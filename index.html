@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ENSIDE MASTER v16.0 - Sistema Completo Final</title>
+    <title>ENSIDE MASTER v18.0 - Sistema Completo Final</title>
     <!-- Tailwind CSS do código ULTRA -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Fonte Inter do Google Fonts -->
@@ -2722,26 +2722,34 @@ XML: Estrutura hierárquica de elementos
 
         function parseFile(file, content) {
             const lines = content.split('\n');
-            const separator = document.getElementById('separator').value;
+            const separator = document.getElementById('separator')?.value || ',';
             const hasHeader = true;
             const headerLine = hasHeader ? lines[0].split(separator) : null;
             
-            let data = [];
-            for (let i = 1; i < Math.min(lines.length, 11); i++) {
+            // Armazenar arquivo atual
+            arquivoAtual = file;
+            
+            // Processar TODOS os dados, não apenas preview
+            dadosImportados = [];
+            for (let i = 1; i < lines.length; i++) {
                 if (lines[i].trim()) {
                     const values = lines[i].split(separator);
                     const row = {};
                     headerLine.forEach((header, index) => {
                         row[header.trim()] = values[index] ? values[index].trim() : '';
                     });
-                    data.push(row);
+                    dadosImportados.push(row);
                 }
             }
-
-            showPreview(data, headerLine);
+            
+            // Mostrar preview (primeiros 10 registros)
+            const previewData = dadosImportados.slice(0, 10);
+            showPreview(previewData, headerLine, dadosImportados.length);
+            
+            console.log(`📄 Arquivo carregado: ${file.name} - ${dadosImportados.length} registros`);
         }
 
-        function showPreview(data, headers) {
+        function showPreview(data, headers, totalRegistros) {
             document.getElementById('previewSection').style.display = 'block';
             const thead = document.getElementById('tableHead');
             const tbody = document.getElementById('tableBody');
@@ -2764,6 +2772,18 @@ XML: Estrutura hierárquica de elementos
                 });
                 tbody.appendChild(tr);
             });
+            
+            // Mostrar total de registros
+            const total = totalRegistros || data.length;
+            const previewInfo = document.getElementById('previewInfo');
+            if (previewInfo) {
+                previewInfo.innerHTML = `<p style="color: #22c55e; margin-top: 10px;">📊 <strong>${total}</strong> registros encontrados (mostrando preview de ${data.length})</p>`;
+            } else {
+                const infoDiv = document.createElement('div');
+                infoDiv.id = 'previewInfo';
+                infoDiv.innerHTML = `<p style="color: #22c55e; margin-top: 10px;">📊 <strong>${total}</strong> registros encontrados (mostrando preview de ${data.length})</p>`;
+                document.getElementById('previewSection').appendChild(infoDiv);
+            }
         }
 
         // Configuração de pastas (sincronizado com Python)
@@ -2774,6 +2794,10 @@ XML: Estrutura hierárquica de elementos
             doc_pessoais: '/Users/andersonenside/Doc_Pessoais'
         };
 
+        // Variável global para armazenar dados importados
+        let dadosImportados = [];
+        let arquivoAtual = null;
+
         function processarImportacao() {
             document.getElementById('previewSection').style.display = 'none';
             document.getElementById('progressSection').style.display = 'block';
@@ -2783,43 +2807,98 @@ XML: Estrutura hierárquica de elementos
             const subcategoria = document.getElementById('subcategoria')?.value || 'auto';
             const tipoArquivo = document.getElementById('dataType')?.value || 'auto';
             
+            // Verificar se há dados para processar
+            if (!arquivoAtual && dadosImportados.length === 0) {
+                alert('⚠️ Nenhum arquivo selecionado para importar!\n\nPor favor, selecione um arquivo usando os botões "Arquivos" ou "Pasta" ou arraste um arquivo para a área indicada.');
+                document.getElementById('progressSection').style.display = 'none';
+                return;
+            }
+            
             let progress = 0;
+            const totalRegistros = dadosImportados.length || 0;
+            
             const interval = setInterval(() => {
-                progress += Math.random() * 35;
+                progress += Math.random() * 25;
                 if (progress >= 100) {
                     progress = 100;
                     clearInterval(interval);
-                    mostrarResultado(categoria, subcategoria, tipoArquivo);
+                    
+                    // Processar dados reais
+                    const resultado = processarDadosReais(dadosImportados, categoria, subcategoria);
+                    mostrarResultadoReal(resultado, categoria, subcategoria, tipoArquivo);
                 }
                 document.getElementById('progressBar').style.width = progress + '%';
                 document.getElementById('progressBar').textContent = Math.floor(progress) + '%';
                 
                 // Mostrar etapa atual
                 let etapa = 'Analisando arquivos...';
-                if (progress > 30) etapa = 'Classificando com IA...';
-                if (progress > 60) etapa = 'Organizando em pastas...';
-                if (progress > 85) etapa = 'Finalizando...';
+                if (progress > 25) etapa = `Processando ${totalRegistros} registros...`;
+                if (progress > 50) etapa = 'Classificando com IA...';
+                if (progress > 75) etapa = 'Salvando dados...';
+                if (progress > 90) etapa = 'Finalizando...';
                 document.getElementById('progressText').innerHTML = `🔄 ${etapa} (${Math.floor(progress)}%)`;
             }, 300);
+        }
+
+        function processarDadosReais(dados, categoria, subcategoria) {
+            let processados = dados.length;
+            let validados = 0;
+            let erros = 0;
+            let duplicatas = 0;
+            let registrosUnicos = new Set();
+            let dadosProcessados = [];
+
+            dados.forEach((registro, index) => {
+                // Criar chave única para detectar duplicatas
+                const chave = JSON.stringify(registro);
+                
+                if (registrosUnicos.has(chave)) {
+                    duplicatas++;
+                } else {
+                    registrosUnicos.add(chave);
+                    
+                    // Validar registro
+                    const temDados = Object.values(registro).some(v => v && v.toString().trim() !== '');
+                    if (temDados) {
+                        validados++;
+                        dadosProcessados.push({
+                            ...registro,
+                            _categoria: categoria,
+                            _subcategoria: subcategoria,
+                            _importadoEm: new Date().toISOString()
+                        });
+                    } else {
+                        erros++;
+                    }
+                }
+            });
+
+            // Salvar no localStorage
+            const dadosAnteriores = JSON.parse(localStorage.getItem('dadosImportadosENSIDE') || '[]');
+            const novosDados = [...dadosAnteriores, ...dadosProcessados];
+            localStorage.setItem('dadosImportadosENSIDE', JSON.stringify(novosDados));
+
+            return { processados, validados, erros, duplicatas, dadosProcessados };
         }
 
         function confirmarImportacao() {
             processarImportacao();
         }
 
-        function mostrarResultado(categoria, subcategoria, tipoArquivo) {
+        function mostrarResultadoReal(resultado, categoria, subcategoria, tipoArquivo) {
             document.getElementById('progressSection').style.display = 'none';
             document.getElementById('resultSection').style.display = 'block';
+            
+            const { processados, validados, erros, duplicatas, dadosProcessados } = resultado;
             
             // Determinar pasta de destino baseada na categoria
             let pastaDestino = CONFIG_PASTAS.destino;
             let catNome = 'Outros';
             
-            if (categoria && categoria !== 'auto' && CATEGORIAS_ARQUIVOS[categoria]) {
+            if (categoria && categoria !== 'auto' && CATEGORIAS_ARQUIVOS && CATEGORIAS_ARQUIVOS[categoria]) {
                 const catData = CATEGORIAS_ARQUIVOS[categoria];
                 catNome = catData.nome || categoria;
                 
-                // Usar pasta específica para triagem e doc_pessoais
                 if (categoria === 'triagem') {
                     pastaDestino = CONFIG_PASTAS.triagem;
                 } else if (categoria === 'doc_pessoais') {
@@ -2829,17 +2908,20 @@ XML: Estrutura hierárquica de elementos
                 }
             }
             
-            // Adicionar subcategoria ao caminho
             if (subcategoria && subcategoria !== 'auto') {
                 pastaDestino += '/' + subcategoria;
             }
             
+            // Mostrar resultado real
+            let statusClass = validados > 0 ? 'badge-success' : 'badge-warning';
+            let statusIcon = validados > 0 ? '✓' : '⚠';
+            
             document.getElementById('resultContent').innerHTML = `
-                <p style="margin: 12px 0;"><span class="badge badge-success">✓ 145 registros importados</span></p>
-                <p style="margin: 12px 0;"><span class="badge badge-success">✓ 142 validados com sucesso</span></p>
-                <p style="margin: 12px 0;"><span class="badge badge-warning">⚠ 3 registros com avisos</span></p>
-                <p style="margin: 12px 0;"><span class="badge badge-success">✓ 5 duplicatas removidas</span></p>
-                <p style="margin: 12px 0;"><span class="badge badge-success">✓ Organizado em pastas corretas</span></p>
+                <p style="margin: 12px 0;"><span class="badge ${statusClass}">${statusIcon} ${processados} registros processados</span></p>
+                <p style="margin: 12px 0;"><span class="badge badge-success">✓ ${validados} validados com sucesso</span></p>
+                ${erros > 0 ? `<p style="margin: 12px 0;"><span class="badge badge-warning">⚠ ${erros} registros com erros</span></p>` : ''}
+                ${duplicatas > 0 ? `<p style="margin: 12px 0;"><span class="badge badge-info">✓ ${duplicatas} duplicatas removidas</span></p>` : ''}
+                <p style="margin: 12px 0;"><span class="badge badge-success">✓ Dados salvos no sistema</span></p>
                 <div style="margin-top: 15px; padding: 15px; background: rgba(34, 197, 94, 0.1); border: 1px solid #22c55e; border-radius: 8px;">
                     <p style="color: #22c55e; font-weight: bold;">📂 Pasta de destino:</p>
                     <p style="color: var(--text); font-family: monospace; font-size: 0.9em;">${pastaDestino}</p>
@@ -2849,12 +2931,21 @@ XML: Estrutura hierárquica de elementos
                 </div>
                 <div style="margin-top: 15px; padding: 10px; background: rgba(14, 165, 233, 0.1); border-radius: 8px;">
                     <p style="color: #94a3b8; font-size: 0.85em;">
-                        💡 <strong>Dica:</strong> Para organizar arquivos automaticamente no Mac, execute o script Python:
-                        <br><code style="background: rgba(0,0,0,0.3); padding: 2px 6px; border-radius: 4px;">python3 organizador_universal_ia.py</code>
+                        💡 <strong>Total no sistema:</strong> ${JSON.parse(localStorage.getItem('dadosImportadosENSIDE') || '[]').length} registros importados
                     </p>
                 </div>
             `;
-            updateStats(145, 142, 3, 5);
+            
+            updateStats(processados, validados, erros, duplicatas);
+            
+            // Limpar dados após importação
+            dadosImportados = [];
+            arquivoAtual = null;
+        }
+
+        // Função legada para compatibilidade
+        function mostrarResultado(categoria, subcategoria, tipoArquivo) {
+            mostrarResultadoReal({ processados: 0, validados: 0, erros: 0, duplicatas: 0, dadosProcessados: [] }, categoria, subcategoria, tipoArquivo);
         }
 
         function cancelarImportacao() {
