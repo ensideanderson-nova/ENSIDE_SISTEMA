@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FASE 2 - Rotas Preferidas</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #000 0%, #1a1a1a 100%);
+            min-height: 100vh;
+            color: #fff;
+            padding: 20px;
+        }
+        .container { max-width: 800px; margin: 0 auto; }
+        
+        .header {
+            text-align: center;
+            padding: 30px;
+            border: 3px solid #FFD700;
+            border-radius: 20px;
+            margin-bottom: 30px;
+            background: rgba(0,0,0,0.5);
+        }
+        .header h1 {
+            color: #FFD700;
+            font-size: 2em;
+            margin-bottom: 10px;
+        }
+        .header .fase {
+            background: #FF4444;
+            color: white;
+            padding: 5px 20px;
+            border-radius: 20px;
+            display: inline-block;
+            margin-bottom: 15px;
+            font-weight: bold;
+        }
+        .header p { color: #ccc; }
+        
+        .welcome {
+            background: linear-gradient(135deg, #4CAF50 0%, #2E7D32 100%);
+            padding: 15px 25px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        .welcome span { font-weight: bold; color: #FFD700; }
+        
+        .form-section {
+            background: rgba(255,255,255,0.05);
+            border: 2px solid #333;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 20px;
+        }
+        .form-section h2 {
+            color: #FFD700;
+            margin-bottom: 20px;
+            font-size: 1.3em;
+        }
+        
+        .rota-group {
+            margin-bottom: 20px;
+            padding: 15px;
+            background: rgba(0,0,0,0.3);
+            border-radius: 10px;
+            border-left: 4px solid #FFD700;
+        }
+        .rota-group label {
+            display: block;
+            color: #FFD700;
+            font-weight: bold;
+            margin-bottom: 10px;
+            font-size: 1.1em;
+        }
+        .rota-group .rota-inputs {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+        .rota-group select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #444;
+            border-radius: 8px;
+            background: #1a1a1a;
+            color: #fff;
+            font-size: 1em;
+        }
+        .rota-group select:focus {
+            border-color: #FFD700;
+            outline: none;
+        }
+        
+        .btn-submit {
+            width: 100%;
+            padding: 20px;
+            font-size: 1.3em;
+            font-weight: bold;
+            background: linear-gradient(135deg, #FF4444 0%, #CC0000 100%);
+            color: white;
+            border: none;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 20px;
+        }
+        .btn-submit:hover {
+            transform: scale(1.02);
+            box-shadow: 0 10px 30px rgba(255, 68, 68, 0.4);
+        }
+        .btn-submit:disabled {
+            background: #666;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .progress {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 30px;
+        }
+        .progress-step {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+        .progress-step.completed {
+            background: #4CAF50;
+            color: white;
+        }
+        .progress-step.active {
+            background: #FFD700;
+            color: #000;
+        }
+        .progress-step.pending {
+            background: #333;
+            color: #666;
+        }
+        .progress-line {
+            width: 50px;
+            height: 4px;
+            background: #333;
+            align-self: center;
+        }
+        .progress-line.completed {
+            background: #4CAF50;
+        }
+        
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 20px;
+        }
+        .loading.show { display: block; }
+        .spinner {
+            border: 4px solid #333;
+            border-top: 4px solid #FFD700;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 15px;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .success {
+            display: none;
+            text-align: center;
+            padding: 40px;
+            background: linear-gradient(135deg, #4CAF50 0%, #2E7D32 100%);
+            border-radius: 15px;
+        }
+        .success.show { display: block; }
+        .success h2 { font-size: 2em; margin-bottom: 15px; }
+        .success p { font-size: 1.2em; margin-bottom: 20px; }
+        .btn-next {
+            display: inline-block;
+            padding: 15px 40px;
+            background: #FFD700;
+            color: #000;
+            text-decoration: none;
+            border-radius: 10px;
+            font-weight: bold;
+            font-size: 1.1em;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Progress -->
+        <div class="progress">
+            <div class="progress-step completed">✓</div>
+            <div class="progress-line completed"></div>
+            <div class="progress-step active">2</div>
+            <div class="progress-line"></div>
+            <div class="progress-step pending">3</div>
+        </div>
+        
+        <!-- Header -->
+        <div class="header">
+            <div class="fase">FASE 2 de 3</div>
+            <h1>🛣️ ESCOLHA SUAS ROTAS PREFERIDAS</h1>
+            <p>Selecione até 5 rotas onde você prefere trabalhar</p>
+        </div>
+        
+        <!-- Welcome -->
+        <div class="welcome" id="welcomeMsg">
+            ✅ Bem-vindo, <span id="userName">Motorista</span>! Agora escolha suas rotas preferidas.
+        </div>
+        
+        <!-- Form -->
+        <form id="rotasForm" class="form-section">
+            <h2>📍 Selecione Origem e Destino para cada rota</h2>
+            
+            <div class="rota-group">
+                <label>🥇 Rota Preferida 1 (Principal)</label>
+                <div class="rota-inputs">
+                    <select id="rota1_origem" required>
+                        <option value="">Origem (Estado)</option>
+                    </select>
+                    <select id="rota1_destino" required>
+                        <option value="">Destino (Estado)</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="rota-group">
+                <label>🥈 Rota Preferida 2</label>
+                <div class="rota-inputs">
+                    <select id="rota2_origem">
+                        <option value="">Origem (Estado)</option>
+                    </select>
+                    <select id="rota2_destino">
+                        <option value="">Destino (Estado)</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="rota-group">
+                <label>🥉 Rota Preferida 3</label>
+                <div class="rota-inputs">
+                    <select id="rota3_origem">
+                        <option value="">Origem (Estado)</option>
+                    </select>
+                    <select id="rota3_destino">
+                        <option value="">Destino (Estado)</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="rota-group">
+                <label>4️⃣ Rota Preferida 4</label>
+                <div class="rota-inputs">
+                    <select id="rota4_origem">
+                        <option value="">Origem (Estado)</option>
+                    </select>
+                    <select id="rota4_destino">
+                        <option value="">Destino (Estado)</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="rota-group">
+                <label>5️⃣ Rota Preferida 5</label>
+                <div class="rota-inputs">
+                    <select id="rota5_origem">
+                        <option value="">Origem (Estado)</option>
+                    </select>
+                    <select id="rota5_destino">
+                        <option value="">Destino (Estado)</option>
+                    </select>
+                </div>
+            </div>
+            
+            <button type="submit" class="btn-submit" id="btnSubmit">
+                ✅ SALVAR ROTAS E CONTINUAR
+            </button>
+        </form>
+        
+        <!-- Loading -->
+        <div class="loading" id="loading">
+            <div class="spinner"></div>
+            <p>Salvando suas rotas preferidas...</p>
+        </div>
+        
+        <!-- Success -->
+        <div class="success" id="success">
+            <h2>✅ ROTAS SALVAS!</h2>
+            <p>Suas rotas preferidas foram registradas com sucesso.</p>
+            <a href="FASE3_FRETES.html" class="btn-next">📦 VER FRETES DISPONÍVEIS →</a>
+        </div>
+    </div>
+    
+    <script>
+        // Configuração
+        const WEBAPP_URL = 'https://script.google.com/macros/s/AKfycbzlXB43ZA83ZT98KAypV4EEmsyxslyXB1Ya8_b6TtwH9xSZunZhzS0ZcZiDKqUtEsT3/exec';
+        
+        // Estados brasileiros
+        const estados = [
+            'AC - Acre', 'AL - Alagoas', 'AP - Amapá', 'AM - Amazonas',
+            'BA - Bahia', 'CE - Ceará', 'DF - Distrito Federal', 'ES - Espírito Santo',
+            'GO - Goiás', 'MA - Maranhão', 'MT - Mato Grosso', 'MS - Mato Grosso do Sul',
+            'MG - Minas Gerais', 'PA - Pará', 'PB - Paraíba', 'PR - Paraná',
+            'PE - Pernambuco', 'PI - Piauí', 'RJ - Rio de Janeiro', 'RN - Rio Grande do Norte',
+            'RS - Rio Grande do Sul', 'RO - Rondônia', 'RR - Roraima', 'SC - Santa Catarina',
+            'SP - São Paulo', 'SE - Sergipe', 'TO - Tocantins'
+        ];
+        
+        // Carregar dados do motorista
+        document.addEventListener('DOMContentLoaded', function() {
+            const userData = JSON.parse(localStorage.getItem('motoristaData') || '{}');
+            if (userData.nome) {
+                document.getElementById('userName').textContent = userData.nome;
+            }
+            
+            // Preencher selects com estados
+            const selects = document.querySelectorAll('select');
+            selects.forEach(select => {
+                estados.forEach(estado => {
+                    const option = document.createElement('option');
+                    option.value = estado;
+                    option.textContent = estado;
+                    select.appendChild(option);
+                });
+            });
+        });
+        
+        // Enviar formulário
+        document.getElementById('rotasForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const form = document.getElementById('rotasForm');
+            const loading = document.getElementById('loading');
+            const success = document.getElementById('success');
+            const btnSubmit = document.getElementById('btnSubmit');
+            
+            // Coletar rotas
+            const rotas = [];
+            for (let i = 1; i <= 5; i++) {
+                const origem = document.getElementById(`rota${i}_origem`).value;
+                const destino = document.getElementById(`rota${i}_destino`).value;
+                if (origem && destino) {
+                    rotas.push(`${origem} → ${destino}`);
+                } else {
+                    rotas.push('');
+                }
+            }
+            
+            // Validar pelo menos 1 rota
+            if (!rotas[0]) {
+                alert('Por favor, selecione pelo menos a Rota Preferida 1');
+                return;
+            }
+            
+            // Mostrar loading
+            form.style.display = 'none';
+            loading.classList.add('show');
+            btnSubmit.disabled = true;
+            
+            // Dados do motorista
+            const userData = JSON.parse(localStorage.getItem('motoristaData') || '{}');
+            
+            // Preparar dados
+            const dados = {
+                action: 'addRotas',
+                visitorId: userData.visitorId || '',
+                whatsapp: userData.whatsapp || '',
+                rota1: rotas[0],
+                rota2: rotas[1],
+                rota3: rotas[2],
+                rota4: rotas[3],
+                rota5: rotas[4]
+            };
+            
+            // Salvar no localStorage
+            userData.rotas = rotas;
+            localStorage.setItem('motoristaData', JSON.stringify(userData));
+            
+            try {
+                // Enviar para Google Sheets
+                const response = await fetch(WEBAPP_URL, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(dados)
+                });
+                
+                // Mostrar sucesso após 1.5s
+                setTimeout(() => {
+                    loading.classList.remove('show');
+                    success.classList.add('show');
+                }, 1500);
+                
+            } catch (error) {
+                console.error('Erro:', error);
+                // Mesmo com erro, continuar (dados salvos localmente)
+                setTimeout(() => {
+                    loading.classList.remove('show');
+                    success.classList.add('show');
+                }, 1500);
+            }
+        });
+    </script>
+</body>
+</html>

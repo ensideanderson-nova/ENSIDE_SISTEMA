@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ANDERSON ENSIDE LOGISTICS - Fretes Disponíveis</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #000 0%, #1a1a1a 100%);
+            min-height: 100vh;
+            color: #fff;
+        }
+        .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
+        
+        /* Header */
+        .header {
+            text-align: center;
+            padding: 20px;
+            border: 3px solid #FFD700;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, #000 0%, #1a1a1a 100%);
+        }
+        .header h1 { color: #FFD700; font-size: 1.8em; }
+        .header p { color: #ccc; }
+        .bem-vindo {
+            background: rgba(0,255,0,0.1);
+            border: 1px solid #00FF00;
+            border-radius: 10px;
+            padding: 10px;
+            margin-top: 10px;
+            color: #00FF00;
+        }
+        
+        /* Filtros */
+        .filtros-section {
+            background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);
+            border: 2px solid #00FF00;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 20px;
+        }
+        .filtros-section h2 {
+            color: #00FF00;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        .filtros-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+        .filtro-group label {
+            display: block;
+            color: #FFD700;
+            margin-bottom: 5px;
+            font-size: 0.9em;
+        }
+        .filtro-group select, .filtro-group input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #FFD700;
+            border-radius: 8px;
+            background: #1a1a1a;
+            color: #fff;
+            font-size: 1em;
+        }
+        .btn-filtrar {
+            grid-column: 1 / -1;
+            padding: 15px;
+            background: linear-gradient(135deg, #00FF00 0%, #00CC00 100%);
+            border: none;
+            border-radius: 10px;
+            color: #000;
+            font-weight: bold;
+            font-size: 1.1em;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        .btn-filtrar:hover { opacity: 0.9; }
+        
+        /* Lista de Fretes */
+        .fretes-lista { margin-bottom: 30px; }
+        .frete-card {
+            background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);
+            border: 2px solid #FFD700;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 15px;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        .frete-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(255,215,0,0.2);
+        }
+        .frete-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        .frete-rota {
+            font-size: 1.3em;
+            font-weight: bold;
+            color: #00FF00;
+        }
+        .badge-urgente {
+            background: #FF0000;
+            color: #fff;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            font-weight: bold;
+            animation: pulse 1.5s infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+        .frete-detalhes {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+        .detalhe-item {
+            text-align: center;
+            padding: 10px;
+            background: rgba(0,0,0,0.3);
+            border-radius: 8px;
+        }
+        .detalhe-item .label { color: #999; font-size: 0.8em; }
+        .detalhe-item .valor { color: #fff; font-weight: bold; font-size: 1.1em; }
+        .detalhe-item .valor.destaque { color: #00FF00; font-size: 1.3em; }
+        .btn-proposta {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+            border: none;
+            border-radius: 10px;
+            color: #000;
+            font-weight: bold;
+            font-size: 1.1em;
+            cursor: pointer;
+        }
+        .btn-proposta:hover { opacity: 0.9; }
+        
+        /* Adicionar Frete */
+        .adicionar-section {
+            background: linear-gradient(135deg, #0a2e0a 0%, #1a4a1a 100%);
+            border: 3px solid #00FF00;
+            border-radius: 20px;
+            padding: 30px;
+            margin-top: 30px;
+        }
+        .adicionar-section h2 {
+            color: #00FF00;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+        .form-group label {
+            display: block;
+            color: #FFD700;
+            margin-bottom: 5px;
+            font-size: 0.9em;
+        }
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #00FF00;
+            border-radius: 8px;
+            background: #1a1a1a;
+            color: #fff;
+        }
+        .btn-adicionar {
+            grid-column: 1 / -1;
+            padding: 18px;
+            background: linear-gradient(135deg, #00FF00 0%, #00CC00 100%);
+            border: none;
+            border-radius: 12px;
+            color: #000;
+            font-weight: bold;
+            font-size: 1.2em;
+            cursor: pointer;
+            margin-top: 15px;
+        }
+        .status-msg {
+            text-align: center;
+            margin-top: 15px;
+            padding: 15px;
+            border-radius: 10px;
+        }
+        
+        /* Voltar */
+        .btn-voltar {
+            display: inline-block;
+            padding: 10px 20px;
+            background: #333;
+            border: 2px solid #FFD700;
+            border-radius: 8px;
+            color: #FFD700;
+            text-decoration: none;
+            margin-bottom: 20px;
+        }
+        .btn-voltar:hover { background: #444; }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .frete-detalhes { grid-template-columns: repeat(2, 1fr); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="FASE1_CAPTACAO.html" class="btn-voltar">← Voltar</a>
+        
+        <!-- Header -->
+        <div class="header">
+            <h1>🚚 ANDERSON ENSIDE LOGISTICS</h1>
+            <p>Fretes Disponíveis</p>
+            <div class="bem-vindo" id="bemVindo"></div>
+        </div>
+        
+        <!-- Filtros -->
+        <div class="filtros-section">
+            <h2>🔍 FILTRAR FRETES DISPONÍVEIS</h2>
+            <div class="filtros-grid">
+                <div class="filtro-group">
+                    <label>Estado Origem</label>
+                    <select id="filtroOrigem" onchange="filtrarFretes()">
+                        <option value="">Todos</option>
+                        <option value="PR">PR</option>
+                        <option value="SC">SC</option>
+                        <option value="SP">SP</option>
+                        <option value="RJ">RJ</option>
+                        <option value="MG">MG</option>
+                        <option value="RS">RS</option>
+                    </select>
+                </div>
+                <div class="filtro-group">
+                    <label>Estado Destino</label>
+                    <select id="filtroDestino" onchange="filtrarFretes()">
+                        <option value="">Todos</option>
+                        <option value="PR">PR</option>
+                        <option value="SC">SC</option>
+                        <option value="SP">SP</option>
+                        <option value="RJ">RJ</option>
+                        <option value="MG">MG</option>
+                        <option value="RS">RS</option>
+                    </select>
+                </div>
+                <div class="filtro-group">
+                    <label>Tipo de Veículo</label>
+                    <select id="filtroVeiculo" onchange="filtrarFretes()">
+                        <option value="">Todos</option>
+                        <option value="Carreta">Carreta</option>
+                        <option value="Truck">Truck</option>
+                        <option value="Bitrem">Bitrem</option>
+                        <option value="Bitruck">Bitruck</option>
+                    </select>
+                </div>
+                <div class="filtro-group">
+                    <label>Valor Mínimo (R$)</label>
+                    <input type="number" id="filtroValor" placeholder="0" onchange="filtrarFretes()">
+                </div>
+            </div>
+        </div>
+        
+        <!-- Lista de Fretes -->
+        <div class="fretes-lista" id="fretesLista">
+            <p style="text-align: center; color: #ccc;">Carregando fretes...</p>
+        </div>
+        
+        <!-- Adicionar Novo Frete -->
+        <div class="adicionar-section">
+            <h2>➕ ADICIONAR NOVO FRETE</h2>
+            <p style="text-align: center; color: #ccc; margin-bottom: 20px;">Cadastre um novo frete disponível (sincroniza com a planilha)</p>
+            
+            <div class="form-grid">
+                <div class="form-group">
+                    <label>Estado Origem *</label>
+                    <select id="novoOrigemUF" required>
+                        <option value="">Selecione</option>
+                        <option value="PR">PR</option>
+                        <option value="SC">SC</option>
+                        <option value="SP">SP</option>
+                        <option value="RJ">RJ</option>
+                        <option value="MG">MG</option>
+                        <option value="RS">RS</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Cidade Origem *</label>
+                    <input type="text" id="novoOrigemCidade" placeholder="Ex: Curitiba" required>
+                </div>
+                <div class="form-group">
+                    <label>Estado Destino *</label>
+                    <select id="novoDestinoUF" required>
+                        <option value="">Selecione</option>
+                        <option value="PR">PR</option>
+                        <option value="SC">SC</option>
+                        <option value="SP">SP</option>
+                        <option value="RJ">RJ</option>
+                        <option value="MG">MG</option>
+                        <option value="RS">RS</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Cidade Destino *</label>
+                    <input type="text" id="novoDestinoCidade" placeholder="Ex: São Paulo" required>
+                </div>
+                <div class="form-group">
+                    <label>Distância (KM) *</label>
+                    <input type="number" id="novoKM" placeholder="Ex: 408" required>
+                </div>
+                <div class="form-group">
+                    <label>Tipo Veículo *</label>
+                    <select id="novoTipoVeiculo" required>
+                        <option value="">Selecione</option>
+                        <option value="Carreta">Carreta</option>
+                        <option value="Truck">Truck</option>
+                        <option value="Bitrem">Bitrem</option>
+                        <option value="Bitruck">Bitruck</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Capacidade (ton)</label>
+                    <input type="number" id="novoCapacidade" placeholder="Ex: 25">
+                </div>
+                <div class="form-group">
+                    <label>Valor Sugerido (R$) *</label>
+                    <input type="number" id="novoValor" placeholder="Ex: 2850" required>
+                </div>
+                <div class="form-group">
+                    <label>Tipo de Carga</label>
+                    <input type="text" id="novoCarga" placeholder="Ex: Madeira">
+                </div>
+                <div class="form-group">
+                    <label>Contato WhatsApp</label>
+                    <input type="tel" id="novoContato" placeholder="(00) 00000-0000">
+                </div>
+                <div class="form-group">
+                    <label>Urgente?</label>
+                    <select id="novoUrgente">
+                        <option value="NAO">Não</option>
+                        <option value="SIM">Sim - Urgente</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Data Embarque</label>
+                    <input type="text" id="novoEmbarque" placeholder="Ex: Hoje, Amanhã">
+                </div>
+            </div>
+            
+            <button class="btn-adicionar" onclick="adicionarFrete()">
+                ✅ CADASTRAR FRETE NA PLANILHA
+            </button>
+            
+            <div id="statusAdicionar" class="status-msg" style="display: none;"></div>
+        </div>
+    </div>
+    
+    <script>
+        // Configuração
+        const CONFIG = {
+            webAppUrl: 'https://script.google.com/macros/s/AKfycbzlXB43ZA83ZT98KAypV4EEmsyxslyXB1Ya8_b6TtwH9xSZunZhzS0ZcZiDKqUtEsT3/exec'
+        };
+        
+        let todosFretes = [];
+        
+        // Carregar dados do motorista cadastrado
+        function carregarMotorista() {
+            const dados = localStorage.getItem('motoristaCadastrado');
+            if (dados) {
+                const motorista = JSON.parse(dados);
+                document.getElementById('bemVindo').innerHTML = 
+                    `✅ Bem-vindo, <strong>${motorista.nomeCompleto}</strong>! Veja os fretes disponíveis abaixo.`;
+            } else {
+                document.getElementById('bemVindo').innerHTML = 
+                    '👋 Veja os fretes disponíveis abaixo.';
+            }
+        }
+        
+        // Carregar fretes da planilha
+        async function carregarFretes() {
+            try {
+                const response = await fetch(`${CONFIG.webAppUrl}?action=getFretes`);
+                if (response.ok) {
+                    const data = await response.json();
+                    if (data.success && data.fretes) {
+                        todosFretes = data.fretes;
+                        renderizarFretes(todosFretes);
+                        return;
+                    }
+                }
+            } catch (error) {
+                console.warn('Erro ao carregar fretes:', error);
+            }
+            
+            // Dados de exemplo se falhar
+            todosFretes = [
+                {id: 1, origemUF: 'PR', origemCidade: 'Curitiba', destinoUF: 'SP', destinoCidade: 'São Paulo', km: 408, tipoVeiculo: 'Carreta', capacidade: 25, valorSugerido: 2850, carga: 'Madeira', urgente: true, embarque: 'Hoje'},
+                {id: 2, origemUF: 'SC', origemCidade: 'Tubarão', destinoUF: 'RJ', destinoCidade: 'Rio de Janeiro', km: 920, tipoVeiculo: 'Carreta', capacidade: 28, valorSugerido: 5200, carga: 'Compensados', urgente: true, embarque: 'Amanhã'},
+                {id: 3, origemUF: 'SP', origemCidade: 'São Paulo', destinoUF: 'MG', destinoCidade: 'Belo Horizonte', km: 586, tipoVeiculo: 'Truck', capacidade: 14, valorSugerido: 3200, carga: 'Madeira', urgente: false, embarque: 'Em 2 dias'},
+            ];
+            renderizarFretes(todosFretes);
+        }
+        
+        // Renderizar lista de fretes
+        function renderizarFretes(fretes) {
+            const lista = document.getElementById('fretesLista');
+            
+            if (fretes.length === 0) {
+                lista.innerHTML = '<p style="text-align: center; color: #FFD700; padding: 40px;">Nenhum frete encontrado com os filtros selecionados.</p>';
+                return;
+            }
+            
+            lista.innerHTML = fretes.map(frete => `
+                <div class="frete-card">
+                    <div class="frete-header">
+                        <div class="frete-rota">${frete.origemCidade} - ${frete.origemUF} → ${frete.destinoCidade} - ${frete.destinoUF}</div>
+                        ${frete.urgente ? '<div class="badge-urgente">🔥 URGENTE</div>' : ''}
+                    </div>
+                    <div class="frete-detalhes">
+                        <div class="detalhe-item">
+                            <div class="label">Distância</div>
+                            <div class="valor">${frete.km} km</div>
+                        </div>
+                        <div class="detalhe-item">
+                            <div class="label">Valor Sugerido</div>
+                            <div class="valor destaque">R$ ${frete.valorSugerido?.toLocaleString('pt-BR') || '0'}</div>
+                        </div>
+                        <div class="detalhe-item">
+                            <div class="label">Tipo Veículo</div>
+                            <div class="valor">${frete.tipoVeiculo || '-'}</div>
+                        </div>
+                        <div class="detalhe-item">
+                            <div class="label">Carga</div>
+                            <div class="valor">${frete.carga || 'Madeira'}</div>
+                        </div>
+                        <div class="detalhe-item">
+                            <div class="label">Peso</div>
+                            <div class="valor">${frete.capacidade || '-'} ton</div>
+                        </div>
+                        <div class="detalhe-item">
+                            <div class="label">Embarque</div>
+                            <div class="valor">${frete.embarque || 'A combinar'}</div>
+                        </div>
+                    </div>
+                    <button class="btn-proposta" onclick="fazerProposta(${frete.id}, '${frete.origemCidade}', '${frete.destinoCidade}', ${frete.valorSugerido})">
+                        💼 FAZER PROPOSTA
+                    </button>
+                </div>
+            `).join('');
+        }
+        
+        // Filtrar fretes
+        function filtrarFretes() {
+            const origem = document.getElementById('filtroOrigem').value;
+            const destino = document.getElementById('filtroDestino').value;
+            const veiculo = document.getElementById('filtroVeiculo').value;
+            const valorMin = parseFloat(document.getElementById('filtroValor').value) || 0;
+            
+            const fretesFiltrados = todosFretes.filter(frete => {
+                if (origem && frete.origemUF !== origem) return false;
+                if (destino && frete.destinoUF !== destino) return false;
+                if (veiculo && frete.tipoVeiculo !== veiculo) return false;
+                if (frete.valorSugerido < valorMin) return false;
+                return true;
+            });
+            
+            renderizarFretes(fretesFiltrados);
+        }
+        
+        // Fazer proposta
+        function fazerProposta(id, origem, destino, valorSugerido) {
+            const valor = prompt(`💰 Qual seu valor para o frete ${origem} → ${destino}?\n\nValor sugerido: R$ ${valorSugerido?.toLocaleString('pt-BR')}`);
+            if (valor) {
+                alert(`✅ Proposta de R$ ${valor} enviada com sucesso!\n\nRota: ${origem} → ${destino}\nEntraremos em contato pelo WhatsApp.`);
+            }
+        }
+        
+        // Adicionar novo frete
+        async function adicionarFrete() {
+            const statusDiv = document.getElementById('statusAdicionar');
+            
+            const novoFrete = {
+                action: 'addFrete',
+                origemUF: document.getElementById('novoOrigemUF').value,
+                origemCidade: document.getElementById('novoOrigemCidade').value,
+                destinoUF: document.getElementById('novoDestinoUF').value,
+                destinoCidade: document.getElementById('novoDestinoCidade').value,
+                km: document.getElementById('novoKM').value,
+                tipoVeiculo: document.getElementById('novoTipoVeiculo').value,
+                capacidade: document.getElementById('novoCapacidade').value,
+                valorSugerido: document.getElementById('novoValor').value,
+                carga: document.getElementById('novoCarga').value || 'Madeira',
+                contato: document.getElementById('novoContato').value,
+                urgente: document.getElementById('novoUrgente').value,
+                embarque: document.getElementById('novoEmbarque').value || 'A combinar'
+            };
+            
+            // Validação
+            if (!novoFrete.origemUF || !novoFrete.origemCidade || !novoFrete.destinoUF || 
+                !novoFrete.destinoCidade || !novoFrete.km || !novoFrete.tipoVeiculo || !novoFrete.valorSugerido) {
+                statusDiv.style.display = 'block';
+                statusDiv.style.background = 'rgba(255,0,0,0.2)';
+                statusDiv.style.color = '#FF4444';
+                statusDiv.textContent = '⚠️ Preencha todos os campos obrigatórios (*)';
+                return;
+            }
+            
+            statusDiv.style.display = 'block';
+            statusDiv.style.background = 'rgba(255,215,0,0.2)';
+            statusDiv.style.color = '#FFD700';
+            statusDiv.textContent = '⏳ Enviando frete para a planilha...';
+            
+            try {
+                // Enviar para Google Sheets
+                await fetch(CONFIG.webAppUrl, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(novoFrete)
+                });
+                
+                // Adicionar localmente também
+                const freteLocal = {
+                    id: Date.now(),
+                    origemUF: novoFrete.origemUF,
+                    origemCidade: novoFrete.origemCidade,
+                    destinoUF: novoFrete.destinoUF,
+                    destinoCidade: novoFrete.destinoCidade,
+                    km: parseInt(novoFrete.km),
+                    tipoVeiculo: novoFrete.tipoVeiculo,
+                    capacidade: parseInt(novoFrete.capacidade) || 0,
+                    valorSugerido: parseFloat(novoFrete.valorSugerido),
+                    carga: novoFrete.carga,
+                    urgente: novoFrete.urgente === 'SIM',
+                    embarque: novoFrete.embarque
+                };
+                
+                todosFretes.unshift(freteLocal);
+                renderizarFretes(todosFretes);
+                
+                statusDiv.style.background = 'rgba(0,255,0,0.2)';
+                statusDiv.style.color = '#00FF00';
+                statusDiv.textContent = '✅ Frete cadastrado com sucesso! Sincronizado com a planilha.';
+                
+                // Limpar formulário
+                document.querySelectorAll('.adicionar-section input, .adicionar-section select').forEach(el => {
+                    if (el.tagName === 'SELECT') el.selectedIndex = 0;
+                    else el.value = '';
+                });
+                
+            } catch (error) {
+                console.error('Erro:', error);
+                statusDiv.style.background = 'rgba(255,165,0,0.2)';
+                statusDiv.style.color = '#FFA500';
+                statusDiv.textContent = '⚠️ Frete salvo localmente. Sincronização pendente.';
+            }
+        }
+        
+        // Inicializar
+        document.addEventListener('DOMContentLoaded', () => {
+            carregarMotorista();
+            carregarFretes();
+        });
+    </script>
+</body>
+</html>

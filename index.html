@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ANDERSON ENSIDE LOGISTICS - Sistema Integrado</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #000 0%, #1a1a1a 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+        }
+        .container {
+            text-align: center;
+            padding: 40px;
+        }
+        .logo {
+            font-size: 4em;
+            margin-bottom: 20px;
+        }
+        h1 {
+            color: #FFD700;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+        .subtitle {
+            color: #aaa;
+            font-size: 1.2em;
+            margin-bottom: 40px;
+        }
+        .buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            max-width: 400px;
+            margin: 0 auto;
+        }
+        .btn {
+            display: block;
+            padding: 20px 40px;
+            font-size: 1.2em;
+            font-weight: bold;
+            text-decoration: none;
+            border-radius: 15px;
+            transition: all 0.3s ease;
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, #FF4444 0%, #CC0000 100%);
+            color: white;
+            border: 3px solid #FF4444;
+        }
+        .btn-primary:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 30px rgba(255, 68, 68, 0.4);
+        }
+        .btn-secondary {
+            background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+            color: #000;
+            border: 3px solid #FFD700;
+        }
+        .btn-secondary:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 30px rgba(255, 215, 0, 0.4);
+        }
+        .btn-tertiary {
+            background: transparent;
+            color: #4CAF50;
+            border: 3px solid #4CAF50;
+        }
+        .btn-tertiary:hover {
+            background: #4CAF50;
+            color: white;
+            transform: scale(1.05);
+        }
+        .info {
+            margin-top: 40px;
+            padding: 20px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 10px;
+            font-size: 0.9em;
+            color: #888;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="logo">🚛</div>
+        <h1>ANDERSON ENSIDE LOGISTICS</h1>
+        <p class="subtitle">Sistema Integrado de Fretes</p>
+        
+        <div class="buttons">
+            <a href="FASE1_CAPTACAO.html" class="btn btn-primary">
+                📝 CADASTRAR MOTORISTA
+            </a>
+            <a href="FASE2_FRETES.html" class="btn btn-secondary">
+                📦 VER FRETES DISPONÍVEIS
+            </a>
+            <a href="../ENSIDE_MASTER_v16.0_FINAL.html" class="btn btn-tertiary">
+                ⚙️ SISTEMA MASTER COMPLETO
+            </a>
+        </div>
+        
+        <div class="info">
+            <p>📅 Última atualização: 26/12/2025</p>
+            <p>🔗 Integrado com Google Sheets em tempo real</p>
+        </div>
+    </div>
+</body>
+</html>
