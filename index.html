@@ -2,11 +2,54 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="refresh" content="0; url=ENSIDE_MASTER_v16.0_FINAL.html">
-    <title>ENSIDE MASTER v16.0</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ENSIDE LOGISTICS - Sistema Integrado</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', sans-serif; background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%); min-height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 20px; color: #fff; }
+        .logo { text-align: center; margin-bottom: 40px; }
+        .logo .icon { font-size: 5rem; }
+        .logo h1 { color: #f39c12; font-size: 2.5rem; margin: 10px 0; }
+        .logo p { color: #bdc3c7; }
+        .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 25px; max-width: 1000px; width: 100%; }
+        .card { background: rgba(255,255,255,0.08); border-radius: 20px; padding: 25px; text-align: center; border: 2px solid transparent; transition: all 0.3s; text-decoration: none; color: #fff; }
+        .card:hover { transform: translateY(-8px); border-color: #f39c12; box-shadow: 0 15px 30px rgba(243,156,18,0.3); }
+        .card .icon { font-size: 3.5rem; margin-bottom: 15px; }
+        .card h2 { color: #f39c12; margin-bottom: 8px; }
+        .card p { color: #bdc3c7; font-size: 0.95rem; }
+        .card .badge { display: inline-block; background: #f39c12; color: #1a1a2e; padding: 4px 12px; border-radius: 15px; font-weight: bold; font-size: 0.8rem; margin-bottom: 10px; }
+        .btn-master { margin-top: 30px; padding: 15px 35px; background: linear-gradient(135deg, #9b59b6, #8e44ad); border-radius: 10px; color: #fff; text-decoration: none; font-weight: bold; transition: all 0.3s; }
+        .btn-master:hover { transform: translateY(-3px); box-shadow: 0 10px 25px rgba(155,89,182,0.4); }
+        .footer { margin-top: 40px; color: #7f8c8d; font-size: 0.9rem; }
+    </style>
 </head>
 <body>
-    <p>Redirecionando para o sistema...</p>
-    <script>window.location.href = 'ENSIDE_MASTER_v16.0_FINAL.html';</script>
+    <div class="logo">
+        <div class="icon">🚛</div>
+        <h1>ENSIDE LOGISTICS</h1>
+        <p>Sistema Integrado de Captação de Fretes</p>
+    </div>
+    <div class="cards">
+        <a href="FASE1_CAPTACAO.html" class="card">
+            <span class="badge">FASE 1</span>
+            <div class="icon">📝</div>
+            <h2>Captação</h2>
+            <p>Cadastre-se com nome e WhatsApp</p>
+        </a>
+        <a href="FASE2_FRETES.html" class="card">
+            <span class="badge">FASE 2</span>
+            <div class="icon">📦</div>
+            <h2>Fretes Disponíveis</h2>
+            <p>Filtros por estado, veículo e valor</p>
+        </a>
+        <a href="FASE3_RESUMO.html" class="card">
+            <span class="badge">FASE 3</span>
+            <div class="icon">📊</div>
+            <h2>Resumo</h2>
+            <p>Cards por cidade com bandeiras</p>
+        </a>
+    </div>
+    <a href="ENSIDE_PRINCIPAL.html" class="btn-master">🏆 Sistema Master Completo</a>
+    <div class="footer">© 2025 ENSIDE LOGISTICS</div>
 </body>
 </html>
