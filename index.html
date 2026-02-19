@@ -6030,12 +6030,90 @@ Em breve entraremos em contato com ofertas de frete!`);
             initFretesIntegrado();
         });
     
+        // ==================== INTEGRAÇÃO EVOLUTION API ====================
+        // Credenciais pré-configuradas da Evolution API
+        const EVOLUTION_CONFIG = {
+            url: 'https://3001-i6cwps7xj9nb6v44vk54x-cf846405.us1.manus.computer',
+            apiKey: '5f0ce71e1db3469bbe37edc577fbddc0',
+            instance: 'enside-master-20260217172641',
+            instanceId: '59240a812ae1c455',
+            webhook: 'https://3001-i6cwps7xj9nb6v44vk54x-cf846405.us1.manus.computer/webhook'
+        };
+
+        // Função para testar conexão com Evolution API
+        async function testarConexaoEvolutionAPI() {
+            try {
+                const response = await fetch(EVOLUTION_CONFIG.url + '/api/health', {
+                    headers: { 'apikey': EVOLUTION_CONFIG.apiKey }
+                });
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    console.log('✅ Evolution API Conectada:', data);
+                    return true;
+                } else {
+                    console.error('❌ Erro ao conectar Evolution API');
+                    return false;
+                }
+            } catch (error) {
+                console.error('❌ Erro de conexão:', error);
+                return false;
+            }
+        }
+
+        // Função para enviar mensagem via Evolution API
+        async function enviarMensagemEvolution(phone, message) {
+            try {
+                const response = await fetch(EVOLUTION_CONFIG.url + '/api/message/send', {
+                    method: 'POST',
+                    headers: { 
+                        'apikey': EVOLUTION_CONFIG.apiKey,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ phone: phone, message: message })
+                });
+                
+                if (response.ok) {
+                    console.log('✅ Mensagem enviada com sucesso');
+                    return true;
+                } else {
+                    console.error('❌ Erro ao enviar mensagem');
+                    return false;
+                }
+            } catch (error) {
+                console.error('❌ Erro:', error);
+                return false;
+            }
+        }
+
+        // Função para listar contatos da Evolution API
+        async function listarContatosEvolution() {
+            try {
+                const response = await fetch(EVOLUTION_CONFIG.url + '/api/contacts/list', {
+                    headers: { 'apikey': EVOLUTION_CONFIG.apiKey }
+                });
+                
+                if (response.ok) {
+                    const contatos = await response.json();
+                    console.log('✅ Contatos carregados:', contatos);
+                    return contatos;
+                } else {
+                    console.error('❌ Erro ao carregar contatos');
+                    return [];
+                }
+            } catch (error) {
+                console.error('❌ Erro:', error);
+                return [];
+            }
+        }
+        // ==================== FIM INTEGRAÇÃO EVOLUTION API ====================
+
         // Validar credenciais ao carregar
         function validarCredenciais() {
-            const url = document.getElementById('evolutionUrl')?.value;
-            const key = document.getElementById('evolutionApiKey')?.value;
-            const instance = document.getElementById('evolutionInstance')?.value;
-            const webhook = document.getElementById('webhookUrl')?.value;
+            const url = document.getElementById('evolutionUrl')?.value || EVOLUTION_CONFIG.url;
+            const key = document.getElementById('evolutionApiKey')?.value || EVOLUTION_CONFIG.apiKey;
+            const instance = document.getElementById('evolutionInstance')?.value || EVOLUTION_CONFIG.instance;
+            const webhook = document.getElementById('webhookUrl')?.value || EVOLUTION_CONFIG.webhook;
             const sheets = document.getElementById('googleSheetsId')?.value;
             
             if (url && key && instance && webhook && sheets) {
@@ -6049,7 +6127,10 @@ Em breve entraremos em contato com ofertas de frete!`);
         
         // Executar validação ao carregar
         document.addEventListener('DOMContentLoaded', function() {
-            setTimeout(validarCredenciais, 1000);
+            setTimeout(() => {
+                validarCredenciais();
+                testarConexaoEvolutionAPI();
+            }, 1000);
         });
 
     </script>
