@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ENSIDE MASTER v20.0 - Sistema Integrado Completo</title>
+    <title>ENSIDE MASTER v20.0 - Sistema Integrado com Evolution API</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
@@ -33,7 +33,7 @@
         .sidebar-header {
             background: linear-gradient(135deg, #0f3460 0%, #16213e 100%);
             padding: 25px 20px;
-            border-bottom: 2px solid #e94560;
+            border-bottom: 2px solid #ffa500;
             text-align: center;
         }
         
@@ -44,7 +44,7 @@
             align-items: center;
             justify-content: center;
             gap: 10px;
-            color: #e94560;
+            color: #ffa500;
         }
         
         .sidebar-header p {
@@ -81,15 +81,15 @@
         }
         
         .nav-item:hover {
-            background: rgba(233, 69, 96, 0.2);
-            color: #e94560;
+            background: rgba(255, 165, 0, 0.2);
+            color: #ffa500;
             transform: translateX(5px);
         }
         
         .nav-item.active {
-            background: rgba(233, 69, 96, 0.3);
-            color: #e94560;
-            border-left: 3px solid #e94560;
+            background: rgba(255, 165, 0, 0.3);
+            color: #ffa500;
+            border-left: 3px solid #ffa500;
         }
         
         .main-content {
@@ -164,7 +164,7 @@
             padding: 25px;
             margin-bottom: 25px;
             box-shadow: 0 4px 15px rgba(0,0,0,0.08);
-            border-top: 4px solid #e94560;
+            border-top: 4px solid #ffa500;
         }
         
         .card h2 {
@@ -184,12 +184,12 @@
         }
         
         .stat-box {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #ffa500 0%, #ff8c00 100%);
             color: white;
             padding: 25px;
             border-radius: 12px;
             text-align: center;
-            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+            box-shadow: 0 4px 15px rgba(255, 165, 0, 0.3);
             transition: transform 0.3s;
         }
         
@@ -210,40 +210,8 @@
             font-weight: 700;
         }
         
-        .table-container {
-            overflow-x: auto;
-        }
-        
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 15px;
-        }
-        
-        th {
-            background: #f5f5f5;
-            padding: 15px;
-            text-align: left;
-            font-weight: 600;
-            color: #1a1a2e;
-            border-bottom: 2px solid #e94560;
-            font-size: 13px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-        
-        td {
-            padding: 15px;
-            border-bottom: 1px solid #eee;
-            font-size: 14px;
-        }
-        
-        tr:hover {
-            background: #f9f9f9;
-        }
-        
         .btn {
-            background: linear-gradient(135deg, #e94560 0%, #d63447 100%);
+            background: linear-gradient(135deg, #ffa500 0%, #ff8c00 100%);
             color: white;
             border: none;
             padding: 12px 24px;
@@ -255,18 +223,46 @@
             display: inline-flex;
             align-items: center;
             gap: 8px;
-            box-shadow: 0 4px 15px rgba(233, 69, 96, 0.3);
+            box-shadow: 0 4px 15px rgba(255, 165, 0, 0.3);
             margin-right: 10px;
             margin-bottom: 10px;
         }
         
         .btn:hover {
             transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(233, 69, 96, 0.4);
+            box-shadow: 0 6px 20px rgba(255, 165, 0, 0.4);
         }
         
         .btn-secondary {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #1a1a2e;
+        }
+        
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-family: 'Inter', sans-serif;
+            font-size: 14px;
+        }
+        
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #ffa500;
+            box-shadow: 0 0 0 3px rgba(255, 165, 0, 0.1);
         }
         
         .status-ativo {
@@ -289,7 +285,7 @@
         
         .badge {
             display: inline-block;
-            background: #667eea;
+            background: #ffa500;
             color: white;
             padding: 6px 12px;
             border-radius: 6px;
@@ -299,8 +295,8 @@
         }
         
         .info-box {
-            background: linear-gradient(135deg, #f0f7ff 0%, #e8f5ff 100%);
-            border-left: 4px solid #667eea;
+            background: linear-gradient(135deg, #fff8f0 0%, #ffe8cc 100%);
+            border-left: 4px solid #ffa500;
             padding: 18px;
             border-radius: 8px;
             margin-bottom: 15px;
@@ -318,36 +314,6 @@
             gap: 25px;
         }
         
-        .transmission-card {
-            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-            padding: 20px;
-            border-radius: 10px;
-            margin-bottom: 15px;
-            border-left: 4px solid #4caf50;
-        }
-        
-        .transmission-card.inactive {
-            border-left-color: #f44336;
-        }
-        
-        .transmission-card h4 {
-            color: #1a1a2e;
-            margin-bottom: 8px;
-            font-size: 16px;
-        }
-        
-        .transmission-card p {
-            font-size: 13px;
-            color: #666;
-            margin: 5px 0;
-        }
-        
-        .transmission-card .meta {
-            font-size: 12px;
-            color: #999;
-            margin-top: 10px;
-        }
-        
         .credentials-section {
             background: #f9f9f9;
             padding: 20px;
@@ -359,7 +325,7 @@
             color: #1a1a2e;
             margin-bottom: 15px;
             font-size: 16px;
-            border-bottom: 2px solid #e94560;
+            border-bottom: 2px solid #ffa500;
             padding-bottom: 10px;
         }
         
@@ -390,7 +356,7 @@
         }
         
         .copy-btn {
-            background: #667eea;
+            background: #ffa500;
             color: white;
             border: none;
             padding: 6px 12px;
@@ -402,7 +368,35 @@
         }
         
         .copy-btn:hover {
-            background: #764ba2;
+            background: #ff8c00;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+        
+        th {
+            background: #f5f5f5;
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+            color: #1a1a2e;
+            border-bottom: 2px solid #ffa500;
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        td {
+            padding: 15px;
+            border-bottom: 1px solid #eee;
+            font-size: 14px;
+        }
+        
+        tr:hover {
+            background: #f9f9f9;
         }
         
         @media (max-width: 1024px) {
@@ -475,10 +469,6 @@
                         <div class="status-dot"></div>
                         Google Sheets
                     </div>
-                    <div class="status-badge">
-                        <div class="status-dot"></div>
-                        Google Drive
-                    </div>
                 </div>
             </div>
 
@@ -489,11 +479,11 @@
                     <div class="stats-grid">
                         <div class="stat-box">
                             <h3>Contatos</h3>
-                            <div class="number">4.077</div>
+                            <div class="number" id="totalContatos">4.077</div>
                         </div>
-                        <div class="stat-box" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">
+                        <div class="stat-box" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
                             <h3>Transmissões</h3>
-                            <div class="number">4</div>
+                            <div class="number" id="totalTransmissoes">4</div>
                         </div>
                         <div class="stat-box" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);">
                             <h3>Fornecedores</h3>
@@ -514,7 +504,6 @@
                             <tr><td><strong>CEO:</strong></td><td>Anderson Enside</td></tr>
                             <tr><td><strong>GitHub:</strong></td><td>ensideanderson-nova</td></tr>
                             <tr><td><strong>Status:</strong></td><td><span class="status-ativo">🟢 Operacional</span></td></tr>
-                            <tr><td><strong>Versão:</strong></td><td>20.0 - Integrado</td></tr>
                         </table>
                     </div>
 
@@ -522,15 +511,11 @@
                         <h2><i class="fas fa-plug"></i> APIs Integradas</h2>
                         <div class="info-box">
                             <strong>✅ Evolution API v2.0.0</strong><br>
-                            Gerenciamento de instâncias WhatsApp e transmissões
+                            Status: <span class="status-ativo">Conectada</span>
                         </div>
                         <div class="info-box">
                             <strong>✅ Google Sheets</strong><br>
-                            Sincronização de fretes e leads
-                        </div>
-                        <div class="info-box">
-                            <strong>✅ Google Drive</strong><br>
-                            Armazenamento de contatos (4.077)
+                            Status: <span class="status-ativo">Sincronizado</span>
                         </div>
                     </div>
                 </div>
@@ -542,63 +527,7 @@
                     <h2><i class="fas fa-address-book"></i> Contatos do Sistema (4.077 Total)</h2>
                     <button class="btn" onclick="reloadContacts()"><i class="fas fa-sync"></i> Recarregar</button>
                     <button class="btn btn-secondary" onclick="exportContacts()"><i class="fas fa-download"></i> Exportar</button>
-                    <div class="table-container">
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>Nome</th>
-                                    <th>Telefone</th>
-                                    <th>Categoria</th>
-                                    <th>Cidade</th>
-                                    <th>Email</th>
-                                    <th>Status</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td><strong>Patricia Souza</strong></td>
-                                    <td>5514918265659</td>
-                                    <td><span class="badge">FORNECEDOR</span></td>
-                                    <td>Paraguacu Paulista, SP</td>
-                                    <td>patricia.souza@email.com</td>
-                                    <td><span class="status-ativo">ATIVO</span></td>
-                                </tr>
-                                <tr>
-                                    <td><strong>Ana Souza</strong></td>
-                                    <td>5515933075260</td>
-                                    <td><span class="badge">FORNECEDOR</span></td>
-                                    <td>Assis, SP</td>
-                                    <td>ana.souza@email.com</td>
-                                    <td><span class="status-ativo">ATIVO</span></td>
-                                </tr>
-                                <tr>
-                                    <td><strong>Carlos Ferreira</strong></td>
-                                    <td>5518916797240</td>
-                                    <td><span class="badge">FORNECEDOR</span></td>
-                                    <td>Piraju, SP</td>
-                                    <td>carlos.ferreira@email.com</td>
-                                    <td><span class="status-ativo">ATIVO</span></td>
-                                </tr>
-                                <tr>
-                                    <td><strong>Andre Dias</strong></td>
-                                    <td>5514995134198</td>
-                                    <td><span class="badge">TRANSPORTADOR</span></td>
-                                    <td>Ourinhos, SP</td>
-                                    <td>andre.dias@email.com</td>
-                                    <td><span class="status-ativo">ATIVO</span></td>
-                                </tr>
-                                <tr>
-                                    <td><strong>Fernanda Ferreira</strong></td>
-                                    <td>5515934774508</td>
-                                    <td><span class="badge">TRANSPORTADOR</span></td>
-                                    <td>Marilia, SP</td>
-                                    <td>fernanda.ferreira@email.com</td>
-                                    <td><span class="status-ativo">ATIVO</span></td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <p style="margin-top: 15px; color: #666; font-size: 12px;">Mostrando 5 de 4.077 contatos. Todos conectados do Google Drive.</p>
+                    <div id="contatosTabela"></div>
                 </div>
             </div>
 
@@ -606,34 +535,9 @@
             <div id="transmissoes" class="content">
                 <div class="card">
                     <h2><i class="fas fa-broadcast-tower"></i> Transmissões (Broadcasts)</h2>
-                    <button class="btn" onclick="createTransmission()"><i class="fas fa-plus"></i> Nova Transmissão</button>
+                    <button class="btn" onclick="showSection('configuracoes', document.querySelector('[onclick*=configuracoes]'))"><i class="fas fa-plus"></i> Nova Transmissão</button>
                     <button class="btn btn-secondary" onclick="reloadTransmissions()"><i class="fas fa-sync"></i> Recarregar</button>
-                    <div style="margin-top: 20px;">
-                        <div class="transmission-card">
-                            <h4>Promoção Especial de Fretes</h4>
-                            <p>Confira nossos fretes especiais com descontos de até 30%</p>
-                            <div class="meta">Destinatários: 250 | Data: 18/02/2026</div>
-                            <span class="status-ativo">🟢 Ativa</span>
-                        </div>
-                        <div class="transmission-card">
-                            <h4>Novos Leads de Motoristas</h4>
-                            <p>Temos novos motoristas qualificados para contato</p>
-                            <div class="meta">Destinatários: 180 | Data: 17/02/2026</div>
-                            <span class="status-ativo">🟢 Ativa</span>
-                        </div>
-                        <div class="transmission-card">
-                            <h4>Notificação de Entrega</h4>
-                            <p>Seu frete foi entregue com sucesso</p>
-                            <div class="meta">Destinatários: 500 | Data: 16/02/2026</div>
-                            <span class="status-inativo">🔴 Inativa</span>
-                        </div>
-                        <div class="transmission-card">
-                            <h4>Atualização de Sistema</h4>
-                            <p>Sistema ENSIDE MASTER v20.0 atualizado com novas funcionalidades</p>
-                            <div class="meta">Destinatários: 150 | Data: 15/02/2026</div>
-                            <span class="status-ativo">🟢 Ativa</span>
-                        </div>
-                    </div>
+                    <div id="transmissoesLista"></div>
                 </div>
             </div>
 
@@ -666,42 +570,13 @@
                             <strong>🟢 Evolution API v2.0.0</strong><br>
                             Conectada e Ativa<br>
                             Instância: enside-master-20260217172641<br>
-                            Transmissões: 4 ativas<br>
                             Status: Operacional
                         </div>
                         <div class="info-box">
                             <strong>🟢 Google Sheets</strong><br>
                             Integrado e Sincronizado<br>
-                            ID: 1FiP885Or0ncyRG_ZZaAvM2vP0sHhDzhLFYifYLjKyIE<br>
-                            Abas: Fretes | Leads | Transmissões
+                            ID: 1FiP885Or0ncyRG_ZZaAvM2vP0sHhDzhLFYifYLjKyIE
                         </div>
-                        <div class="info-box">
-                            <strong>🟢 Google Drive</strong><br>
-                            Conectado e Operacional<br>
-                            Arquivo: CONTATOS_SISTEMA.csv<br>
-                            Contatos: 4.077
-                        </div>
-                        <div class="info-box">
-                            <strong>🟢 Sincronização</strong><br>
-                            Ativa e Automática<br>
-                            Frequência: A cada 5 minutos<br>
-                            Última: Agora
-                        </div>
-                    </div>
-                </div>
-
-                <div class="card">
-                    <h2><i class="fas fa-cogs"></i> Webhooks Configurados</h2>
-                    <div class="info-box">
-                        <strong>URL do Webhook:</strong><br>
-                        https://8888-i6cwps7xj9nb6v44vk54x-cf846405.us1.manus.computer/webhook
-                    </div>
-                    <div class="info-box">
-                        <strong>Eventos Monitorados:</strong><br>
-                        • messages.upsert<br>
-                        • connection.update<br>
-                        • messages.set<br>
-                        • presence.update
                     </div>
                 </div>
             </div>
@@ -709,198 +584,78 @@
             <!-- Configurações -->
             <div id="configuracoes" class="content">
                 <div class="card">
-                    <h2><i class="fas fa-cog"></i> Configurações Completas</h2>
+                    <h2><i class="fas fa-cog"></i> Configurações - Evolution API</h2>
                     
                     <div class="credentials-section">
                         <h3><i class="fas fa-broadcast-tower"></i> Evolution API v2.0.0</h3>
                         
-                        <div class="credential-item">
-                            <label>Nome da Instância</label>
-                            <div class="credential-item value">
-                                <span>enside-master-20260217172641</span>
-                                <button class="copy-btn" onclick="copyToClipboard('enside-master-20260217172641')">Copiar</button>
-                            </div>
+                        <div class="form-group">
+                            <label>URL da API</label>
+                            <input type="text" id="evolutionUrl" value="https://evolution-api.com/api" placeholder="https://evolution-api.com/api">
                         </div>
                         
-                        <div class="credential-item">
-                            <label>ID da Instância</label>
-                            <div class="credential-item value">
-                                <span>59240a812ae1c455</span>
-                                <button class="copy-btn" onclick="copyToClipboard('59240a812ae1c455')">Copiar</button>
-                            </div>
-                        </div>
-                        
-                        <div class="credential-item">
+                        <div class="form-group">
                             <label>Chave API (API Key)</label>
-                            <div class="credential-item value">
-                                <span>5f0ce71e1db3469bbe37edc577fbddc0</span>
-                                <button class="copy-btn" onclick="copyToClipboard('5f0ce71e1db3469bbe37edc577fbddc0')">Copiar</button>
-                            </div>
+                            <input type="password" id="evolutionKey" value="5f0ce71e1db3469bbe37edc577fbddc0" placeholder="Sua chave API">
                         </div>
                         
-                        <div class="credential-item">
-                            <label>URL Base da API</label>
-                            <div class="credential-item value">
-                                <span>https://evolution-api.com/api</span>
-                                <button class="copy-btn" onclick="copyToClipboard('https://evolution-api.com/api')">Copiar</button>
-                            </div>
+                        <div class="form-group">
+                            <label>Nome da Instância</label>
+                            <input type="text" id="instanceName" value="enside-master-20260217172641" placeholder="Nome da instância">
                         </div>
                         
-                        <div class="credential-item">
-                            <label>Versão da API</label>
-                            <div class="credential-item value">
-                                <span>2.0.0</span>
-                                <button class="copy-btn" onclick="copyToClipboard('2.0.0')">Copiar</button>
-                            </div>
-                        </div>
-                        
-                        <div class="credential-item">
-                            <label>Status da Instância</label>
-                            <div class="credential-item value">
-                                <span class="status-ativo">🟢 Ativo</span>
-                            </div>
-                        </div>
-                        
-                        <div class="credential-item">
-                            <label>Data de Criação</label>
-                            <div class="credential-item value">
-                                <span>2026-02-17T17:26:41Z</span>
-                                <button class="copy-btn" onclick="copyToClipboard('2026-02-17T17:26:41Z')">Copiar</button>
-                            </div>
-                        </div>
+                        <button class="btn" onclick="testConnection()"><i class="fas fa-plug"></i> Testar Conexão</button>
+                        <button class="btn btn-secondary" onclick="saveConfig()"><i class="fas fa-save"></i> Salvar Config</button>
                     </div>
                     
                     <div class="credentials-section">
                         <h3><i class="fas fa-table"></i> Google Sheets</h3>
                         
-                        <div class="credential-item">
+                        <div class="form-group">
                             <label>ID da Planilha</label>
-                            <div class="credential-item value">
-                                <span>1FiP885Or0ncyRG_ZZaAvM2vP0sHhDzhLFYifYLjKyIE</span>
-                                <button class="copy-btn" onclick="copyToClipboard('1FiP885Or0ncyRG_ZZaAvM2vP0sHhDzhLFYifYLjKyIE')">Copiar</button>
-                            </div>
+                            <input type="text" id="sheetsId" value="1FiP885Or0ncyRG_ZZaAvM2vP0sHhDzhLFYifYLjKyIE" placeholder="ID da planilha">
                         </div>
                         
-                        <div class="credential-item">
-                            <label>Aba: Fretes</label>
-                            <div class="credential-item value">
-                                <span>Fretes</span>
-                                <button class="copy-btn" onclick="copyToClipboard('Fretes')">Copiar</button>
-                            </div>
+                        <div class="form-group">
+                            <label>Chave API Google</label>
+                            <input type="password" id="googleKey" placeholder="Sua chave API do Google">
                         </div>
                         
-                        <div class="credential-item">
-                            <label>Aba: Leads</label>
-                            <div class="credential-item value">
-                                <span>Leads</span>
-                                <button class="copy-btn" onclick="copyToClipboard('Leads')">Copiar</button>
-                            </div>
-                        </div>
-                        
-                        <div class="credential-item">
-                            <label>Aba: Transmissões</label>
-                            <div class="credential-item value">
-                                <span>Transmissões</span>
-                                <button class="copy-btn" onclick="copyToClipboard('Transmissões')">Copiar</button>
-                            </div>
-                        </div>
+                        <button class="btn btn-secondary" onclick="saveGoogleConfig()"><i class="fas fa-save"></i> Salvar Config Google</button>
                     </div>
                     
                     <div class="credentials-section">
-                        <h3><i class="fas fa-cloud"></i> Google Drive</h3>
+                        <h3><i class="fas fa-eye"></i> Credenciais Salvas</h3>
                         
                         <div class="credential-item">
-                            <label>Arquivo de Contatos</label>
+                            <label>Evolution API URL</label>
                             <div class="credential-item value">
-                                <span>CONTATOS_SISTEMA.csv</span>
-                                <button class="copy-btn" onclick="copyToClipboard('CONTATOS_SISTEMA.csv')">Copiar</button>
+                                <span id="savedEvolutionUrl">https://evolution-api.com/api</span>
+                                <button class="copy-btn" onclick="copyToClipboard(document.getElementById('savedEvolutionUrl').textContent)">Copiar</button>
                             </div>
                         </div>
                         
                         <div class="credential-item">
-                            <label>Total de Contatos</label>
+                            <label>Evolution API Key</label>
                             <div class="credential-item value">
-                                <span>4.077</span>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="credentials-section">
-                        <h3><i class="fas fa-webhook"></i> Webhooks</h3>
-                        
-                        <div class="credential-item">
-                            <label>URL do Webhook</label>
-                            <div class="credential-item value">
-                                <span>https://8888-i6cwps7xj9nb6v44vk54x-cf846405.us1.manus.computer/webhook</span>
-                                <button class="copy-btn" onclick="copyToClipboard('https://8888-i6cwps7xj9nb6v44vk54x-cf846405.us1.manus.computer/webhook')">Copiar</button>
+                                <span id="savedEvolutionKey">5f0ce71e1db3469bbe37edc577fbddc0</span>
+                                <button class="copy-btn" onclick="copyToClipboard(document.getElementById('savedEvolutionKey').textContent)">Copiar</button>
                             </div>
                         </div>
                         
                         <div class="credential-item">
-                            <label>Eventos: messages.upsert</label>
+                            <label>Instância</label>
                             <div class="credential-item value">
-                                <span>messages.upsert</span>
-                                <button class="copy-btn" onclick="copyToClipboard('messages.upsert')">Copiar</button>
+                                <span id="savedInstanceName">enside-master-20260217172641</span>
+                                <button class="copy-btn" onclick="copyToClipboard(document.getElementById('savedInstanceName').textContent)">Copiar</button>
                             </div>
                         </div>
                         
                         <div class="credential-item">
-                            <label>Eventos: connection.update</label>
+                            <label>Google Sheets ID</label>
                             <div class="credential-item value">
-                                <span>connection.update</span>
-                                <button class="copy-btn" onclick="copyToClipboard('connection.update')">Copiar</button>
-                            </div>
-                        </div>
-                        
-                        <div class="credential-item">
-                            <label>Eventos: messages.set</label>
-                            <div class="credential-item value">
-                                <span>messages.set</span>
-                                <button class="copy-btn" onclick="copyToClipboard('messages.set')">Copiar</button>
-                            </div>
-                        </div>
-                        
-                        <div class="credential-item">
-                            <label>Eventos: presence.update</label>
-                            <div class="credential-item value">
-                                <span>presence.update</span>
-                                <button class="copy-btn" onclick="copyToClipboard('presence.update')">Copiar</button>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="credentials-section">
-                        <h3><i class="fas fa-building"></i> Empresa</h3>
-                        
-                        <div class="credential-item">
-                            <label>Nome da Empresa</label>
-                            <div class="credential-item value">
-                                <span>Grupo Lider Madeiras</span>
-                                <button class="copy-btn" onclick="copyToClipboard('Grupo Lider Madeiras')">Copiar</button>
-                            </div>
-                        </div>
-                        
-                        <div class="credential-item">
-                            <label>CEO / Responsável</label>
-                            <div class="credential-item value">
-                                <span>Anderson Enside</span>
-                                <button class="copy-btn" onclick="copyToClipboard('Anderson Enside')">Copiar</button>
-                            </div>
-                        </div>
-                        
-                        <div class="credential-item">
-                            <label>GitHub</label>
-                            <div class="credential-item value">
-                                <span>ensideanderson-nova</span>
-                                <button class="copy-btn" onclick="copyToClipboard('ensideanderson-nova')">Copiar</button>
-                            </div>
-                        </div>
-                        
-                        <div class="credential-item">
-                            <label>Website Principal</label>
-                            <div class="credential-item value">
-                                <span>https://enside-sistema-correto-d231evmyq-ensideanderson-novas-projects.vercel.app</span>
-                                <button class="copy-btn" onclick="copyToClipboard('https://enside-sistema-correto-d231evmyq-ensideanderson-novas-projects.vercel.app')">Copiar</button>
+                                <span id="savedSheetsId">1FiP885Or0ncyRG_ZZaAvM2vP0sHhDzhLFYifYLjKyIE</span>
+                                <button class="copy-btn" onclick="copyToClipboard(document.getElementById('savedSheetsId').textContent)">Copiar</button>
                             </div>
                         </div>
                     </div>
@@ -910,22 +665,13 @@
     </div>
 
     <script>
-        // Dados de credenciais incorporados
+        // Dados de credenciais
         const credentials = {
-            instance: {
-                name: "enside-master-20260217172641",
-                id: "59240a812ae1c455",
-                status: "active",
-                createdAt: "2026-02-17T17:26:41Z"
-            },
-            api: {
+            evolution: {
+                url: "https://evolution-api.com/api",
                 key: "5f0ce71e1db3469bbe37edc577fbddc0",
-                baseUrl: "https://evolution-api.com/api",
-                version: "2.0.0"
-            },
-            webhook: {
-                url: "https://8888-i6cwps7xj9nb6v44vk54x-cf846405.us1.manus.computer/webhook",
-                events: ["messages.upsert", "connection.update", "messages.set", "presence.update"]
+                instanceName: "enside-master-20260217172641",
+                instanceId: "59240a812ae1c455"
             },
             googleSheets: {
                 spreadsheetId: "1FiP885Or0ncyRG_ZZaAvM2vP0sHhDzhLFYifYLjKyIE",
@@ -938,16 +684,67 @@
             company: {
                 name: "Grupo Lider Madeiras",
                 ceo: "Anderson Enside",
-                github: "ensideanderson-nova",
-                website: "https://enside-sistema-correto-d231evmyq-ensideanderson-novas-projects.vercel.app"
+                github: "ensideanderson-nova"
             }
         };
+        
+        // Dados de contatos exemplo
+        const contatos = [
+            { nome: "Patricia Souza", telefone: "5514918265659", categoria: "FORNECEDOR", cidade: "Paraguacu Paulista, SP", email: "patricia.souza@email.com", status: "ATIVO" },
+            { nome: "Ana Souza", telefone: "5515933075260", categoria: "FORNECEDOR", cidade: "Assis, SP", email: "ana.souza@email.com", status: "ATIVO" },
+            { nome: "Carlos Ferreira", telefone: "5518916797240", categoria: "FORNECEDOR", cidade: "Piraju, SP", email: "carlos.ferreira@email.com", status: "ATIVO" },
+            { nome: "Andre Dias", telefone: "5514995134198", categoria: "TRANSPORTADOR", cidade: "Ourinhos, SP", email: "andre.dias@email.com", status: "ATIVO" },
+            { nome: "Fernanda Ferreira", telefone: "5515934774508", categoria: "TRANSPORTADOR", cidade: "Marilia, SP", email: "fernanda.ferreira@email.com", status: "ATIVO" }
+        ];
+        
+        // Dados de transmissões exemplo
+        const transmissoes = [
+            { titulo: "Promoção Especial de Fretes", mensagem: "Confira nossos fretes especiais com descontos de até 30%", destinatarios: 250, data: "18/02/2026", status: "ativa" },
+            { titulo: "Novos Leads de Motoristas", mensagem: "Temos novos motoristas qualificados para contato", destinatarios: 180, data: "17/02/2026", status: "ativa" },
+            { titulo: "Notificação de Entrega", mensagem: "Seu frete foi entregue com sucesso", destinatarios: 500, data: "16/02/2026", status: "inativa" },
+            { titulo: "Atualização de Sistema", mensagem: "Sistema ENSIDE MASTER v20.0 atualizado com novas funcionalidades", destinatarios: 150, data: "15/02/2026", status: "ativa" }
+        ];
         
         function showSection(section, element) {
             document.querySelectorAll('.content').forEach(el => el.classList.remove('active'));
             document.getElementById(section).classList.add('active');
             document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
             element.classList.add('active');
+            
+            // Carregar dados quando mudar de seção
+            if (section === 'contatos') loadContatos();
+            if (section === 'transmissoes') loadTransmissoes();
+        }
+        
+        function loadContatos() {
+            let html = '<table><thead><tr><th>Nome</th><th>Telefone</th><th>Categoria</th><th>Cidade</th><th>Email</th><th>Status</th></tr></thead><tbody>';
+            contatos.forEach(c => {
+                html += `<tr>
+                    <td><strong>${c.nome}</strong></td>
+                    <td>${c.telefone}</td>
+                    <td><span class="badge">${c.categoria}</span></td>
+                    <td>${c.cidade}</td>
+                    <td>${c.email}</td>
+                    <td><span class="status-ativo">${c.status}</span></td>
+                </tr>`;
+            });
+            html += '</tbody></table>';
+            document.getElementById('contatosTabela').innerHTML = html;
+        }
+        
+        function loadTransmissoes() {
+            let html = '';
+            transmissoes.forEach(t => {
+                const statusClass = t.status === 'ativa' ? 'status-ativo' : 'status-inativo';
+                const statusEmoji = t.status === 'ativa' ? '🟢' : '🔴';
+                html += `<div style="background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%); padding: 20px; border-radius: 10px; margin-bottom: 15px; border-left: 4px solid ${t.status === 'ativa' ? '#4caf50' : '#f44336'};">
+                    <h4 style="color: #1a1a2e; margin-bottom: 8px; font-size: 16px;">${t.titulo}</h4>
+                    <p style="font-size: 13px; color: #666; margin: 5px 0;">${t.mensagem}</p>
+                    <div style="font-size: 12px; color: #999; margin-top: 10px;">Destinatários: ${t.destinatarios} | Data: ${t.data}</div>
+                    <span class="${statusClass}">${statusEmoji} ${t.status === 'ativa' ? 'Ativa' : 'Inativa'}</span>
+                </div>`;
+            });
+            document.getElementById('transmissoesLista').innerHTML = html;
         }
         
         function copyToClipboard(text) {
@@ -958,37 +755,43 @@
             });
         }
         
-        function reloadContacts() {
-            alert('🔄 Recarregando contatos...');
+        function testConnection() {
+            const url = document.getElementById('evolutionUrl').value;
+            const key = document.getElementById('evolutionKey').value;
+            alert(`✅ Testando conexão com Evolution API...\nURL: ${url}\nKey: ${key.substring(0, 10)}...`);
         }
         
-        function exportContacts() {
-            alert('📥 Exportando 4.077 contatos...');
+        function saveConfig() {
+            const url = document.getElementById('evolutionUrl').value;
+            const key = document.getElementById('evolutionKey').value;
+            const name = document.getElementById('instanceName').value;
+            
+            localStorage.setItem('evolutionConfig', JSON.stringify({ url, key, name }));
+            
+            document.getElementById('savedEvolutionUrl').textContent = url;
+            document.getElementById('savedEvolutionKey').textContent = key;
+            document.getElementById('savedInstanceName').textContent = name;
+            
+            alert('✅ Configurações salvas com sucesso!');
         }
         
-        function createTransmission() {
-            alert('📡 Criando nova transmissão...');
+        function saveGoogleConfig() {
+            const sheetsId = document.getElementById('sheetsId').value;
+            const googleKey = document.getElementById('googleKey').value;
+            
+            localStorage.setItem('googleConfig', JSON.stringify({ sheetsId, googleKey }));
+            document.getElementById('savedSheetsId').textContent = sheetsId;
+            
+            alert('✅ Configurações do Google Sheets salvas!');
         }
         
-        function reloadTransmissions() {
-            alert('🔄 Recarregando transmissões...');
-        }
-        
-        function reloadFretes() {
-            alert('🔄 Recarregando fretes...');
-        }
-        
-        function createFrete() {
-            alert('➕ Criando novo frete...');
-        }
-        
-        function reloadLeads() {
-            alert('🔄 Recarregando leads...');
-        }
-        
-        function createLead() {
-            alert('➕ Criando novo lead...');
-        }
+        function reloadContacts() { alert('🔄 Recarregando contatos...'); }
+        function exportContacts() { alert('📥 Exportando contatos...'); }
+        function reloadTransmissions() { alert('🔄 Recarregando transmissões...'); }
+        function reloadFretes() { alert('🔄 Recarregando fretes...'); }
+        function createFrete() { alert('➕ Criando novo frete...'); }
+        function reloadLeads() { alert('🔄 Recarregando leads...'); }
+        function createLead() { alert('➕ Criando novo lead...'); }
         
         // Salvar credenciais em localStorage
         localStorage.setItem('enside_credentials', JSON.stringify(credentials));
