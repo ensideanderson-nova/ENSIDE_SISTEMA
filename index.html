@@ -399,6 +399,24 @@
             background: #f9f9f9;
         }
         
+        .success-message {
+            background: #e8f5e9;
+            border-left: 4px solid #4caf50;
+            color: #2e7d32;
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 15px;
+        }
+        
+        .error-message {
+            background: #ffebee;
+            border-left: 4px solid #f44336;
+            color: #c62828;
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 15px;
+        }
+        
         @media (max-width: 1024px) {
             .grid-2 { grid-template-columns: 1fr; }
             .sidebar { width: 240px; }
@@ -479,11 +497,11 @@
                     <div class="stats-grid">
                         <div class="stat-box">
                             <h3>Contatos</h3>
-                            <div class="number" id="totalContatos">4.077</div>
+                            <div class="number">4.077</div>
                         </div>
                         <div class="stat-box" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
                             <h3>Transmissões</h3>
-                            <div class="number" id="totalTransmissoes">4</div>
+                            <div class="number">4</div>
                         </div>
                         <div class="stat-box" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);">
                             <h3>Fornecedores</h3>
@@ -584,7 +602,9 @@
             <!-- Configurações -->
             <div id="configuracoes" class="content">
                 <div class="card">
-                    <h2><i class="fas fa-cog"></i> Configurações - Evolution API</h2>
+                    <h2><i class="fas fa-cog"></i> Configurações - Evolution API v2.0.0</h2>
+                    
+                    <div id="statusMessage"></div>
                     
                     <div class="credentials-section">
                         <h3><i class="fas fa-broadcast-tower"></i> Evolution API v2.0.0</h3>
@@ -602,6 +622,11 @@
                         <div class="form-group">
                             <label>Nome da Instância</label>
                             <input type="text" id="instanceName" value="enside-master-20260217172641" placeholder="Nome da instância">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>ID da Instância</label>
+                            <input type="text" id="instanceId" value="59240a812ae1c455" placeholder="ID da instância">
                         </div>
                         
                         <button class="btn" onclick="testConnection()"><i class="fas fa-plug"></i> Testar Conexão</button>
@@ -625,7 +650,7 @@
                     </div>
                     
                     <div class="credentials-section">
-                        <h3><i class="fas fa-eye"></i> Credenciais Salvas</h3>
+                        <h3><i class="fas fa-eye"></i> Credenciais Salvas - COPIE AQUI</h3>
                         
                         <div class="credential-item">
                             <label>Evolution API URL</label>
@@ -652,6 +677,14 @@
                         </div>
                         
                         <div class="credential-item">
+                            <label>ID da Instância</label>
+                            <div class="credential-item value">
+                                <span id="savedInstanceId">59240a812ae1c455</span>
+                                <button class="copy-btn" onclick="copyToClipboard(document.getElementById('savedInstanceId').textContent)">Copiar</button>
+                            </div>
+                        </div>
+                        
+                        <div class="credential-item">
                             <label>Google Sheets ID</label>
                             <div class="credential-item value">
                                 <span id="savedSheetsId">1FiP885Or0ncyRG_ZZaAvM2vP0sHhDzhLFYifYLjKyIE</span>
@@ -665,13 +698,14 @@
     </div>
 
     <script>
-        // Dados de credenciais
+        // Dados de credenciais PRINCIPAIS
         const credentials = {
             evolution: {
                 url: "https://evolution-api.com/api",
                 key: "5f0ce71e1db3469bbe37edc577fbddc0",
                 instanceName: "enside-master-20260217172641",
-                instanceId: "59240a812ae1c455"
+                instanceId: "59240a812ae1c455",
+                version: "2.0.0"
             },
             googleSheets: {
                 spreadsheetId: "1FiP885Or0ncyRG_ZZaAvM2vP0sHhDzhLFYifYLjKyIE",
@@ -681,10 +715,15 @@
                     transmissoes: "Transmissões"
                 }
             },
+            googleDrive: {
+                contatosFile: "CONTATOS_SISTEMA.csv",
+                totalContatos: 4077
+            },
             company: {
                 name: "Grupo Lider Madeiras",
                 ceo: "Anderson Enside",
-                github: "ensideanderson-nova"
+                github: "ensideanderson-nova",
+                website: "https://enside-sistema-correto-d231evmyq-ensideanderson-novas-projects.vercel.app"
             }
         };
         
@@ -711,7 +750,6 @@
             document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
             element.classList.add('active');
             
-            // Carregar dados quando mudar de seção
             if (section === 'contatos') loadContatos();
             if (section === 'transmissoes') loadTransmissoes();
         }
@@ -749,30 +787,40 @@
         
         function copyToClipboard(text) {
             navigator.clipboard.writeText(text).then(() => {
-                alert('✅ Copiado para a área de transferência!');
+                showMessage('✅ Copiado para a área de transferência!', 'success');
             }).catch(() => {
-                alert('❌ Erro ao copiar');
+                showMessage('❌ Erro ao copiar', 'error');
             });
+        }
+        
+        function showMessage(msg, type) {
+            const messageDiv = document.getElementById('statusMessage');
+            messageDiv.innerHTML = `<div class="${type === 'success' ? 'success-message' : 'error-message'}">${msg}</div>`;
+            setTimeout(() => {
+                messageDiv.innerHTML = '';
+            }, 3000);
         }
         
         function testConnection() {
             const url = document.getElementById('evolutionUrl').value;
             const key = document.getElementById('evolutionKey').value;
-            alert(`✅ Testando conexão com Evolution API...\nURL: ${url}\nKey: ${key.substring(0, 10)}...`);
+            showMessage(`✅ Testando conexão com Evolution API...\nURL: ${url}\nChave: ${key.substring(0, 10)}...`, 'success');
         }
         
         function saveConfig() {
             const url = document.getElementById('evolutionUrl').value;
             const key = document.getElementById('evolutionKey').value;
             const name = document.getElementById('instanceName').value;
+            const id = document.getElementById('instanceId').value;
             
-            localStorage.setItem('evolutionConfig', JSON.stringify({ url, key, name }));
+            localStorage.setItem('evolutionConfig', JSON.stringify({ url, key, name, id }));
             
             document.getElementById('savedEvolutionUrl').textContent = url;
             document.getElementById('savedEvolutionKey').textContent = key;
             document.getElementById('savedInstanceName').textContent = name;
+            document.getElementById('savedInstanceId').textContent = id;
             
-            alert('✅ Configurações salvas com sucesso!');
+            showMessage('✅ Configurações da Evolution API salvas com sucesso!', 'success');
         }
         
         function saveGoogleConfig() {
@@ -782,23 +830,26 @@
             localStorage.setItem('googleConfig', JSON.stringify({ sheetsId, googleKey }));
             document.getElementById('savedSheetsId').textContent = sheetsId;
             
-            alert('✅ Configurações do Google Sheets salvas!');
+            showMessage('✅ Configurações do Google Sheets salvas!', 'success');
         }
         
-        function reloadContacts() { alert('🔄 Recarregando contatos...'); }
-        function exportContacts() { alert('📥 Exportando contatos...'); }
-        function reloadTransmissions() { alert('🔄 Recarregando transmissões...'); }
-        function reloadFretes() { alert('🔄 Recarregando fretes...'); }
-        function createFrete() { alert('➕ Criando novo frete...'); }
-        function reloadLeads() { alert('🔄 Recarregando leads...'); }
-        function createLead() { alert('➕ Criando novo lead...'); }
+        function reloadContacts() { showMessage('🔄 Recarregando contatos...', 'success'); }
+        function exportContacts() { showMessage('📥 Exportando contatos...', 'success'); }
+        function reloadTransmissions() { showMessage('🔄 Recarregando transmissões...', 'success'); }
+        function reloadFretes() { showMessage('🔄 Recarregando fretes...', 'success'); }
+        function createFrete() { showMessage('➕ Criando novo frete...', 'success'); }
+        function reloadLeads() { showMessage('🔄 Recarregando leads...', 'success'); }
+        function createLead() { showMessage('➕ Criando novo lead...', 'success'); }
         
         // Salvar credenciais em localStorage
         localStorage.setItem('enside_credentials', JSON.stringify(credentials));
         
         // Log de inicialização
-        console.log('ENSIDE MASTER v20.0 - Sistema Integrado Completo');
+        console.log('✅ ENSIDE MASTER v20.0 - Sistema Integrado Completo');
         console.log('Credenciais carregadas:', credentials);
+        console.log('Evolution API URL:', credentials.evolution.url);
+        console.log('Evolution API Key:', credentials.evolution.key);
+        console.log('Instância:', credentials.evolution.instanceName);
     </script>
 </body>
 </html>
