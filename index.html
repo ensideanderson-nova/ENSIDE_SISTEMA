@@ -97,6 +97,7 @@
             flex: 1;
             padding: 30px;
             background: #f8f9fa;
+            overflow-y: auto;
         }
         
         .header {
@@ -347,35 +348,6 @@
             margin-top: 10px;
         }
         
-        .api-credentials {
-            background: #f5f5f5;
-            padding: 15px;
-            border-radius: 8px;
-            margin-bottom: 15px;
-            font-family: 'Courier New', monospace;
-            font-size: 12px;
-            word-break: break-all;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        
-        .copy-btn {
-            background: #667eea;
-            color: white;
-            border: none;
-            padding: 6px 12px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 12px;
-            margin-left: 10px;
-            white-space: nowrap;
-        }
-        
-        .copy-btn:hover {
-            background: #764ba2;
-        }
-        
         .credentials-section {
             background: #f9f9f9;
             padding: 20px;
@@ -415,6 +387,22 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
+        }
+        
+        .copy-btn {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+            margin-left: 10px;
+            white-space: nowrap;
+        }
+        
+        .copy-btn:hover {
+            background: #764ba2;
         }
         
         @media (max-width: 1024px) {
@@ -724,7 +712,7 @@
                     <h2><i class="fas fa-cog"></i> Configurações Completas</h2>
                     
                     <div class="credentials-section">
-                        <h3><i class="fas fa-broadcast-tower"></i> Evolution API</h3>
+                        <h3><i class="fas fa-broadcast-tower"></i> Evolution API v2.0.0</h3>
                         
                         <div class="credential-item">
                             <label>Nome da Instância</label>
@@ -743,7 +731,7 @@
                         </div>
                         
                         <div class="credential-item">
-                            <label>Chave API</label>
+                            <label>Chave API (API Key)</label>
                             <div class="credential-item value">
                                 <span>5f0ce71e1db3469bbe37edc577fbddc0</span>
                                 <button class="copy-btn" onclick="copyToClipboard('5f0ce71e1db3469bbe37edc577fbddc0')">Copiar</button>
@@ -751,7 +739,7 @@
                         </div>
                         
                         <div class="credential-item">
-                            <label>URL Base</label>
+                            <label>URL Base da API</label>
                             <div class="credential-item value">
                                 <span>https://evolution-api.com/api</span>
                                 <button class="copy-btn" onclick="copyToClipboard('https://evolution-api.com/api')">Copiar</button>
@@ -759,7 +747,7 @@
                         </div>
                         
                         <div class="credential-item">
-                            <label>Versão</label>
+                            <label>Versão da API</label>
                             <div class="credential-item value">
                                 <span>2.0.0</span>
                                 <button class="copy-btn" onclick="copyToClipboard('2.0.0')">Copiar</button>
@@ -767,7 +755,7 @@
                         </div>
                         
                         <div class="credential-item">
-                            <label>Status</label>
+                            <label>Status da Instância</label>
                             <div class="credential-item value">
                                 <span class="status-ativo">🟢 Ativo</span>
                             </div>
@@ -838,10 +826,54 @@
                     </div>
                     
                     <div class="credentials-section">
+                        <h3><i class="fas fa-webhook"></i> Webhooks</h3>
+                        
+                        <div class="credential-item">
+                            <label>URL do Webhook</label>
+                            <div class="credential-item value">
+                                <span>https://8888-i6cwps7xj9nb6v44vk54x-cf846405.us1.manus.computer/webhook</span>
+                                <button class="copy-btn" onclick="copyToClipboard('https://8888-i6cwps7xj9nb6v44vk54x-cf846405.us1.manus.computer/webhook')">Copiar</button>
+                            </div>
+                        </div>
+                        
+                        <div class="credential-item">
+                            <label>Eventos: messages.upsert</label>
+                            <div class="credential-item value">
+                                <span>messages.upsert</span>
+                                <button class="copy-btn" onclick="copyToClipboard('messages.upsert')">Copiar</button>
+                            </div>
+                        </div>
+                        
+                        <div class="credential-item">
+                            <label>Eventos: connection.update</label>
+                            <div class="credential-item value">
+                                <span>connection.update</span>
+                                <button class="copy-btn" onclick="copyToClipboard('connection.update')">Copiar</button>
+                            </div>
+                        </div>
+                        
+                        <div class="credential-item">
+                            <label>Eventos: messages.set</label>
+                            <div class="credential-item value">
+                                <span>messages.set</span>
+                                <button class="copy-btn" onclick="copyToClipboard('messages.set')">Copiar</button>
+                            </div>
+                        </div>
+                        
+                        <div class="credential-item">
+                            <label>Eventos: presence.update</label>
+                            <div class="credential-item value">
+                                <span>presence.update</span>
+                                <button class="copy-btn" onclick="copyToClipboard('presence.update')">Copiar</button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="credentials-section">
                         <h3><i class="fas fa-building"></i> Empresa</h3>
                         
                         <div class="credential-item">
-                            <label>Nome</label>
+                            <label>Nome da Empresa</label>
                             <div class="credential-item value">
                                 <span>Grupo Lider Madeiras</span>
                                 <button class="copy-btn" onclick="copyToClipboard('Grupo Lider Madeiras')">Copiar</button>
@@ -849,7 +881,7 @@
                         </div>
                         
                         <div class="credential-item">
-                            <label>CEO</label>
+                            <label>CEO / Responsável</label>
                             <div class="credential-item value">
                                 <span>Anderson Enside</span>
                                 <button class="copy-btn" onclick="copyToClipboard('Anderson Enside')">Copiar</button>
@@ -865,7 +897,7 @@
                         </div>
                         
                         <div class="credential-item">
-                            <label>Website</label>
+                            <label>Website Principal</label>
                             <div class="credential-item value">
                                 <span>https://enside-sistema-correto-d231evmyq-ensideanderson-novas-projects.vercel.app</span>
                                 <button class="copy-btn" onclick="copyToClipboard('https://enside-sistema-correto-d231evmyq-ensideanderson-novas-projects.vercel.app')">Copiar</button>
