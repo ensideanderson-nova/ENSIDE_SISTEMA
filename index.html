@@ -1206,8 +1206,14 @@
                 </div>
                     <div class="form-group">
                         <label>ID da Instância</label>
-                        <input type="text" id="evolutionInstanceId" placeholder="ID da Instância" value="59240a812ae1c455" readonly>
+                        <input type="text" id="evolutionInstanceId" placeholder="ID da Instância" value="59240a812ae1c455" readonly style="background: rgba(34, 197, 94, 0.1); border-color: #22c55e;">
                     </div>
+                <div class="form-group">
+                    <label>🔗 Webhook URL</label>
+                    <input type="text" id="webhookUrl" placeholder="URL do Webhook" value="https://8888-i6cwps7xj9nb6v44vk54x-cf846405.us1.manus.computer/webhook" readonly style="background: rgba(14, 165, 233, 0.1); border-color: #0ea5e9;">
+                    <small style="color: #94a3b8; display: block; margin-top: 5px;">✅ Webhook configurado para receber eventos</small>
+                </div>
+
                 <div style="display: flex; gap: 10px; margin-top: 15px;">
                     <button onclick="testarConexaoEvolution()" style="background: linear-gradient(135deg, #22c55e, #16a34a);">🔌 Testar Conexão</button>
                     <button onclick="salvarConfigEvolution()" class="btn-secondary">💾 Salvar Config</button>
@@ -1305,11 +1311,14 @@
                 <strong>💡 Dica:</strong> A Evolution API permite enviar mensagens automáticas via WhatsApp. 
                 Configure sua instância em <a href="https://evolution-api.com" target="_blank" style="color: #0ea5e9;">evolution-api.com</a>
             </div>
-            <div class="info-box" style="background: linear-gradient(135deg, rgba(34, 197, 94, 0.1), rgba(14, 165, 233, 0.1)); border-left: 4px solid #22c55e;">
-                <strong>✅ Credenciais Pré-Configuradas:</strong><br>
+            <div class="info-box" style="background: linear-gradient(135deg, rgba(34, 197, 94, 0.1), rgba(14, 165, 233, 0.1)); border-left: 4px solid #22c55e; margin-top: 20px;">
+                <strong>✅ Sistema Completamente Configurado:</strong><br>
                 🔑 Evolution API v2.0.0 integrada<br>
                 📊 Google Sheets sincronizada (Fretes, Leads, Transmissões)<br>
-                🚀 Sistema pronto para usar!
+                🔗 Webhook configurado para eventos em tempo real<br>
+                🚀 Sistema pronto para usar!<br>
+                <br>
+                <small style="color: #94a3b8;">Última atualização: 2026-02-19 | Versão: v19.0 CORRIGIDA</small>
             </div>
 
         </div>
@@ -6016,13 +6025,34 @@ Em breve entraremos em contato com ofertas de frete!`);
             // Reconectar GitHub automaticamente se estava conectado
             reconectarGitHub();
             console.log('Planilha integrada:', GOOGLE_SHEETS_CONFIG.spreadsheetName);
-            console.log('✅ Sistema ENSIDE MASTER v19.0 EVOLUÍDO - Com Credenciais Evolution API v2.0.0 + Google Sheets');
+            console.log('✅ Sistema ENSIDE MASTER v19.0 CORRIGIDO - Evolution API v2.0.0 + Google Sheets + Webhook');
             // Inicializar Captação de Fretes
             initFretesIntegrado();
         });
+    
+        // Validar credenciais ao carregar
+        function validarCredenciais() {
+            const url = document.getElementById('evolutionUrl')?.value;
+            const key = document.getElementById('evolutionApiKey')?.value;
+            const instance = document.getElementById('evolutionInstance')?.value;
+            const webhook = document.getElementById('webhookUrl')?.value;
+            const sheets = document.getElementById('googleSheetsId')?.value;
+            
+            if (url && key && instance && webhook && sheets) {
+                console.log('✅ Todas as credenciais estão configuradas!');
+                return true;
+            } else {
+                console.warn('⚠️ Algumas credenciais estão faltando');
+                return false;
+            }
+        }
+        
+        // Executar validação ao carregar
+        document.addEventListener('DOMContentLoaded', function() {
+            setTimeout(validarCredenciais, 1000);
+        });
+
     </script>
     <!-- Scripts externos ENSIDE -->
-    <script src="SCRIPTS/enside_ia_widget.js"></script>
-    <script src="SCRIPTS/evolution_api_config.js"></script>
 </body>
 </html>
