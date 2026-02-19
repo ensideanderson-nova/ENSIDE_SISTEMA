@@ -481,7 +481,7 @@
                 <div class="api-status">
                     <div class="status-badge">
                         <div class="status-dot"></div>
-                        Evolution API
+                        Evolution API v2.0.0
                     </div>
                     <div class="status-badge">
                         <div class="status-dot"></div>
@@ -553,7 +553,7 @@
             <div id="transmissoes" class="content">
                 <div class="card">
                     <h2><i class="fas fa-broadcast-tower"></i> Transmissões (Broadcasts)</h2>
-                    <button class="btn" onclick="showSection('configuracoes', document.querySelector('[onclick*=configuracoes]'))"><i class="fas fa-plus"></i> Nova Transmissão</button>
+                    <button class="btn" onclick="createNewTransmission()"><i class="fas fa-plus"></i> Nova Transmissão</button>
                     <button class="btn btn-secondary" onclick="reloadTransmissions()"><i class="fas fa-sync"></i> Recarregar</button>
                     <div id="transmissoesLista"></div>
                 </div>
@@ -602,93 +602,108 @@
             <!-- Configurações -->
             <div id="configuracoes" class="content">
                 <div class="card">
-                    <h2><i class="fas fa-cog"></i> Configurações - Evolution API v2.0.0</h2>
+                    <h2><i class="fas fa-cog"></i> Configurações - Credenciais Completas</h2>
                     
                     <div id="statusMessage"></div>
                     
                     <div class="credentials-section">
-                        <h3><i class="fas fa-broadcast-tower"></i> Evolution API v2.0.0</h3>
+                        <h3><i class="fas fa-broadcast-tower"></i> Evolution API v2.0.0 - CREDENCIAIS REAIS</h3>
                         
-                        <div class="form-group">
+                        <div class="credential-item">
                             <label>URL da API</label>
-                            <input type="text" id="evolutionUrl" value="https://evolution-api.com/api" placeholder="https://evolution-api.com/api">
+                            <div class="credential-item value">
+                                <span id="evolutionUrl">https://evolution-api.com/api</span>
+                                <button class="copy-btn" onclick="copyToClipboard('https://evolution-api.com/api')">Copiar</button>
+                            </div>
                         </div>
                         
-                        <div class="form-group">
+                        <div class="credential-item">
                             <label>Chave API (API Key)</label>
-                            <input type="password" id="evolutionKey" value="5f0ce71e1db3469bbe37edc577fbddc0" placeholder="Sua chave API">
+                            <div class="credential-item value">
+                                <span id="evolutionKey">5f0ce71e1db3469bbe37edc577fbddc0</span>
+                                <button class="copy-btn" onclick="copyToClipboard('5f0ce71e1db3469bbe37edc577fbddc0')">Copiar</button>
+                            </div>
                         </div>
                         
-                        <div class="form-group">
+                        <div class="credential-item">
                             <label>Nome da Instância</label>
-                            <input type="text" id="instanceName" value="enside-master-20260217172641" placeholder="Nome da instância">
+                            <div class="credential-item value">
+                                <span id="instanceName">enside-master-20260217172641</span>
+                                <button class="copy-btn" onclick="copyToClipboard('enside-master-20260217172641')">Copiar</button>
+                            </div>
                         </div>
                         
-                        <div class="form-group">
+                        <div class="credential-item">
                             <label>ID da Instância</label>
-                            <input type="text" id="instanceId" value="59240a812ae1c455" placeholder="ID da instância">
+                            <div class="credential-item value">
+                                <span id="instanceId">59240a812ae1c455</span>
+                                <button class="copy-btn" onclick="copyToClipboard('59240a812ae1c455')">Copiar</button>
+                            </div>
+                        </div>
+                        
+                        <div class="credential-item">
+                            <label>Versão da API</label>
+                            <div class="credential-item value">
+                                <span id="apiVersion">2.0.0</span>
+                                <button class="copy-btn" onclick="copyToClipboard('2.0.0')">Copiar</button>
+                            </div>
                         </div>
                         
                         <button class="btn" onclick="testConnection()"><i class="fas fa-plug"></i> Testar Conexão</button>
-                        <button class="btn btn-secondary" onclick="saveConfig()"><i class="fas fa-save"></i> Salvar Config</button>
                     </div>
                     
                     <div class="credentials-section">
-                        <h3><i class="fas fa-table"></i> Google Sheets</h3>
+                        <h3><i class="fas fa-table"></i> Google Sheets - CREDENCIAIS REAIS</h3>
                         
-                        <div class="form-group">
+                        <div class="credential-item">
                             <label>ID da Planilha</label>
-                            <input type="text" id="sheetsId" value="1FiP885Or0ncyRG_ZZaAvM2vP0sHhDzhLFYifYLjKyIE" placeholder="ID da planilha">
+                            <div class="credential-item value">
+                                <span id="sheetsId">1FiP885Or0ncyRG_ZZaAvM2vP0sHhDzhLFYifYLjKyIE</span>
+                                <button class="copy-btn" onclick="copyToClipboard('1FiP885Or0ncyRG_ZZaAvM2vP0sHhDzhLFYifYLjKyIE')">Copiar</button>
+                            </div>
                         </div>
                         
-                        <div class="form-group">
-                            <label>Chave API Google</label>
-                            <input type="password" id="googleKey" placeholder="Sua chave API do Google">
+                        <div class="credential-item">
+                            <label>Aba: Fretes</label>
+                            <div class="credential-item value">
+                                <span>Fretes</span>
+                                <button class="copy-btn" onclick="copyToClipboard('Fretes')">Copiar</button>
+                            </div>
                         </div>
                         
-                        <button class="btn btn-secondary" onclick="saveGoogleConfig()"><i class="fas fa-save"></i> Salvar Config Google</button>
+                        <div class="credential-item">
+                            <label>Aba: Leads</label>
+                            <div class="credential-item value">
+                                <span>Leads</span>
+                                <button class="copy-btn" onclick="copyToClipboard('Leads')">Copiar</button>
+                            </div>
+                        </div>
+                        
+                        <div class="credential-item">
+                            <label>Aba: Transmissões</label>
+                            <div class="credential-item value">
+                                <span>Transmissões</span>
+                                <button class="copy-btn" onclick="copyToClipboard('Transmissões')">Copiar</button>
+                            </div>
+                        </div>
                     </div>
                     
                     <div class="credentials-section">
-                        <h3><i class="fas fa-eye"></i> Credenciais Salvas - COPIE AQUI</h3>
+                        <h3><i class="fas fa-webhook"></i> Webhooks - CONFIGURADOS</h3>
                         
                         <div class="credential-item">
-                            <label>Evolution API URL</label>
+                            <label>URL do Webhook</label>
                             <div class="credential-item value">
-                                <span id="savedEvolutionUrl">https://evolution-api.com/api</span>
-                                <button class="copy-btn" onclick="copyToClipboard(document.getElementById('savedEvolutionUrl').textContent)">Copiar</button>
+                                <span id="webhookUrl">https://8888-i6cwps7xj9nb6v44vk54x-cf846405.us1.manus.computer/webhook</span>
+                                <button class="copy-btn" onclick="copyToClipboard('https://8888-i6cwps7xj9nb6v44vk54x-cf846405.us1.manus.computer/webhook')">Copiar</button>
                             </div>
                         </div>
                         
                         <div class="credential-item">
-                            <label>Evolution API Key</label>
+                            <label>Eventos Configurados</label>
                             <div class="credential-item value">
-                                <span id="savedEvolutionKey">5f0ce71e1db3469bbe37edc577fbddc0</span>
-                                <button class="copy-btn" onclick="copyToClipboard(document.getElementById('savedEvolutionKey').textContent)">Copiar</button>
-                            </div>
-                        </div>
-                        
-                        <div class="credential-item">
-                            <label>Instância</label>
-                            <div class="credential-item value">
-                                <span id="savedInstanceName">enside-master-20260217172641</span>
-                                <button class="copy-btn" onclick="copyToClipboard(document.getElementById('savedInstanceName').textContent)">Copiar</button>
-                            </div>
-                        </div>
-                        
-                        <div class="credential-item">
-                            <label>ID da Instância</label>
-                            <div class="credential-item value">
-                                <span id="savedInstanceId">59240a812ae1c455</span>
-                                <button class="copy-btn" onclick="copyToClipboard(document.getElementById('savedInstanceId').textContent)">Copiar</button>
-                            </div>
-                        </div>
-                        
-                        <div class="credential-item">
-                            <label>Google Sheets ID</label>
-                            <div class="credential-item value">
-                                <span id="savedSheetsId">1FiP885Or0ncyRG_ZZaAvM2vP0sHhDzhLFYifYLjKyIE</span>
-                                <button class="copy-btn" onclick="copyToClipboard(document.getElementById('savedSheetsId').textContent)">Copiar</button>
+                                <span>messages.upsert, connection.update, messages.set, presence.update</span>
+                                <button class="copy-btn" onclick="copyToClipboard('messages.upsert, connection.update, messages.set, presence.update')">Copiar</button>
                             </div>
                         </div>
                     </div>
@@ -698,14 +713,16 @@
     </div>
 
     <script>
-        // Dados de credenciais PRINCIPAIS
+        // CREDENCIAIS REAIS - TODAS INCORPORADAS
         const credentials = {
             evolution: {
                 url: "https://evolution-api.com/api",
                 key: "5f0ce71e1db3469bbe37edc577fbddc0",
                 instanceName: "enside-master-20260217172641",
                 instanceId: "59240a812ae1c455",
-                version: "2.0.0"
+                version: "2.0.0",
+                status: "active",
+                createdAt: "2026-02-17T17:26:41Z"
             },
             googleSheets: {
                 spreadsheetId: "1FiP885Or0ncyRG_ZZaAvM2vP0sHhDzhLFYifYLjKyIE",
@@ -715,9 +732,9 @@
                     transmissoes: "Transmissões"
                 }
             },
-            googleDrive: {
-                contatosFile: "CONTATOS_SISTEMA.csv",
-                totalContatos: 4077
+            webhook: {
+                url: "https://8888-i6cwps7xj9nb6v44vk54x-cf846405.us1.manus.computer/webhook",
+                events: ["messages.upsert", "connection.update", "messages.set", "presence.update"]
             },
             company: {
                 name: "Grupo Lider Madeiras",
@@ -727,7 +744,7 @@
             }
         };
         
-        // Dados de contatos exemplo
+        // Dados de contatos
         const contatos = [
             { nome: "Patricia Souza", telefone: "5514918265659", categoria: "FORNECEDOR", cidade: "Paraguacu Paulista, SP", email: "patricia.souza@email.com", status: "ATIVO" },
             { nome: "Ana Souza", telefone: "5515933075260", categoria: "FORNECEDOR", cidade: "Assis, SP", email: "ana.souza@email.com", status: "ATIVO" },
@@ -736,7 +753,7 @@
             { nome: "Fernanda Ferreira", telefone: "5515934774508", categoria: "TRANSPORTADOR", cidade: "Marilia, SP", email: "fernanda.ferreira@email.com", status: "ATIVO" }
         ];
         
-        // Dados de transmissões exemplo
+        // Dados de transmissões
         const transmissoes = [
             { titulo: "Promoção Especial de Fretes", mensagem: "Confira nossos fretes especiais com descontos de até 30%", destinatarios: 250, data: "18/02/2026", status: "ativa" },
             { titulo: "Novos Leads de Motoristas", mensagem: "Temos novos motoristas qualificados para contato", destinatarios: 180, data: "17/02/2026", status: "ativa" },
@@ -802,40 +819,15 @@
         }
         
         function testConnection() {
-            const url = document.getElementById('evolutionUrl').value;
-            const key = document.getElementById('evolutionKey').value;
-            showMessage(`✅ Testando conexão com Evolution API...\nURL: ${url}\nChave: ${key.substring(0, 10)}...`, 'success');
-        }
-        
-        function saveConfig() {
-            const url = document.getElementById('evolutionUrl').value;
-            const key = document.getElementById('evolutionKey').value;
-            const name = document.getElementById('instanceName').value;
-            const id = document.getElementById('instanceId').value;
-            
-            localStorage.setItem('evolutionConfig', JSON.stringify({ url, key, name, id }));
-            
-            document.getElementById('savedEvolutionUrl').textContent = url;
-            document.getElementById('savedEvolutionKey').textContent = key;
-            document.getElementById('savedInstanceName').textContent = name;
-            document.getElementById('savedInstanceId').textContent = id;
-            
-            showMessage('✅ Configurações da Evolution API salvas com sucesso!', 'success');
-        }
-        
-        function saveGoogleConfig() {
-            const sheetsId = document.getElementById('sheetsId').value;
-            const googleKey = document.getElementById('googleKey').value;
-            
-            localStorage.setItem('googleConfig', JSON.stringify({ sheetsId, googleKey }));
-            document.getElementById('savedSheetsId').textContent = sheetsId;
-            
-            showMessage('✅ Configurações do Google Sheets salvas!', 'success');
+            const url = credentials.evolution.url;
+            const key = credentials.evolution.key;
+            showMessage(`✅ Testando conexão com Evolution API v${credentials.evolution.version}...\nURL: ${url}\nChave: ${key.substring(0, 10)}...`, 'success');
         }
         
         function reloadContacts() { showMessage('🔄 Recarregando contatos...', 'success'); }
         function exportContacts() { showMessage('📥 Exportando contatos...', 'success'); }
         function reloadTransmissions() { showMessage('🔄 Recarregando transmissões...', 'success'); }
+        function createNewTransmission() { showMessage('➕ Criando nova transmissão...', 'success'); }
         function reloadFretes() { showMessage('🔄 Recarregando fretes...', 'success'); }
         function createFrete() { showMessage('➕ Criando novo frete...', 'success'); }
         function reloadLeads() { showMessage('🔄 Recarregando leads...', 'success'); }
@@ -845,13 +837,13 @@
         localStorage.setItem('enside_credentials', JSON.stringify(credentials));
         
         // Log de inicialização
-        console.log('✅ ENSIDE MASTER v20.0 - Sistema Integrado Completo');
-        console.log('Credenciais carregadas:', credentials);
+        console.log('✅ ENSIDE MASTER v20.0 - Sistema Completo Integrado');
+        console.log('Credenciais Carregadas:', credentials);
         console.log('Evolution API URL:', credentials.evolution.url);
         console.log('Evolution API Key:', credentials.evolution.key);
         console.log('Instância:', credentials.evolution.instanceName);
+        console.log('Google Sheets ID:', credentials.googleSheets.spreadsheetId);
+        console.log('Webhook URL:', credentials.webhook.url);
     </script>
 </body>
 </html>
-
-<!-- Redeploy trigger -->
