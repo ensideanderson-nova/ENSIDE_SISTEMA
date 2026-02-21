@@ -1305,6 +1305,8 @@
                     <button onclick="enviarMensagemMassa()" style="background: linear-gradient(135deg, #f59e0b, #d97706);">📨 Enviar para Lista</button>
                     <button onclick="agendarEnvio()" class="btn-secondary">⏰ Agendar Envio</button>
                 </div>
+                <div id="progressoEnvioMassa" style="display: none; margin-top: 15px; padding: 15px; background: rgba(0,0,0,0.2); border-radius: 8px;"></div>
+                <div id="statusSincronizacao" style="margin-top: 10px; font-size: 0.85em; color: #94a3b8;">💡 Clique em <strong>🔄 SINCRONIZAR COM PLANILHA</strong> para carregar as listas com contagens reais da planilha.</div>
             </div>
 
             <div class="info-box">
@@ -3948,30 +3950,39 @@ XML: Estrutura hierárquica de elementos
                 return;
             }
 
-            // Obter contatos da planilha ou do sistema
+            // Usar o div de progresso da aba Evolution API
+            const progressEl = document.getElementById('progressoEnvioMassa') || document.getElementById('progressoEnvio');
+
+            // Carregar contatos automaticamente se ainda não carregados
+            if (!window.contatosGoogleSheets || window.contatosGoogleSheets.length === 0) {
+                if (progressEl) { progressEl.style.display = 'block'; progressEl.innerHTML = '<p>⏳ Carregando contatos da planilha... Aguarde.</p>'; }
+                try {
+                    await carregarContatosGoogleSheets();
+                } catch(e) {
+                    if (progressEl) progressEl.style.display = 'none';
+                    alert('❌ Não foi possível carregar os contatos.\nVerifique a conexão com a internet e tente novamente.');
+                    return;
+                }
+                if (progressEl) progressEl.style.display = 'none';
+            }
+
+            // Filtrar contatos usando LISTAS_FILTROS (mapeamento completo)
             let contatosFiltrados = [...(window.contatosGoogleSheets || [])];
             
-            // Filtrar por categoria baseado na lista selecionada
-            const filtros = {
-                'fornecedores': c => c.categoria && c.categoria.toUpperCase().includes('FORNECEDOR'),
-                'clientes': c => c.categoria && c.categoria.toUpperCase().includes('CLIENTE'),
-                'transportadores': c => c.categoria && c.categoria.toUpperCase().includes('TRANSPORTADOR'),
-                'todos_fornecedores': c => c.categoria && c.categoria.toUpperCase().includes('FORNECEDOR'),
-                'todos_clientes': c => c.categoria && c.categoria.toUpperCase().includes('CLIENTE'),
-            };
+            const filtroFn = (typeof LISTAS_FILTROS !== 'undefined' && LISTAS_FILTROS[listaValor])
+                ? LISTAS_FILTROS[listaValor]
+                : null;
 
-            if (filtros[listaValor]) {
-                contatosFiltrados = contatosFiltrados.filter(filtros[listaValor]);
-            } else if (listaValor.includes('_sp')) {
-                contatosFiltrados = contatosFiltrados.filter(c => c.uf === 'SP');
+            if (filtroFn) {
+                contatosFiltrados = contatosFiltrados.filter(filtroFn);
             }
+            // Se nenhum filtro específico, usar todos os contatos
 
             // Limitar a 256 por envio (limite WhatsApp)
             const lote = contatosFiltrados.slice(0, 256);
             
             if (lote.length === 0) {
-                // Fallback: se não há contatos carregados, carregar primeiro
-                alert('⚠️ Nenhum contato carregado.\n\nClique em "Sincronizar Google Sheets" primeiro para carregar os contatos da planilha.');
+                alert(`⚠️ Nenhum contato encontrado para a lista "${listaValor}".\n\nDica: Clique em "🔄 SINCRONIZAR COM PLANILHA" para atualizar as listas com dados reais.`);
                 return;
             }
 
@@ -3990,10 +4001,10 @@ XML: Estrutura hierárquica de elementos
                 return;
             }
 
-            const progressEl = document.getElementById('progressoEnvio');
-            if (progressEl) {
-                progressEl.style.display = 'block';
-                progressEl.innerHTML = `<p>⏳ Enviando para ${phones.length} contatos via Evolution API...</p>`;
+            const progressElMassa = document.getElementById('progressoEnvioMassa') || document.getElementById('progressoEnvio');
+            if (progressElMassa) {
+                progressElMassa.style.display = 'block';
+                progressElMassa.innerHTML = `<p>⏳ Enviando para ${phones.length} contatos via Evolution API...</p>`;
             }
 
             // v1.7.4: não há send-bulk — enviar individualmente com delay
@@ -4013,13 +4024,13 @@ XML: Estrutura hierárquica de elementos
                         if (response.ok) totalEnviados++; else totalErros++;
                     } catch(e) { totalErros++; }
                     
-                    if (progressEl) {
+                    if (progressElMassa) {
                         const pct = Math.round(((i + 1) / phones.length) * 100);
-                        progressEl.innerHTML = `
+                        progressElMassa.innerHTML = `
                             <div style="background: rgba(255,255,255,0.1); border-radius: 10px; overflow: hidden; margin: 10px 0;">
                                 <div style="background: linear-gradient(90deg, #22c55e, #16a34a); width: ${pct}%; height: 20px; transition: width 0.3s;"></div>
                             </div>
-                            <p>✅ Enviados: ${totalEnviados} | ❌ Erros: ${totalErros} | ${pct}%</p>
+                            <p>✅ Enviados: ${totalEnviados} | ❌ Erros: ${totalErros} | ${pct}% | Contato: ${lote[i]?.nome || phone}</p>
                         `;
                     }
                     await new Promise(r => setTimeout(r, 1200)); // delay 1.2s entre envios
@@ -4027,10 +4038,10 @@ XML: Estrutura hierárquica de elementos
 
                 const countEl = document.getElementById('evolutionMsgs');
                 if (countEl) countEl.textContent = parseInt(countEl.textContent || '0') + totalEnviados;
-                if (progressEl) progressEl.style.display = 'none';
+                if (progressElMassa) progressElMassa.style.display = 'none';
                 alert(`✅ Envio concluído!\n\n📨 Enviados: ${totalEnviados}\n❌ Erros: ${totalErros}\n📅 ${new Date().toLocaleString('pt-BR')}`);
             } catch (error) {
-                if (progressEl) progressEl.style.display = 'none';
+                if (progressElMassa) progressElMassa.style.display = 'none';
                 alert(`❌ Erro no envio em massa: ${error.message}\n\nVerifique a conexão com a Evolution API.`);
             }
         }
@@ -4577,74 +4588,120 @@ ${filtros.join('\n') || 'Nenhum filtro'}
         }
 
         // ==================== SINCRONIZAR LISTAS COM PLANILHA ====================
+        // Mapeamento das listas para filtros reais de contatos
+        const LISTAS_FILTROS = {
+            'fornecedores':                    c => c.categoria && c.categoria.toUpperCase().includes('FORNECEDOR'),
+            'clientes':                        c => c.categoria && c.categoria.toUpperCase().includes('CLIENTE'),
+            'transportadores':                 c => c.categoria && c.categoria.toUpperCase().includes('TRANSPORTADOR'),
+            'todos_fornecedores':              c => c.categoria && c.categoria.toUpperCase().includes('FORNECEDOR'),
+            'todos_clientes':                  c => c.categoria && c.categoria.toUpperCase().includes('CLIENTE'),
+            'fornecedores_mouroes':            c => c.categoria && c.categoria.toUpperCase().includes('FORNECEDOR') && (c.subcategoria || '').toUpperCase().includes('MOUR'),
+            'clientes_varejo_sp':              c => c.categoria && c.categoria.toUpperCase().includes('CLIENTE') && (c.uf || '').toUpperCase() === 'SP',
+            'transportadores_frete_longo':     c => c.categoria && c.categoria.toUpperCase().includes('TRANSPORTADOR'),
+            'fornecedores_tratamento_cca':     c => c.categoria && c.categoria.toUpperCase().includes('FORNECEDOR') && (c.subcategoria || '').toUpperCase().includes('CCA'),
+            'clientes_construcao':             c => c.categoria && c.categoria.toUpperCase().includes('CLIENTE') && (c.subcategoria || '').toUpperCase().includes('CONSTRU'),
+            'clientes_atacado':                c => c.categoria && c.categoria.toUpperCase().includes('CLIENTE') && (c.subcategoria || '').toUpperCase().includes('ATACADO'),
+            'fornecedores_eucalipto_verde':    c => c.categoria && c.categoria.toUpperCase().includes('FORNECEDOR') && (c.subcategoria || '').toUpperCase().includes('EUCALIPTO'),
+            'clientes_rural':                  c => c.categoria && c.categoria.toUpperCase().includes('CLIENTE') && (c.subcategoria || '').toUpperCase().includes('RURAL'),
+            'clientes_construcao_civil':       c => c.categoria && c.categoria.toUpperCase().includes('CLIENTE'),
+        };
+
         async function sincronizarListasPlanilha() {
             const spreadsheetId = GOOGLE_SHEETS_CONFIG.spreadsheetId;
             const gid = '1114979046'; // LISTAS_TRANSMISSAO
             
+            // Mostrar status sem bloquear com alert
+            const btnSync = document.querySelector('button[onclick="sincronizarListasPlanilha()"]');
+            const textoOriginal = btnSync ? btnSync.textContent : '';
+            if (btnSync) btnSync.textContent = '⏳ Sincronizando...';
+
             try {
-                // Mostrar loading
-                alert('🔄 Sincronizando listas da planilha...\n\nAguarde...');
-                
+                // 1) Carregar contatos se ainda não carregados
+                if (!window.contatosGoogleSheets || window.contatosGoogleSheets.length === 0) {
+                    if (btnSync) btnSync.textContent = '⏳ Carregando contatos...';
+                    await carregarContatosGoogleSheets();
+                }
+
+                // 2) Carregar listas da aba LISTAS_TRANSMISSAO
                 const url = `https://docs.google.com/spreadsheets/d/${spreadsheetId}/gviz/tq?tqx=out:json&gid=${gid}`;
                 const response = await fetch(url);
                 const text = await response.text();
                 
-                // Parse do JSON do Google Sheets
                 const jsonStart = text.indexOf('{');
                 const jsonEnd = text.lastIndexOf('}') + 1;
-                const jsonStr = text.substring(jsonStart, jsonEnd);
-                const data = JSON.parse(jsonStr);
+                const data = JSON.parse(text.substring(jsonStart, jsonEnd));
                 
+                const listas = [];
                 if (data.table && data.table.rows) {
-                    const listas = [];
-                    data.table.rows.forEach((row, index) => {
-                        if (index === 0) return; // Pular cabeçalho
+                    data.table.rows.forEach((row) => {
                         if (row.c && row.c[1] && row.c[1].v) {
-                            listas.push({
-                                id: row.c[0]?.v || index,
-                                nome: row.c[1]?.v || '',
-                                categoria: row.c[2]?.v || '',
-                                subcategoria: row.c[3]?.v || '',
-                                totalContatos: row.c[4]?.v || 0,
-                                dataCriacao: row.c[5]?.v || '',
-                                ultimaAtualizacao: row.c[6]?.v || '',
-                                status: row.c[7]?.v || 'ATIVO'
-                            });
+                            const nomeLista = String(row.c[1].v).trim();
+                            const cat = String(row.c[2]?.v || '').trim();
+                            const sub = String(row.c[3]?.v || '').trim();
+                            const total = parseInt(row.c[4]?.v || 0);
+                            // Gerar chave de filtro normalizada
+                            const chave = nomeLista.toLowerCase()
+                                .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+                                .replace(/\s+/g, '_');
+                            listas.push({ nome: nomeLista, categoria: cat, subcategoria: sub, total, chave });
                         }
                     });
-                    
-                    // Salvar no localStorage
-                    localStorage.setItem('listasTransmissaoPlanilha', JSON.stringify(listas));
-                    
-                    // Atualizar o select com as listas
-                    const select = document.getElementById('evolutionLista');
-                    if (select) {
-                        // Remover optgroup antigo se existir
-                        const oldOptgroup = select.querySelector('optgroup[label*="Planilha"]');
-                        if (oldOptgroup) oldOptgroup.remove();
-                        
-                        // Criar novo optgroup
-                        const optgroup = document.createElement('optgroup');
-                        optgroup.label = '📊 Listas da Planilha (Sincronizadas)';
-                        
-                        listas.forEach(lista => {
-                            const option = document.createElement('option');
-                            option.value = lista.nome.toLowerCase().replace(/\s+/g, '_');
-                            option.textContent = `📋 ${lista.nome} (${lista.totalContatos})`;
-                            optgroup.appendChild(option);
-                        });
-                        
-                        select.appendChild(optgroup);
-                    }
-                    
-                    alert(`✅ Sincronização concluída!\n\n📊 ${listas.length} listas importadas da planilha:\n\n${listas.map(l => `• ${l.nome}: ${l.totalContatos} contatos`).join('\n')}`);
-                    return listas;
-                } else {
-                    throw new Error('Formato de dados inválido');
                 }
+
+                // 3) Salvar mapeamento no window para uso no envio
+                window.listasTransmissaoPlanilha = listas;
+                localStorage.setItem('listasTransmissaoPlanilha', JSON.stringify(listas));
+
+                // 4) Reconstruir o select com contagens reais
+                const contatos = window.contatosGoogleSheets || [];
+                const select = document.getElementById('evolutionLista');
+                if (select) {
+                    // Limpar e reconstruir completamente
+                    select.innerHTML = '<option value="">Selecione uma lista...</option>';
+
+                    // Grupo: Listas Básicas com contagens reais
+                    const grpBasico = document.createElement('optgroup');
+                    grpBasico.label = '📋 Listas Básicas';
+                    const basicas = [
+                        { value: 'fornecedores',    label: '🏭 Fornecedores', filtro: c => c.categoria && c.categoria.toUpperCase().includes('FORNECEDOR') },
+                        { value: 'clientes',        label: '👥 Clientes',     filtro: c => c.categoria && c.categoria.toUpperCase().includes('CLIENTE') },
+                        { value: 'transportadores', label: '🚚 Transportadores', filtro: c => c.categoria && c.categoria.toUpperCase().includes('TRANSPORTADOR') },
+                    ];
+                    basicas.forEach(b => {
+                        const qtd = contatos.filter(b.filtro).length;
+                        const opt = document.createElement('option');
+                        opt.value = b.value;
+                        opt.textContent = `${b.label} (${qtd} reais)`;
+                        grpBasico.appendChild(opt);
+                    });
+                    select.appendChild(grpBasico);
+
+                    // Grupo: Listas da Planilha
+                    if (listas.length > 0) {
+                        const grpPlanilha = document.createElement('optgroup');
+                        grpPlanilha.label = '📊 Listas da Planilha (Sincronizadas)';
+                        listas.forEach(lista => {
+                            // Calcular contagem real se possível
+                            const filtroFn = LISTAS_FILTROS[lista.chave];
+                            const qtdReal = filtroFn ? contatos.filter(filtroFn).length : lista.total;
+                            const opt = document.createElement('option');
+                            opt.value = lista.chave;
+                            opt.textContent = `📋 ${lista.nome} (${qtdReal > 0 ? qtdReal + ' reais' : lista.total + ' estimados'})`;
+                            grpPlanilha.appendChild(opt);
+                        });
+                        select.appendChild(grpPlanilha);
+                    }
+                }
+
+                const totalContatos = contatos.length;
+                if (btnSync) btnSync.textContent = textoOriginal;
+                alert(`✅ Sincronização concluída!\n\n📊 ${listas.length} listas da planilha\n👥 ${totalContatos} contatos carregados\n\nO select foi atualizado com contagens reais.`);
+                return listas;
+
             } catch (error) {
                 console.error('Erro ao sincronizar:', error);
-                alert(`❌ Erro ao sincronizar listas:\n${error.message}\n\nVerifique se a planilha está publicada na web.`);
+                if (btnSync) btnSync.textContent = textoOriginal;
+                alert(`❌ Erro ao sincronizar listas:\n${error.message}`);
                 return [];
             }
         }
