@@ -1,13 +1,17 @@
 {
   "version": 2,
+  "name": "enside-sistema-unificado",
   "public": true,
-  "buildCommand": "echo 'Static site - no build needed'",
+  "buildCommand": "echo 'Static site'",
   "outputDirectory": ".",
-  "framework": "static",
   "routes": [
     {
-      "src": "/(.*)",
+      "src": "/(?!.*\\.)",
       "dest": "/index.html"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/$1"
     }
   ]
 }

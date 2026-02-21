@@ -1,19 +1,11 @@
 {
-  "name": "enside-master",
-  "version": "19.0.0",
-  "description": "ENSIDE MASTER v19.0 - Sistema Completo Integrado com Evolution API e Google Sheets",
-  "private": true,
+  "name": "enside-sistema-unificado",
+  "version": "1.0.0",
+  "description": "Sistema ENSIDE - Integração com Evolution API",
   "scripts": {
-    "build": "echo 'Static HTML site - no build needed'",
-    "start": "echo 'Static HTML site - no server needed'"
+    "dev": "http-server",
+    "build": "echo 'Static site - no build needed'",
+    "start": "echo 'Static site - no start script needed'"
   },
-  "keywords": [
-    "enside",
-    "madeiras",
-    "evolution-api",
-    "whatsapp",
-    "google-sheets"
-  ],
-  "author": "Anderson Enside",
-  "license": "MIT"
+  "dependencies": {}
 }
