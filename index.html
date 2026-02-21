@@ -1272,31 +1272,31 @@
                     <select id="evolutionLista">
                         <option value="">Selecione uma lista...</option>
                         <optgroup label="📋 Listas Básicas">
-                            <option value="fornecedores">🏭 Fornecedores (1.200)</option>
-                            <option value="clientes">👥 Clientes (2.500)</option>
-                            <option value="transportadores">🚚 Transportadores (377)</option>
+                            <option value="fornecedores">🏾 Fornecedores</option>
+                            <option value="clientes">👥 Clientes</option>
+                            <option value="transportadores">🚚 Transportadores</option>
                         </optgroup>
-                        <optgroup label="📊 Listas da Planilha (Sincronizadas)">
-                            <option value="fornecedores_mouroes">🪵 Fornecedores Mourões (180)</option>
-                            <option value="clientes_varejo_sp">🏪 Clientes Varejo SP (400)</option>
-                            <option value="transportadores_frete_longo">🚛 Transportadores Frete Longo (85)</option>
-                            <option value="fornecedores_tratamento_cca">🧪 Fornecedores Tratamento CCA (150)</option>
-                            <option value="clientes_construcao">🏗️ Clientes Construção (450)</option>
-                            <option value="clientes_atacado">📦 Clientes Atacado (350)</option>
-                            <option value="fornecedores_eucalipto_verde">🌿 Fornecedores Eucalipto Verde (200)</option>
-                            <option value="clientes_rural">🌾 Clientes Rural (380)</option>
-                            <option value="todos_fornecedores">🏭 Todos Fornecedores (1.200)</option>
-                            <option value="todos_clientes">👥 Todos Clientes (2.500)</option>
+                        <optgroup label="📊 Listas Segmentadas">
+                            <option value="fornecedores_mouroes">🪵 Fornecedores Mourões</option>
+                            <option value="clientes_varejo_sp">🏪 Clientes Varejo SP</option>
+                            <option value="transportadores_frete_longo">🚛 Transportadores Frete Longo</option>
+                            <option value="fornecedores_tratamento_cca">🧪 Fornecedores Tratamento CCA</option>
+                            <option value="clientes_construcao">🏗️ Clientes Construção</option>
+                            <option value="clientes_atacado">📦 Clientes Atacado</option>
+                            <option value="fornecedores_eucalipto_verde">🌿 Fornecedores Eucalipto Verde</option>
+                            <option value="clientes_rural">🌾 Clientes Rural</option>
+                            <option value="todos_fornecedores">🏾 Todos Fornecedores</option>
+                            <option value="todos_clientes">👥 Todos Clientes</option>
                         </optgroup>
                     </select>
-                    
+                    <small id="listaContagem" style="color: #94a3b8; display: block; margin-top: 5px;">Clique em 🔄 SINCRONIZAR para ver contagens reais</small>
+                </div>
                 <div class="form-group">
                     <label>📊 ID da Planilha Google Sheets</label>
                     <input type="text" id="googleSheetsId" placeholder="ID da Planilha" value="1FiP885Or0ncyRG_ZZaAvM2vP0sHhDzhLFYifYLjKyIE" readonly style="background: rgba(34, 197, 94, 0.1); border-color: #22c55e;">
                     <small style="color: #94a3b8; display: block; margin-top: 5px;">✅ Planilha sincronizada: Fretes, Leads, Transmissões</small>
                 </div>
-<button onclick="sincronizarListasPlanilha()" style="margin-top: 10px; background: linear-gradient(135deg, #22c55e, #16a34a); padding: 8px 16px; border: none; border-radius: 8px; color: white; cursor: pointer; font-weight: bold;">🔄 SINCRONIZAR COM PLANILHA</button>
-                </div>
+                <button onclick="sincronizarListasPlanilha()" style="margin-top: 10px; background: linear-gradient(135deg, #22c55e, #16a34a); padding: 8px 16px; border: none; border-radius: 8px; color: white; cursor: pointer; font-weight: bold;">🔄 SINCRONIZAR COM PLANILHA</button>
                 <div class="form-group">
                     <label>Mensagem para Envio em Massa</label>
                     <textarea id="evolutionMensagemMassa" rows="4" placeholder="Use {nome} para personalizar...">🌲 Olá {nome}! A ENSIDE MADEIRAS tem novidades para você. Entre em contato!</textarea>
@@ -4733,6 +4733,9 @@ ${filtros.join('\n') || 'Nenhum filtro'}
 
                 const totalContatos = contatos.length;
                 if (btnSync) btnSync.textContent = textoOriginal;
+                // Atualizar o texto informativo abaixo do select
+                const contagemEl = document.getElementById('listaContagem');
+                if (contagemEl) contagemEl.textContent = `✅ ${totalContatos} contatos carregados | ${listas.length} listas sincronizadas`;
                 alert(`✅ Sincronização concluída!\n\n📊 ${listas.length} listas da planilha\n👥 ${totalContatos} contatos carregados\n\nO select foi atualizado com contagens reais.`);
                 return listas;
 
