@@ -1193,7 +1193,7 @@
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
                     <div class="form-group">
                         <label>URL da API</label>
-                        <input type="text" id="evolutionUrl" placeholder="https://evolution-api.com/api" value="https://evolution-api.com/api">
+                        <input type="text" id="evolutionUrl" placeholder="https://evolution-api-enside.onrender.com" value="https://evolution-api-enside.onrender.com">
                     </div>
                     <div class="form-group">
                         <label>API Key</label>
@@ -1210,8 +1210,8 @@
                     </div>
                 <div class="form-group">
                     <label>🔗 Webhook URL</label>
-                    <input type="text" id="webhookUrl" placeholder="URL do Webhook" value="https://evolution-api-enside.onrender.com/webhook" readonly style="background: rgba(14, 165, 233, 0.1); border-color: #0ea5e9;">
-                    <small style="color: #94a3b8; display: block; margin-top: 5px;">⚠️ Webhook DESABILITADO no Evolution Manager (evita erros)</small>
+                    <input type="text" id="webhookUrl" placeholder="URL do Webhook" value="https://evolution-api-enside.onrender.com/webhook/ENSIDE" readonly style="background: rgba(14, 165, 233, 0.1); border-color: #0ea5e9;">
+                    <small style="color: #94a3b8; display: block; margin-top: 5px;">✅ Webhook configurado para receber eventos</small>
                 </div>
 
                 <div style="display: flex; gap: 10px; margin-top: 15px;">
@@ -3791,7 +3791,7 @@ XML: Estrutura hierárquica de elementos
             } catch (error) {
                 document.getElementById('evolutionStatus').textContent = '❌';
                 document.getElementById('evolutionStatusCard').style.borderColor = '#ef4444';
-                alert(`❌ Erro ao conectar: ${error.message}\n\nVerifique:\n- URL da API (ex: https://evolution-api-enside.onrender.com)\n- API Key\n- Se o servidor está online`);
+                alert(`❌ Erro ao conectar: ${error.message}\n\nVerifique:\n- URL da API (ex: https://3001-xxx.manus.computer)\n- API Key\n- Se o servidor está online`);
             }
         }
 
@@ -6371,7 +6371,7 @@ Em breve entraremos em contato com ofertas de frete!`);
             apiKey: 'evolution-api-enside-2024-secret',
             instance: 'ENSIDE',
             instanceId: 'ENSIDE',
-            webhook: 'https://evolution-api-enside.onrender.com/webhook'
+            webhook: 'https://evolution-api-enside.onrender.com/webhook/ENSIDE'
         };
 
         // Função para testar conexão com Evolution API (endpoint correto v2.0.0)
@@ -6510,5 +6510,4 @@ Em breve entraremos em contato com ofertas de frete!`);
     </script>
     <!-- Scripts externos ENSIDE -->
 </body>
-</html><!-- deploy fix -->
-<!-- force deploy sáb 21 fev 2026 13:29:10 -03 -->
+</html>
