@@ -3726,16 +3726,49 @@ XML: Estrutura hierárquica de elementos
         }
 
         // ==================== EVOLUTION API ====================
+        // Credenciais corretas e definitivas da Evolution API
+        const EVOLUTION_DEFAULTS = {
+            url: 'https://evolution-api-enside.onrender.com',
+            apiKey: 'evolution-api-enside-2024-secret',
+            instance: 'ENSIDE',
+            instanceId: 'ENSIDE',
+            webhook: 'https://evolution-api-enside.onrender.com/webhook/ENSIDE'
+        };
+
+        // Limpar localStorage com valores desatualizados (instância antiga)
+        (function migrarCredenciaisEvolution() {
+            const instanciaAtual = localStorage.getItem('evolutionInstance');
+            const urlAtual = localStorage.getItem('evolutionUrl');
+            // Se o localStorage tem valores antigos/errados, resetar para os valores corretos
+            if (!instanciaAtual || instanciaAtual !== EVOLUTION_DEFAULTS.instance ||
+                !urlAtual || !urlAtual.includes('onrender.com')) {
+                localStorage.setItem('evolutionUrl', EVOLUTION_DEFAULTS.url);
+                localStorage.setItem('evolutionApiKey', EVOLUTION_DEFAULTS.apiKey);
+                localStorage.setItem('evolutionInstance', EVOLUTION_DEFAULTS.instance);
+                console.log('✅ Credenciais Evolution API migradas para valores corretos');
+            }
+        })();
+
         let evolutionConfig = {
-            url: localStorage.getItem('evolutionUrl') || 'https://evolution-api-enside.onrender.com',
-            apiKey: localStorage.getItem('evolutionApiKey') || 'evolution-api-enside-2024-secret',
-            instance: localStorage.getItem('evolutionInstance') || 'ENSIDE'
+            url: EVOLUTION_DEFAULTS.url,
+            apiKey: EVOLUTION_DEFAULTS.apiKey,
+            instance: EVOLUTION_DEFAULTS.instance
         };
 
         function carregarConfigEvolution() {
-            document.getElementById('evolutionUrl').value = evolutionConfig.url;
-            document.getElementById('evolutionApiKey').value = evolutionConfig.apiKey;
-            document.getElementById('evolutionInstance').value = evolutionConfig.instance;
+            // Sempre usar as credenciais corretas, ignorando localStorage desatualizado
+            document.getElementById('evolutionUrl').value = EVOLUTION_DEFAULTS.url;
+            document.getElementById('evolutionApiKey').value = EVOLUTION_DEFAULTS.apiKey;
+            document.getElementById('evolutionInstance').value = EVOLUTION_DEFAULTS.instance;
+            // Atualizar campos readonly com valores corretos
+            const instanceIdEl = document.getElementById('evolutionInstanceId');
+            if (instanceIdEl) instanceIdEl.value = EVOLUTION_DEFAULTS.instanceId;
+            const webhookEl = document.getElementById('webhookUrl');
+            if (webhookEl) webhookEl.value = EVOLUTION_DEFAULTS.webhook;
+            // Sincronizar evolutionConfig
+            evolutionConfig.url = EVOLUTION_DEFAULTS.url;
+            evolutionConfig.apiKey = EVOLUTION_DEFAULTS.apiKey;
+            evolutionConfig.instance = EVOLUTION_DEFAULTS.instance;
         }
 
         function salvarConfigEvolution() {
