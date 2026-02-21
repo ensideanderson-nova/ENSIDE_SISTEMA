@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GIDs da Planilha ENSIDE</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: #0f172a;
+      color: #e2e8f0;
+      min-height: 100vh;
+      padding: 32px 16px;
+    }
+    h1 {
+      text-align: center;
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin-bottom: 8px;
+      color: #f8fafc;
+    }
+    .subtitle {
+      text-align: center;
+      color: #64748b;
+      font-size: 0.875rem;
+      margin-bottom: 32px;
+    }
+    .sheet-id-box {
+      background: #1e293b;
+      border: 1px solid #334155;
+      border-radius: 12px;
+      padding: 16px 20px;
+      margin: 0 auto 32px;
+      max-width: 680px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+    .sheet-id-label {
+      color: #94a3b8;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 4px;
+    }
+    .sheet-id-value {
+      font-family: 'Courier New', monospace;
+      font-size: 0.9rem;
+      color: #38bdf8;
+      word-break: break-all;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 10px;
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+    .card {
+      background: #1e293b;
+      border: 1px solid #334155;
+      border-radius: 10px;
+      padding: 14px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      transition: border-color 0.15s;
+    }
+    .card:hover { border-color: #475569; }
+    .card-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-width: 0;
+    }
+    .emoji { font-size: 1.25rem; flex-shrink: 0; }
+    .card-info { min-width: 0; }
+    .card-name {
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: #f1f5f9;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .card-gid {
+      font-family: 'Courier New', monospace;
+      font-size: 0.8rem;
+      color: #94a3b8;
+      margin-top: 2px;
+    }
+    .btn-copy {
+      background: #334155;
+      border: none;
+      border-radius: 7px;
+      color: #94a3b8;
+      cursor: pointer;
+      font-size: 0.8rem;
+      font-weight: 600;
+      padding: 7px 14px;
+      white-space: nowrap;
+      transition: background 0.15s, color 0.15s;
+      flex-shrink: 0;
+    }
+    .btn-copy:hover { background: #475569; color: #f1f5f9; }
+    .btn-copy.copied {
+      background: #166534;
+      color: #4ade80;
+    }
+    .btn-copy-big {
+      background: #1e40af;
+      border: none;
+      border-radius: 8px;
+      color: #bfdbfe;
+      cursor: pointer;
+      font-size: 0.85rem;
+      font-weight: 600;
+      padding: 10px 20px;
+      transition: background 0.15s;
+      flex-shrink: 0;
+    }
+    .btn-copy-big:hover { background: #1d4ed8; }
+    .btn-copy-big.copied { background: #166534; color: #4ade80; }
+    .section-title {
+      max-width: 1000px;
+      margin: 0 auto 12px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: #475569;
+      padding-left: 4px;
+    }
+    .toast {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%) translateY(80px);
+      background: #166534;
+      color: #4ade80;
+      padding: 12px 24px;
+      border-radius: 10px;
+      font-weight: 600;
+      font-size: 0.9rem;
+      transition: transform 0.25s ease;
+      z-index: 9999;
+      pointer-events: none;
+    }
+    .toast.show { transform: translateX(-50%) translateY(0); }
+  </style>
+</head>
+<body>
+
+  <h1>📋 GIDs da Planilha ENSIDE</h1>
+  <p class="subtitle">Clique em qualquer GID para copiar instantaneamente</p>
+
+  <div class="sheet-id-box">
+    <div>
+      <div class="sheet-id-label">ID da Planilha (Spreadsheet ID)</div>
+      <div class="sheet-id-value">1FiP885Or0ncyRG_ZZaAvM2vP0sHhDzhLFYifYLjKyIE</div>
+    </div>
+    <button class="btn-copy-big" onclick="copiar('1FiP885Or0ncyRG_ZZaAvM2vP0sHhDzhLFYifYLjKyIE', this)">Copiar ID</button>
+  </div>
+
+  <div class="section-title">Abas da Planilha — 20 abas</div>
+
+  <div class="grid" id="grid"></div>
+
+  <div class="toast" id="toast">✅ Copiado!</div>
+
+  <script>
+    const abas = [
+      { emoji: '👥', nome: 'CONTATOS',           gid: '1689968688' },
+      { emoji: '🚚', nome: 'FRETES_DISPONIVEIS',  gid: '1716433489' },
+      { emoji: '📥', nome: 'CAPTACAO_FRETES',     gid: '1335082895' },
+      { emoji: '📊', nome: 'Leads_Motoristas',    gid: '961123584'  },
+      { emoji: '📝', nome: 'LISTAS_TRANSMISSAO',  gid: '1114979046' },
+      { emoji: '❤️', nome: 'MINHAS_LISTAS',       gid: '250132552'  },
+      { emoji: '📈', nome: 'RESUMO EXECUTIVO',    gid: '1707733664' },
+      { emoji: '⚙️', nome: 'PARÂMETROS',          gid: '773407069'  },
+      { emoji: '💰', nome: 'ANÁLISE CUSTOS',      gid: '1081938874' },
+      { emoji: '🌳', nome: 'TRATAMENTO CCA',      gid: '2118458555' },
+      { emoji: '📦', nome: 'ATACADO',             gid: '773407069'  },
+      { emoji: '🧮', nome: 'SIMULADOR',           gid: '85954134'   },
+      { emoji: '📄', nome: 'RELATÓRIO',           gid: '2085464626' },
+      { emoji: '🗺️', nome: 'ESTADOS_CIDADES',    gid: '1784972020' },
+      { emoji: '🛍️', nome: 'VAREJO',             gid: '2046460774' },
+      { emoji: '🛠️', nome: 'CUSTOS SERRAGEM',    gid: '2118458555' },
+      { emoji: '📊', nome: 'Tabela dinâmica 1',   gid: '1142513380' },
+      { emoji: '🔍', nome: 'Detalhe1',            gid: '1183996076' },
+      { emoji: '📖', nome: 'GLOSSÁRIO',           gid: '1656119291' },
+      { emoji: '📃', nome: 'PROPOSTAS',           gid: '2135374310' },
+    ];
+
+    const grid = document.getElementById('grid');
+    abas.forEach(aba => {
+      const card = document.createElement('div');
+      card.className = 'card';
+      card.innerHTML = `
+        <div class="card-left">
+          <span class="emoji">${aba.emoji}</span>
+          <div class="card-info">
+            <div class="card-name">${aba.nome}</div>
+            <div class="card-gid">gid=${aba.gid}</div>
+          </div>
+        </div>
+        <button class="btn-copy" onclick="copiar('${aba.gid}', this)">Copiar</button>
+      `;
+      grid.appendChild(card);
+    });
+
+    let toastTimer;
+    function copiar(texto, btn) {
+      navigator.clipboard.writeText(texto).then(() => {
+        const original = btn.textContent;
+        btn.textContent = '✅ Copiado';
+        btn.classList.add('copied');
+        setTimeout(() => {
+          btn.textContent = original;
+          btn.classList.remove('copied');
+        }, 1800);
+
+        const toast = document.getElementById('toast');
+        toast.classList.add('show');
+        clearTimeout(toastTimer);
+        toastTimer = setTimeout(() => toast.classList.remove('show'), 2000);
+      });
+    }
+  </script>
+</body>
+</html>
