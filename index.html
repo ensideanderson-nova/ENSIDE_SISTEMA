@@ -1193,24 +1193,24 @@
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
                     <div class="form-group">
                         <label>URL da API</label>
-                        <input type="text" id="evolutionUrl" placeholder="https://evolution-api.com/api" value="https://evolution-api.com/api">
+                        <input type="text" id="evolutionUrl" placeholder="https://evolution-api-enside.onrender.com" value="https://evolution-api-enside.onrender.com">
                     </div>
                     <div class="form-group">
                         <label>API Key</label>
-                        <input type="password" id="evolutionApiKey" placeholder="Sua chave de API" value="5f0ce71e1db3469bbe37edc577fbddc0">
+                        <input type="password" id="evolutionApiKey" placeholder="Sua chave de API" value="evolution-api-enside-2024-secret">
                     </div>
                 </div>
                 <div class="form-group">
                     <label>Nome da Instância</label>
-                    <input type="text" id="evolutionInstance" placeholder="ENSIDE" value="enside-master-20260217172641">
+                    <input type="text" id="evolutionInstance" placeholder="ENSIDE" value="ENSIDE">
                 </div>
                     <div class="form-group">
                         <label>ID da Instância</label>
-                        <input type="text" id="evolutionInstanceId" placeholder="ID da Instância" value="59240a812ae1c455" readonly style="background: rgba(34, 197, 94, 0.1); border-color: #22c55e;">
+                        <input type="text" id="evolutionInstanceId" placeholder="ID da Instância" value="ENSIDE" readonly style="background: rgba(34, 197, 94, 0.1); border-color: #22c55e;">
                     </div>
                 <div class="form-group">
                     <label>🔗 Webhook URL</label>
-                    <input type="text" id="webhookUrl" placeholder="URL do Webhook" value="https://8888-i6cwps7xj9nb6v44vk54x-cf846405.us1.manus.computer/webhook" readonly style="background: rgba(14, 165, 233, 0.1); border-color: #0ea5e9;">
+                    <input type="text" id="webhookUrl" placeholder="URL do Webhook" value="https://evolution-api-enside.onrender.com/webhook/ENSIDE" readonly style="background: rgba(14, 165, 233, 0.1); border-color: #0ea5e9;">
                     <small style="color: #94a3b8; display: block; margin-top: 5px;">✅ Webhook configurado para receber eventos</small>
                 </div>
 
@@ -3727,9 +3727,9 @@ XML: Estrutura hierárquica de elementos
 
         // ==================== EVOLUTION API ====================
         let evolutionConfig = {
-            url: localStorage.getItem('evolutionUrl') || 'https://3001-i6cwps7xj9nb6v44vk54x-cf846405.us1.manus.computer',
-            apiKey: localStorage.getItem('evolutionApiKey') || '5f0ce71e1db3469bbe37edc577fbddc0',
-            instance: localStorage.getItem('evolutionInstance') || 'enside-master-20260217172641'
+            url: localStorage.getItem('evolutionUrl') || 'https://evolution-api-enside.onrender.com',
+            apiKey: localStorage.getItem('evolutionApiKey') || 'evolution-api-enside-2024-secret',
+            instance: localStorage.getItem('evolutionInstance') || 'ENSIDE'
         };
 
         function carregarConfigEvolution() {
@@ -6367,11 +6367,11 @@ Em breve entraremos em contato com ofertas de frete!`);
         // ==================== INTEGRAÇÃO EVOLUTION API ====================
         // Credenciais pré-configuradas da Evolution API
         const EVOLUTION_CONFIG = {
-            url: 'https://3001-i6cwps7xj9nb6v44vk54x-cf846405.us1.manus.computer',
-            apiKey: '5f0ce71e1db3469bbe37edc577fbddc0',
-            instance: 'enside-master-20260217172641',
-            instanceId: '59240a812ae1c455',
-            webhook: 'https://3001-i6cwps7xj9nb6v44vk54x-cf846405.us1.manus.computer/webhook'
+            url: 'https://evolution-api-enside.onrender.com',
+            apiKey: 'evolution-api-enside-2024-secret',
+            instance: 'ENSIDE',
+            instanceId: 'ENSIDE',
+            webhook: 'https://evolution-api-enside.onrender.com/webhook/ENSIDE'
         };
 
         // Função para testar conexão com Evolution API (endpoint correto v2.0.0)
