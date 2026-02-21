@@ -1827,6 +1827,32 @@
                 <p style="color: #94a3b8;">Sincronização automática com Google Sheets | Backups | Restauração</p>
             </div>
 
+            <!-- SINCRONIZAÇÃO WHATSAPP + PLANILHA -->
+            <div class="section" style="border: 2px solid #22c55e; border-radius: 12px; padding: 20px; margin-bottom: 20px;">
+                <h3 style="color: #22c55e; margin-bottom: 10px;">📱 Sincronizar Contatos WhatsApp ↔ Google Sheets</h3>
+                <p style="color: #94a3b8; margin-bottom: 15px;">
+                    Busca os <strong>3.702+ contatos reais do WhatsApp</strong> (Evolution API) e cruza com os contatos da planilha pelo número de telefone. 
+                    Os matches são salvos na coluna <strong>WHATSAPP</strong> da planilha para uso no Envio em Massa.
+                </p>
+                
+                <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 15px;">
+                    <button onclick="sincronizarContatosWhatsApp()" style="padding: 12px 24px; background: linear-gradient(135deg, #22c55e, #16a34a); color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 1em;">
+                        🔄 SINCRONIZAR AGORA
+                    </button>
+                    <button onclick="exportarContatosWhatsApp()" style="padding: 12px 24px; background: linear-gradient(135deg, #0ea5e9, #0284c7); color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold;">
+                        📊 Exportar Contatos WPP
+                    </button>
+                </div>
+                
+                <div id="syncWppStatus" style="display: none; padding: 15px; background: rgba(34,197,94,0.1); border-radius: 8px; border: 1px solid #22c55e;">
+                    <p id="syncWppMsg" style="color: #22c55e; font-weight: bold;"></p>
+                    <div id="syncWppProgress" style="background: rgba(255,255,255,0.1); border-radius: 10px; overflow: hidden; margin: 10px 0; display: none;">
+                        <div id="syncWppBar" style="background: linear-gradient(90deg, #22c55e, #16a34a); width: 0%; height: 16px; transition: width 0.3s;"></div>
+                    </div>
+                    <div id="syncWppResultado" style="margin-top: 10px;"></div>
+                </div>
+            </div>
+
             <div class="grid">
                 <div class="grid-card">
                     <h3>☁️ Google Sheets</h3>
@@ -4093,6 +4119,190 @@ XML: Estrutura hierárquica de elementos
                 if (progressElMassa) progressElMassa.style.display = 'none';
                 alert(`❌ Erro no envio em massa: ${error.message}\n\nVerifique a conexão com a Evolution API.`);
             }
+        }
+
+        // ==================== SINCRONIZAÇÃO WHATSAPP ↔ GOOGLE SHEETS ====================
+        async function sincronizarContatosWhatsApp() {
+            const url = document.getElementById('evolutionUrl')?.value || 'https://evolution-api-enside.onrender.com';
+            const apiKey = document.getElementById('evolutionApiKey')?.value || 'evolution-api-enside-2024-secret';
+            const instance = document.getElementById('evolutionInstance')?.value || 'ENSIDE';
+
+            const statusEl = document.getElementById('syncWppStatus');
+            const msgEl = document.getElementById('syncWppMsg');
+            const progressEl = document.getElementById('syncWppProgress');
+            const barEl = document.getElementById('syncWppBar');
+            const resultadoEl = document.getElementById('syncWppResultado');
+
+            if (statusEl) statusEl.style.display = 'block';
+            if (progressEl) progressEl.style.display = 'none';
+            if (resultadoEl) resultadoEl.innerHTML = '';
+            if (msgEl) msgEl.textContent = '⏳ Buscando contatos do WhatsApp...';
+
+            try {
+                // 1) Buscar contatos do WhatsApp via Evolution API
+                const wppResp = await fetch(`${url}/chat/findContacts/${instance}`, {
+                    method: 'POST',
+                    headers: { 'apikey': apiKey, 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ where: {} }),
+                    signal: AbortSignal.timeout(30000)
+                });
+                if (!wppResp.ok) throw new Error(`Evolution API retornou HTTP ${wppResp.status}`);
+                const wppContatos = await wppResp.json();
+
+                if (!Array.isArray(wppContatos) || wppContatos.length === 0) {
+                    throw new Error('Nenhum contato encontrado no WhatsApp');
+                }
+
+                if (msgEl) msgEl.textContent = `✅ ${wppContatos.length} contatos do WhatsApp carregados. Cruzando com a planilha...`;
+
+                // 2) Montar mapa de telefone -> número WhatsApp
+                // Normalizar: remover @s.whatsapp.net, manter apenas dígitos
+                const wppMap = new Map();
+                wppContatos.forEach(c => {
+                    const jid = c.id || '';
+                    const phone = jid.replace('@s.whatsapp.net', '').replace('@c.us', '').replace(/\D/g, '');
+                    if (phone.length >= 10) {
+                        // Indexar por número completo (com 55) e sem 55
+                        wppMap.set(phone, { phone, nome: c.pushName || '' });
+                        // Tambem indexar pelos últimos 9 dígitos para match parcial
+                        const ultimos9 = phone.slice(-9);
+                        if (!wppMap.has('_' + ultimos9)) wppMap.set('_' + ultimos9, { phone, nome: c.pushName || '' });
+                    }
+                });
+
+                // 3) Carregar contatos da planilha se necessário
+                if (!window.contatosGoogleSheets || window.contatosGoogleSheets.length === 0) {
+                    if (msgEl) msgEl.textContent = '⏳ Carregando contatos da planilha...';
+                    await carregarContatosGoogleSheets();
+                }
+                const planilhaContatos = window.contatosGoogleSheets || [];
+
+                if (msgEl) msgEl.textContent = `⏳ Cruzando ${planilhaContatos.length} contatos da planilha com ${wppContatos.length} do WhatsApp...`;
+                if (progressEl) progressEl.style.display = 'block';
+
+                // 4) Cruzar contatos
+                let matches = 0;
+                let semMatch = 0;
+                const contatosAtualizados = [];
+
+                for (let i = 0; i < planilhaContatos.length; i++) {
+                    const c = planilhaContatos[i];
+                    const telBruto = String(c.telefone || '').replace(/\D/g, '');
+                    const tel2Bruto = String(c.telefone2 || '').replace(/\D/g, '');
+
+                    // Tentar match pelo telefone principal
+                    let wppInfo = null;
+                    for (const tel of [telBruto, tel2Bruto]) {
+                        if (!tel || tel.length < 8) continue;
+                        const telC55 = tel.startsWith('55') ? tel : '55' + tel;
+                        const ultimos9 = tel.slice(-9);
+                        wppInfo = wppMap.get(telC55) || wppMap.get(tel) || wppMap.get('_' + ultimos9);
+                        if (wppInfo) break;
+                    }
+
+                    if (wppInfo) {
+                        matches++;
+                        // Atualizar o contato com o número WhatsApp confirmado
+                        c.whatsapp = wppInfo.phone.startsWith('55') ? wppInfo.phone : '55' + wppInfo.phone;
+                        contatosAtualizados.push({ ...c, whatsapp: c.whatsapp });
+                    } else {
+                        semMatch++;
+                    }
+
+                    // Atualizar progresso a cada 100
+                    if (i % 100 === 0 && barEl) {
+                        const pct = Math.round((i / planilhaContatos.length) * 100);
+                        barEl.style.width = pct + '%';
+                    }
+                }
+
+                if (barEl) barEl.style.width = '100%';
+
+                // 5) Salvar resultado no window para uso no envio em massa
+                window.contatosGoogleSheets = planilhaContatos;
+                window.contatosWppSincronizados = contatosAtualizados;
+
+                // 6) Mostrar resultado
+                const pct = Math.round((matches / planilhaContatos.length) * 100);
+                if (msgEl) msgEl.textContent = `✅ Sincronização concluída!`;
+                if (resultadoEl) resultadoEl.innerHTML = `
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; margin-top: 10px;">
+                        <div style="background: rgba(34,197,94,0.2); padding: 12px; border-radius: 8px; text-align: center;">
+                            <div style="font-size: 1.8em; font-weight: bold; color: #22c55e;">${matches}</div>
+                            <div style="color: #94a3b8; font-size: 0.85em;">Com WhatsApp</div>
+                        </div>
+                        <div style="background: rgba(239,68,68,0.2); padding: 12px; border-radius: 8px; text-align: center;">
+                            <div style="font-size: 1.8em; font-weight: bold; color: #ef4444;">${semMatch}</div>
+                            <div style="color: #94a3b8; font-size: 0.85em;">Sem Match</div>
+                        </div>
+                        <div style="background: rgba(14,165,233,0.2); padding: 12px; border-radius: 8px; text-align: center;">
+                            <div style="font-size: 1.8em; font-weight: bold; color: #0ea5e9;">${pct}%</div>
+                            <div style="color: #94a3b8; font-size: 0.85em;">Taxa de Match</div>
+                        </div>
+                        <div style="background: rgba(245,158,11,0.2); padding: 12px; border-radius: 8px; text-align: center;">
+                            <div style="font-size: 1.8em; font-weight: bold; color: #f59e0b;">${wppContatos.length}</div>
+                            <div style="color: #94a3b8; font-size: 0.85em;">Contatos WPP</div>
+                        </div>
+                    </div>
+                    <p style="color: #94a3b8; margin-top: 12px; font-size: 0.9em;">
+                        ✅ <strong>${matches} contatos</strong> agora têm WhatsApp confirmado e serão priorizados no Envio em Massa.<br>
+                        📊 Os dados foram atualizados em memória. Para salvar permanentemente, exporte o CSV abaixo.
+                    </p>
+                    <button onclick="exportarContatosWhatsApp()" style="margin-top: 10px; padding: 10px 20px; background: linear-gradient(135deg, #0ea5e9, #0284c7); color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold;">
+                        📊 Exportar CSV com WhatsApp
+                    </button>
+                `;
+
+                // Atualizar o select do envio em massa com contagens reais
+                const select = document.getElementById('evolutionLista');
+                if (select && typeof LISTAS_FILTROS !== 'undefined') {
+                    const contatos = window.contatosGoogleSheets;
+                    // Atualizar contagens no select
+                    for (let i = 0; i < select.options.length; i++) {
+                        const opt = select.options[i];
+                        const filtroFn = LISTAS_FILTROS[opt.value];
+                        if (filtroFn) {
+                            const total = contatos.filter(filtroFn).length;
+                            const comWpp = contatos.filter(c => filtroFn(c) && c.whatsapp).length;
+                            opt.textContent = opt.textContent.replace(/\(.*\)/, `(${comWpp} WPP / ${total} total)`);
+                        }
+                    }
+                }
+
+            } catch(e) {
+                if (msgEl) msgEl.textContent = `❌ Erro: ${e.message}`;
+                if (msgEl) msgEl.style.color = '#ef4444';
+                console.error('Erro na sincronização:', e);
+            }
+        }
+
+        async function exportarContatosWhatsApp() {
+            const contatos = window.contatosGoogleSheets || [];
+            const comWpp = contatos.filter(c => c.whatsapp);
+
+            if (comWpp.length === 0) {
+                alert('⚠️ Nenhum contato com WhatsApp encontrado.\nClique em "🔄 SINCRONIZAR AGORA" primeiro.');
+                return;
+            }
+
+            // Gerar CSV
+            const headers = ['NOME', 'TELEFONE', 'WHATSAPP', 'CATEGORIA', 'SUBCATEGORIA', 'CIDADE', 'UF', 'EMAIL', 'EMPRESA'];
+            const rows = comWpp.map(c => [
+                c.nome || '', c.telefone || '', c.whatsapp || '',
+                c.categoria || '', c.subcategoria || '', c.cidade || '',
+                c.uf || '', c.email || '', c.empresa || ''
+            ]);
+
+            const csv = [headers, ...rows].map(r => r.map(v => `"${String(v).replace(/"/g, '""')}"`).join(',')).join('\n');
+            const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `contatos_whatsapp_${new Date().toISOString().slice(0,10)}.csv`;
+            a.click();
+            URL.revokeObjectURL(url);
+
+            alert(`✅ CSV exportado!\n\n📱 ${comWpp.length} contatos com WhatsApp\n\nImporte este arquivo na coluna WHATSAPP da planilha Google Sheets para salvar permanentemente.`);
         }
 
         function agendarEnvio() {
