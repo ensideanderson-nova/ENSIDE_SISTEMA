@@ -1193,16 +1193,16 @@
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
                     <div class="form-group">
                         <label>URL da API</label>
-                        <input type="text" id="evolutionUrl" placeholder="https://evolution-api-enside.onrender.com" value="https://evolution-api-enside.onrender.com" style="word-break: break-all;">
+                        <input type="text" id="evolutionUrl" placeholder="https://evolution-api.com/api" value="https://evolution-api.com/api">
                     </div>
                     <div class="form-group">
                         <label>API Key</label>
-                        <input type="password" id="evolutionApiKey" placeholder="Sua chave de API" value="evolution-api-enside-2024-secret">
+                        <input type="password" id="evolutionApiKey" placeholder="Sua chave de API" value="5f0ce71e1db3469bbe37edc577fbddc0">
                     </div>
                 </div>
                 <div class="form-group">
                     <label>Nome da Instância</label>
-                    <input type="text" id="evolutionInstance" placeholder="ENSIDE" value="ENSIDE">
+                    <input type="text" id="evolutionInstance" placeholder="ENSIDE" value="enside-master-20260217172641">
                 </div>
                     <div class="form-group">
                         <label>ID da Instância</label>
@@ -1210,7 +1210,7 @@
                     </div>
                 <div class="form-group">
                     <label>🔗 Webhook URL</label>
-                    <input type="text" id="webhookUrl" placeholder="URL do Webhook" value="https://evolution-api-enside.onrender.com/webhook" readonly style="background: rgba(14, 165, 233, 0.1); border-color: #0ea5e9; word-break: break-all;">
+                    <input type="text" id="webhookUrl" placeholder="URL do Webhook" value="https://8888-i6cwps7xj9nb6v44vk54x-cf846405.us1.manus.computer/webhook" readonly style="background: rgba(14, 165, 233, 0.1); border-color: #0ea5e9;">
                     <small style="color: #94a3b8; display: block; margin-top: 5px;">✅ Webhook configurado para receber eventos</small>
                 </div>
 
@@ -1893,19 +1893,32 @@
                 
                 <!-- Abas da Planilha -->
                 <div style="display: flex; gap: 5px; margin-bottom: 15px; flex-wrap: wrap;">
-                    <button onclick="mudarAbaPlanilha('0')" class="planilha-tab active" data-gid="0">📋 Resumo Executivo</button>
-                    <button onclick="mudarAbaPlanilha('1114979046')" class="planilha-tab" data-gid="1114979046">👥 Contatos</button>
-                    <button onclick="mudarAbaPlanilha('1707733664')" class="planilha-tab" data-gid="1707733664">📝 Listas Transmissão</button>
-                    <button onclick="mudarAbaPlanilha('parametros')" class="planilha-tab" data-gid="parametros">⚙️ Parâmetros</button>
-                    <button onclick="mudarAbaPlanilha('atacado')" class="planilha-tab" data-gid="atacado">💰 Atacado</button>
-                    <button onclick="mudarAbaPlanilha('varejo')" class="planilha-tab" data-gid="varejo">🛒 Varejo</button>
-                    <button onclick="mudarAbaPlanilha('custos')" class="planilha-tab" data-gid="custos">📊 Custos Serragem</button>
+                    <button onclick="mudarAbaPlanilha('1689968688')" class="planilha-tab active" data-gid="1689968688">👥 CONTATOS</button>
+                    <button onclick="mudarAbaPlanilha('1716433489')" class="planilha-tab" data-gid="1716433489">🚚 FRETES</button>
+                    <button onclick="mudarAbaPlanilha('1335082895')" class="planilha-tab" data-gid="1335082895">📥 CAPTAÇÃO</button>
+                    <button onclick="mudarAbaPlanilha('961123584')" class="planilha-tab" data-gid="961123584">📊 LEADS</button>
+                    <button onclick="mudarAbaPlanilha('1114979046')" class="planilha-tab" data-gid="1114979046">📝 LISTAS</button>
+                    <button onclick="mudarAbaPlanilha('250132552')" class="planilha-tab" data-gid="250132552">❤️ MINHAS LISTAS</button>
+                    <button onclick="mudarAbaPlanilha('1707733664')" class="planilha-tab" data-gid="1707733664">📊 RESUMO</button>
+                    <button onclick="mudarAbaPlanilha('773407069')" class="planilha-tab" data-gid="773407069">⚙️ PARÂMETROS</button>
+                    <button onclick="mudarAbaPlanilha('1081938874')" class="planilha-tab" data-gid="1081938874">💰 ANÁLISE CUSTOS</button>
+                    <button onclick="mudarAbaPlanilha('2118458555')" class="planilha-tab" data-gid="2118458555">🌳 TRATAMENTO CCA</button>
+                    <button onclick="mudarAbaPlanilha('773407069')" class="planilha-tab" data-gid="773407069">📦 ATACADO</button>
+                    <button onclick="mudarAbaPlanilha('85954134')" class="planilha-tab" data-gid="85954134">🧮 SIMULADOR</button>
+                    <button onclick="mudarAbaPlanilha('2085464626')" class="planilha-tab" data-gid="2085464626">📄 RELATÓRIO</button>
+                    <button onclick="mudarAbaPlanilha('1784972020')" class="planilha-tab" data-gid="1784972020">🇳🇧 ESTADOS</button>
+                    <button onclick="mudarAbaPlanilha('2046460774')" class="planilha-tab" data-gid="2046460774">🛍️ VAREJO</button>
+                    <button onclick="mudarAbaPlanilha('2118458555')" class="planilha-tab" data-gid="2118458555">🛠️ CUSTOS SERRAGEM</button>
+                    <button onclick="mudarAbaPlanilha('1142513380')" class="planilha-tab" data-gid="1142513380">📊 TABELA DINÂMICA</button>
+                    <button onclick="mudarAbaPlanilha('1183996076')" class="planilha-tab" data-gid="1183996076">🔍 DETALHE1</button>
+                    <button onclick="mudarAbaPlanilha('1656119291')" class="planilha-tab" data-gid="1656119291">📖 GLOSSÁRIO</button>
+                    <button onclick="mudarAbaPlanilha('2135374310')" class="planilha-tab" data-gid="2135374310">📃 PROPOSTAS</button>
                 </div>
                 
                 <!-- Container do iframe -->
                 <div style="background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.3);">
                     <iframe id="planilhaFrame" 
-                            src="https://docs.google.com/spreadsheets/d/1FiP885Or0ncyRG_ZZaAvM2vP0sHhDzhLFYifYLjKyIE/edit?usp=sharing&rm=minimal&gid=0" 
+                            src="https://docs.google.com/spreadsheets/d/1FiP885Or0ncyRG_ZZaAvM2vP0sHhDzhLFYifYLjKyIE/edit?usp=sharing&rm=minimal&gid=1689968688" 
                             style="width: 100%; height: 700px; border: none;"
                             allowfullscreen>
                     </iframe>
@@ -2367,7 +2380,7 @@ XML: Estrutura hierárquica de elementos
         <p style="text-align: center; color: var(--text-muted); margin-bottom: 20px;">Gestão completa de contatos com campos CRM | Integrado em tempo real com a planilha EUCALIPTO</p>
         <div style="display: flex; gap: 15px; justify-content: center; flex-wrap: wrap; margin-bottom: 20px;">
             <button onclick="window.open('MODULOS/CONTATOS_CRM.html', '_blank')" class="btn" style="background: linear-gradient(135deg, #ec4899, #be185d);">🔗 Abrir CRM Completo</button>
-            <button onclick="window.open('https://docs.google.com/spreadsheets/d/1FiP885Or0ncyRG_ZZaAvM2vP0sHhDzhLFYifYLjKyIE/edit#gid=0', '_blank')" class="btn" style="background: linear-gradient(135deg, #22c55e, #16a34a);">📊 Abrir Planilha</button>
+            <button onclick="window.open('https://docs.google.com/spreadsheets/d/1FiP885Or0ncyRG_ZZaAvM2vP0sHhDzhLFYifYLjKyIE/edit?gid=1689968688', '_blank')" class="btn" style="background: linear-gradient(135deg, #22c55e, #16a34a);">📊 Abrir Planilha</button>
         </div>
         <div style="width: 100%; height: 400px; border: 2px solid #ec4899; border-radius: 12px; background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 20px;">
             <div style="font-size: 4em;">📊</div>
@@ -2375,7 +2388,7 @@ XML: Estrutura hierárquica de elementos
             <p style="color: #94a3b8; text-align: center; max-width: 500px;">Sistema completo de CRM com 7.055+ contatos, filtros avançados, categorias (Fornecedores, Clientes, Transportadores, Representantes) e integração com Google Sheets.</p>
             <div style="display: flex; gap: 15px; flex-wrap: wrap; justify-content: center;">
                 <button onclick="window.open('MODULOS/CONTATOS_CRM.html', '_blank')" style="background: linear-gradient(135deg, #ec4899, #be185d); color: white; border: none; padding: 15px 30px; border-radius: 10px; font-size: 1.1em; cursor: pointer; font-weight: 600;">🚀 Abrir CRM Completo</button>
-                <button onclick="window.open('https://docs.google.com/spreadsheets/d/1FiP885Or0ncyRG_ZZaAvM2vP0sHhDzhLFYifYLjKyIE/edit#gid=0', '_blank')" style="background: linear-gradient(135deg, #22c55e, #16a34a); color: white; border: none; padding: 15px 30px; border-radius: 10px; font-size: 1.1em; cursor: pointer; font-weight: 600;">📊 Abrir Planilha</button>
+                <button onclick="window.open('https://docs.google.com/spreadsheets/d/1FiP885Or0ncyRG_ZZaAvM2vP0sHhDzhLFYifYLjKyIE/edit?gid=1689968688', '_blank')" style="background: linear-gradient(135deg, #22c55e, #16a34a); color: white; border: none; padding: 15px 30px; border-radius: 10px; font-size: 1.1em; cursor: pointer; font-weight: 600;">📊 Abrir Planilha</button>
             </div>
             <p style="color: #64748b; font-size: 0.85em; margin-top: 10px;">⚠️ Por segurança, o Safari não permite iframes de arquivos locais. Clique no botão acima.</p>
         </div>
@@ -2387,7 +2400,7 @@ XML: Estrutura hierárquica de elementos
         <p style="text-align: center; color: var(--text-muted); margin-bottom: 20px;">Cadastre e gerencie fretes disponíveis | Integrado em tempo real com a planilha EUCALIPTO</p>
         <div style="display: flex; gap: 15px; justify-content: center; flex-wrap: wrap; margin-bottom: 20px;">
             <button onclick="window.open('MODULOS/FRETES_DISPONIVEIS.html', '_blank')" class="btn" style="background: linear-gradient(135deg, #8b5cf6, #6d28d9);">🔗 Abrir Fretes Completo</button>
-            <button onclick="window.open('https://docs.google.com/spreadsheets/d/1FiP885Or0ncyRG_ZZaAvM2vP0sHhDzhLFYifYLjKyIE/edit#gid=FRETES_DISPONIVEIS', '_blank')" class="btn" style="background: linear-gradient(135deg, #22c55e, #16a34a);">📊 Abrir Planilha</button>
+            <button onclick="window.open('https://docs.google.com/spreadsheets/d/1FiP885Or0ncyRG_ZZaAvM2vP0sHhDzhLFYifYLjKyIE/edit?gid=1716433489', '_blank')" class="btn" style="background: linear-gradient(135deg, #22c55e, #16a34a);">📊 Abrir Planilha</button>
         </div>
         <div style="width: 100%; height: 400px; border: 2px solid #8b5cf6; border-radius: 12px; background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 20px;">
             <div style="font-size: 4em;">📦</div>
@@ -2395,7 +2408,7 @@ XML: Estrutura hierárquica de elementos
             <p style="color: #94a3b8; text-align: center; max-width: 500px;">Sistema de fretes com rotas disponíveis, valores, filtros por origem/destino e integração com transportadores.</p>
             <div style="display: flex; gap: 15px; flex-wrap: wrap; justify-content: center;">
                 <button onclick="window.open('MODULOS/FRETES_DISPONIVEIS.html', '_blank')" style="background: linear-gradient(135deg, #8b5cf6, #6d28d9); color: white; border: none; padding: 15px 30px; border-radius: 10px; font-size: 1.1em; cursor: pointer; font-weight: 600;">🚀 Abrir Fretes</button>
-                <button onclick="window.open('https://docs.google.com/spreadsheets/d/1FiP885Or0ncyRG_ZZaAvM2vP0sHhDzhLFYifYLjKyIE/edit#gid=1234567890', '_blank')" style="background: linear-gradient(135deg, #22c55e, #16a34a); color: white; border: none; padding: 15px 30px; border-radius: 10px; font-size: 1.1em; cursor: pointer; font-weight: 600;">📊 Abrir Planilha</button>
+                <button onclick="window.open('https://docs.google.com/spreadsheets/d/1FiP885Or0ncyRG_ZZaAvM2vP0sHhDzhLFYifYLjKyIE/edit?gid=1716433489', '_blank')" style="background: linear-gradient(135deg, #22c55e, #16a34a); color: white; border: none; padding: 15px 30px; border-radius: 10px; font-size: 1.1em; cursor: pointer; font-weight: 600;">📊 Abrir Planilha</button>
             </div>
             <p style="color: #64748b; font-size: 0.85em; margin-top: 10px;">⚠️ Por segurança, o Safari não permite iframes de arquivos locais. Clique no botão acima.</p>
         </div>
@@ -2758,9 +2771,7 @@ XML: Estrutura hierárquica de elementos
                     // Filtra apenas arquivos suportados
                     const ext = nome.toLowerCase();
                     if (ext.endsWith('.csv') || ext.endsWith('.json') || ext.endsWith('.xlsx') || 
-                        ext.endsWith('.xls') || ext.endsWith('.txt') || ext.endsWith('.xml') ||
-                        ext.endsWith('.pdf') || ext.endsWith('.docx') || ext.endsWith('.doc') ||
-                        ext.endsWith('.pptx') || ext.endsWith('.ppt')) {
+                        ext.endsWith('.xls') || ext.endsWith('.txt') || ext.endsWith('.xml')) {
                         arquivos.push(file);
                     }
                 }
@@ -2784,103 +2795,12 @@ XML: Estrutura hierárquica de elementos
 
         fileInput.addEventListener('change', (e) => handleFiles(e.target.files));
 
-
-        // Função para processar PDF (simulado)
-        function parsePDF(file, arrayBuffer) {
-            const dadosPDF = [
-                { 'Nome': 'Documento PDF', 'Conteudo': 'Importado de ' + file.name, 'Tipo': 'PDF', 'Data': new Date().toLocaleDateString() },
-                { 'Nome': 'Página 1', 'Conteudo': 'Dados extraídos do PDF', 'Tipo': 'PDF', 'Data': new Date().toLocaleDateString() }
-            ];
-            
-            dadosImportados = dadosPDF;
-            showPreview(dadosPDF, ['Nome', 'Conteudo', 'Tipo', 'Data'], dadosPDF.length);
-            console.log('PDF carregado: ' + file.name + ' - ' + dadosPDF.length + ' registros');
-        }
-
-
-        // ==================== INDEXEDDB PARA PERSISTÊNCIA ====================
-        let db = null;
-        
-        function inicializarIndexedDB() {
-            return new Promise((resolve, reject) => {
-                const request = indexedDB.open('ENSIDEDatabase', 1);
-                
-                request.onerror = () => reject(request.error);
-                request.onsuccess = () => {
-                    db = request.result;
-                    resolve(db);
-                };
-                
-                request.onupgradeneeded = (event) => {
-                    const db = event.target.result;
-                    if (!db.objectStoreNames.contains('dadosImportados')) {
-                        db.createObjectStore('dadosImportados', { keyPath: 'id', autoIncrement: true });
-                    }
-                    if (!db.objectStoreNames.contains('backups')) {
-                        db.createObjectStore('backups', { keyPath: 'id', autoIncrement: true });
-                    }
-                };
-            });
-        }
-        
-        function salvarNoIndexedDB(storeName, dados) {
-            if (!db) return;
-            const transaction = db.transaction([storeName], 'readwrite');
-            const store = transaction.objectStore(storeName);
-            store.clear();
-            dados.forEach(item => store.add(item));
-        }
-        
-        function carregarDoIndexedDB(storeName) {
-            return new Promise((resolve, reject) => {
-                if (!db) {
-                    resolve([]);
-                    return;
-                }
-                const transaction = db.transaction([storeName], 'readonly');
-                const store = transaction.objectStore(storeName);
-                const request = store.getAll();
-                request.onsuccess = () => resolve(request.result);
-                request.onerror = () => reject(request.error);
-            });
-        }
-        
-        function criarBackupAutomatico(dados) {
-            const backup = {
-                data: new Date().toISOString(),
-                quantidade: dados.length,
-                dados: dados
-            };
-            
-            const backups = JSON.parse(localStorage.getItem('backupsENSIDE') || '[]');
-            backups.push(backup);
-            
-            if (backups.length > 10) {
-                backups.shift();
-            }
-            
-            localStorage.setItem('backupsENSIDE', JSON.stringify(backups));
-            salvarNoIndexedDB('backups', backups);
-        }
-        
-        inicializarIndexedDB().catch(e => console.log('IndexedDB não disponível:', e));
-
         function handleFiles(files) {
             if (files.length === 0) return;
             const file = files[0];
-            const ext = file.name.toLowerCase();
-            
-            if (ext.endsWith('.pdf')) {
-                const reader = new FileReader();
-                reader.onload = (e) => parsePDF(file, e.target.result);
-                reader.readAsArrayBuffer(file);
-            } else if (ext.endsWith('.docx') || ext.endsWith('.doc') || ext.endsWith('.pptx') || ext.endsWith('.ppt')) {
-                alert('Arquivo ' + ext + ' detectado.\n\nConverta para CSV ou XLSX para importar.\n\nEm breve suportaremos importação direta!');
-            } else {
-                const reader = new FileReader();
-                reader.onload = (e) => parseFile(file, e.target.result);
-                reader.readAsText(file);
-            }
+            const reader = new FileReader();
+            reader.onload = (e) => parseFile(file, e.target.result);
+            reader.readAsText(file);
         }
 
         function parseFile(file, content) {
@@ -3036,12 +2956,10 @@ XML: Estrutura hierárquica de elementos
                 }
             });
 
-            // Salvar no localStorage E IndexedDB
+            // Salvar no localStorage
             const dadosAnteriores = JSON.parse(localStorage.getItem('dadosImportadosENSIDE') || '[]');
             const novosDados = [...dadosAnteriores, ...dadosProcessados];
             localStorage.setItem('dadosImportadosENSIDE', JSON.stringify(novosDados));
-            salvarNoIndexedDB('dadosImportados', novosDados);
-            criarBackupAutomatico(novosDados);
 
             return { processados, validados, erros, duplicatas, dadosProcessados };
         }
@@ -3730,9 +3648,9 @@ XML: Estrutura hierárquica de elementos
 
         // ==================== EVOLUTION API ====================
         let evolutionConfig = {
-            url: localStorage.getItem('evolutionUrl') || 'https://evolution-api-enside.onrender.com',
-            apiKey: localStorage.getItem('evolutionApiKey') || 'evolution-api-enside-2024-secret',
-            instance: localStorage.getItem('evolutionInstance') || 'ENSIDE'
+            url: localStorage.getItem('evolutionUrl') || 'https://3001-i6cwps7xj9nb6v44vk54x-cf846405.us1.manus.computer',
+            apiKey: localStorage.getItem('evolutionApiKey') || '5f0ce71e1db3469bbe37edc577fbddc0',
+            instance: localStorage.getItem('evolutionInstance') || 'enside-master-20260217172641'
         };
 
         function carregarConfigEvolution() {
@@ -3746,9 +3664,9 @@ XML: Estrutura hierárquica de elementos
             evolutionConfig.apiKey = document.getElementById('evolutionApiKey').value;
             evolutionConfig.instance = document.getElementById('evolutionInstance').value;
             
-            localStorage.setItem('evolutionUrl', evolutionConfig.url); backendSync.salvarConfiguracao('evolutionUrl', evolutionConfig.url);
-            localStorage.setItem('evolutionApiKey', evolutionConfig.apiKey); backendSync.salvarConfiguracao('evolutionApiKey', evolutionConfig.apiKey);
-            localStorage.setItem('evolutionInstance', evolutionConfig.instance); backendSync.salvarConfiguracao('evolutionInstance', evolutionConfig.instance);
+            localStorage.setItem('evolutionUrl', evolutionConfig.url);
+            localStorage.setItem('evolutionApiKey', evolutionConfig.apiKey);
+            localStorage.setItem('evolutionInstance', evolutionConfig.instance);
             
             alert('✅ Configurações salvas com sucesso!');
         }
@@ -3756,7 +3674,6 @@ XML: Estrutura hierárquica de elementos
         async function testarConexaoEvolution() {
             const url = document.getElementById('evolutionUrl').value;
             const apiKey = document.getElementById('evolutionApiKey').value;
-            const instance = document.getElementById('evolutionInstance').value;
 
             if (!url || !apiKey) {
                 alert('⚠️ Por favor, preencha URL e API Key');
@@ -3766,7 +3683,8 @@ XML: Estrutura hierárquica de elementos
             document.getElementById('evolutionStatus').textContent = '🔄';
             
             try {
-                const response = await fetch(`${url}/instance/connectionState/${instance}`, {
+                // Endpoint correto da Evolution API v2.0.0
+                const response = await fetch(`${url}/api/instance/status`, {
                     headers: {
                         'apikey': apiKey,
                         'Content-Type': 'application/json'
@@ -3775,16 +3693,26 @@ XML: Estrutura hierárquica de elementos
                 
                 if (response.ok) {
                     const data = await response.json();
-                    document.getElementById('evolutionStatus').textContent = '✅';
-                    document.getElementById('evolutionStatusCard').style.borderColor = '#22c55e';
-                    alert(`✅ Conexão bem sucedida!\nStatus: ${data.state || 'Conectado'}`);
+                    const status = data.status || data.state || 'Conectado';
+                    const phone = data.phone ? `\n📱 Número: ${data.phone}` : '';
+                    const connected = data.connected ? '✅ Conectado' : '⚠️ Desconectado';
+                    document.getElementById('evolutionStatus').textContent = data.connected ? '✅' : '⚠️';
+                    document.getElementById('evolutionStatusCard').style.borderColor = data.connected ? '#22c55e' : '#f59e0b';
+                    // Atualizar contagem de contatos
+                    const contatosResp = await fetch(`${url}/api/contacts/list`, { headers: { 'apikey': apiKey } });
+                    if (contatosResp.ok) {
+                        const contatosData = await contatosResp.json();
+                        const total = contatosData.total || (contatosData.contacts || []).length;
+                        document.getElementById('evolutionContacts').textContent = total;
+                    }
+                    alert(`${connected}\nInstância: ${data.instance || ''}${phone}\nStatus: ${status}`);
                 } else {
-                    throw new Error('Falha na conexão');
+                    throw new Error(`HTTP ${response.status}`);
                 }
             } catch (error) {
                 document.getElementById('evolutionStatus').textContent = '❌';
                 document.getElementById('evolutionStatusCard').style.borderColor = '#ef4444';
-                alert(`❌ Erro ao conectar: ${error.message}\n\nVerifique:\n- URL da API\n- API Key\n- Nome da instância`);
+                alert(`❌ Erro ao conectar: ${error.message}\n\nVerifique:\n- URL da API (ex: https://3001-xxx.manus.computer)\n- API Key\n- Se o servidor está online`);
             }
         }
 
@@ -3834,7 +3762,6 @@ XML: Estrutura hierárquica de elementos
         async function enviarMensagemEvolution() {
             const url = document.getElementById('evolutionUrl').value;
             const apiKey = document.getElementById('evolutionApiKey').value;
-            const instance = document.getElementById('evolutionInstance').value;
             const numero = document.getElementById('evolutionNumero').value.replace(/\D/g, '');
             const mensagem = document.getElementById('evolutionMensagem').value;
 
@@ -3843,50 +3770,137 @@ XML: Estrutura hierárquica de elementos
                 return;
             }
 
+            // Formatar telefone: garantir que comece com 55
+            const telefone = numero.startsWith('55') ? numero : '55' + numero;
+
             try {
-                const response = await fetch(`${url}/message/sendText/${instance}`, {
+                // Endpoint correto da Evolution API v2.0.0
+                const response = await fetch(`${url}/api/message/send`, {
                     method: 'POST',
                     headers: {
                         'apikey': apiKey,
                         'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({
-                        number: numero,
-                        textMessage: { text: mensagem }
+                        phone: telefone,
+                        message: mensagem
                     })
                 });
 
                 if (response.ok) {
                     const data = await response.json();
-                    alert('✅ Mensagem enviada com sucesso!');
+                    alert(`✅ Mensagem enviada com sucesso!\nID: ${data.messageId || ''}\nStatus: ${data.status || 'sent'}`);
                     const count = parseInt(document.getElementById('evolutionMsgs').textContent) + 1;
                     document.getElementById('evolutionMsgs').textContent = count;
                 } else {
-                    throw new Error('Falha ao enviar');
+                    const err = await response.json().catch(() => ({}));
+                    throw new Error(err.error || `HTTP ${response.status}`);
                 }
             } catch (error) {
-                alert(`❌ Erro: ${error.message}`);
+                alert(`❌ Erro ao enviar: ${error.message}`);
             }
         }
 
         async function enviarMensagemMassa() {
-            const lista = document.getElementById('evolutionLista').value;
-            if (!lista) {
+            const listaValor = document.getElementById('evolutionLista').value;
+            if (!listaValor) {
                 alert('⚠️ Selecione uma lista de contatos');
                 return;
             }
             
-            const mensagem = document.getElementById('evolutionMensagemMassa').value;
-            const contatos = {
-                fornecedores: 1200,
-                clientes: 2500,
-                transportadores: 377
+            const mensagemTemplate = document.getElementById('evolutionMensagemMassa').value;
+            if (!mensagemTemplate) {
+                alert('⚠️ Digite uma mensagem');
+                return;
+            }
+
+            const url = document.getElementById('evolutionUrl').value;
+            const apiKey = document.getElementById('evolutionApiKey').value;
+
+            if (!url || !apiKey) {
+                alert('⚠️ Configure a URL e API Key da Evolution API primeiro');
+                return;
+            }
+
+            // Obter contatos da planilha ou do sistema
+            let contatosFiltrados = [...(window.contatosGoogleSheets || [])];
+            
+            // Filtrar por categoria baseado na lista selecionada
+            const filtros = {
+                'fornecedores': c => c.categoria && c.categoria.toUpperCase().includes('FORNECEDOR'),
+                'clientes': c => c.categoria && c.categoria.toUpperCase().includes('CLIENTE'),
+                'transportadores': c => c.categoria && c.categoria.toUpperCase().includes('TRANSPORTADOR'),
+                'todos_fornecedores': c => c.categoria && c.categoria.toUpperCase().includes('FORNECEDOR'),
+                'todos_clientes': c => c.categoria && c.categoria.toUpperCase().includes('CLIENTE'),
             };
+
+            if (filtros[listaValor]) {
+                contatosFiltrados = contatosFiltrados.filter(filtros[listaValor]);
+            } else if (listaValor.includes('_sp')) {
+                contatosFiltrados = contatosFiltrados.filter(c => c.uf === 'SP');
+            }
+
+            // Limitar a 256 por envio (limite WhatsApp)
+            const lote = contatosFiltrados.slice(0, 256);
             
-            const total = contatos[lista];
-            const lotes = Math.ceil(total / 256);
-            
-            alert(`📨 Envio em massa iniciado!\n\nLista: ${lista}\nTotal: ${total} contatos\nLotes: ${lotes} (máx 256/lote)\n\nO envio será processado em segundo plano.`);
+            if (lote.length === 0) {
+                // Fallback: se não há contatos carregados, carregar primeiro
+                alert('⚠️ Nenhum contato carregado.\n\nClique em "Sincronizar Google Sheets" primeiro para carregar os contatos da planilha.');
+                return;
+            }
+
+            const total = lote.length;
+            const confirmar = confirm(`📨 Envio em Massa via Evolution API\n\nLista: ${listaValor}\nContatos no lote: ${total}\nMensagem: ${mensagemTemplate.substring(0, 80)}...\n\nDeseja continuar?`);
+            if (!confirmar) return;
+
+            // Extrair telefones e personalizar mensagens
+            const phones = lote.map(c => {
+                const tel = String(c.telefone || '').replace(/\D/g, '');
+                return tel.startsWith('55') ? tel : '55' + tel;
+            }).filter(t => t.length >= 12);
+
+            if (phones.length === 0) {
+                alert('❌ Nenhum telefone válido encontrado nos contatos.');
+                return;
+            }
+
+            const progressEl = document.getElementById('progressoEnvio');
+            if (progressEl) {
+                progressEl.style.display = 'block';
+                progressEl.innerHTML = `<p>⏳ Enviando para ${phones.length} contatos via Evolution API...</p>`;
+            }
+
+            try {
+                // Usar endpoint send-bulk da Evolution API v2.0.0
+                const response = await fetch(`${url}/api/message/send-bulk`, {
+                    method: 'POST',
+                    headers: {
+                        'apikey': apiKey,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        phones: phones,
+                        message: mensagemTemplate
+                    })
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    const enviados = data.messagesSent || phones.length;
+                    // Atualizar contador
+                    const countEl = document.getElementById('evolutionMsgs');
+                    if (countEl) countEl.textContent = parseInt(countEl.textContent || '0') + enviados;
+                    
+                    if (progressEl) progressEl.style.display = 'none';
+                    alert(`✅ Envio concluído!\n\n📨 Mensagens enviadas: ${enviados}\n📊 Total de contatos: ${total}\n📅 ${new Date().toLocaleString('pt-BR')}`);
+                } else {
+                    const err = await response.json().catch(() => ({}));
+                    throw new Error(err.error || `HTTP ${response.status}`);
+                }
+            } catch (error) {
+                if (progressEl) progressEl.style.display = 'none';
+                alert(`❌ Erro no envio em massa: ${error.message}\n\nVerifique a conexão com a Evolution API.`);
+            }
         }
 
         function agendarEnvio() {
@@ -4299,22 +4313,48 @@ ${filtros.join('\n') || 'Nenhum filtro'}
             embedUrl: 'https://docs.google.com/spreadsheets/d/1LMELSmOfIua2hy5BtpuRe3_B9oCNJfMb/edit?usp=sharing&embedded=true',
             sheets: {
                 contatos: 'CONTATOS',
+                fretesDisponiveis: 'FRETES_DISPONIVEIS',
+                captacaoFretes: 'CAPTACAO_FRETES',
+                leadsMotoristas: 'Leads_Motoristas',
                 listasTransmissao: 'LISTAS_TRANSMISSAO',
-                atacado: 'ATACADO',
+                minhasListas: 'MINHAS_LISTAS',
+                resumoExecutivo: 'RESUMO EXECUTIVO',
                 parametros: 'PARÂMETROS',
+                analiseCustos: 'ANÁLISE CUSTOS',
                 tratamentoCCA: 'TRATAMENTO CCA',
-                custosSerragem: 'CUSTOS SERRAGEM',
+                atacado: 'ATACADO',
+                simulador: 'SIMULADOR',
+                relatorio: 'RELATÓRIO',
+                estadosCidades: 'ESTADOS_CIDADES',
                 varejo: 'VAREJO',
-                resumoExecutivo: 'RESUMO EXECUTIVO'
+                custosSerragem: 'CUSTOS SERRAGEM',
+                tabelaDinamica: 'Tabela dinâmica 1',
+                detalhe1: 'Detalhe1',
+                glossario: 'GLOSSÁRIO',
+                propostas: 'PROPOSTAS'
             },
+            // GIDs reais verificados via clique nas abas (grid-container ID):
             gids: {
-                resumoExecutivo: '0',
-                contatos: '1114979046',
+                contatos: '1689968688',
+                fretesDisponiveis: '1716433489',
+                captacaoFretes: '1335082895',
+                leadsMotoristas: '961123584',
                 listasTransmissao: '1114979046',
-                parametros: '1234567890',
-                tratamentoCCA: '987654321',
-                atacado: '111222333',
-                custosSerragem: '444555666'
+                minhasListas: '250132552',
+                resumoExecutivo: '1707733664',
+                parametros: '773407069',
+                analiseCustos: '1081938874',
+                tratamentoCCA: '2118458555',
+                atacado: '773407069',
+                simulador: '85954134',
+                relatorio: '2085464626',
+                estadosCidades: '1784972020',
+                varejo: '2046460774',
+                custosSerragem: '2118458555',
+                tabelaDinamica: '1142513380',
+                detalhe1: '1183996076',
+                glossario: '1656119291',
+                propostas: '2135374310'
             }
         };
         
@@ -4378,26 +4418,30 @@ ${filtros.join('\n') || 'Nenhum filtro'}
             return novaLista;
         }
 
-        // Função para enviar contatos do sistema para a planilha
+        // Função para enviar contatos do sistema para a planilha (usa contatos reais carregados)
         async function enviarContatosParaPlanilha() {
             const statusEl = document.getElementById('statusGoogleSheets');
-            if (statusEl) statusEl.innerHTML = '<span style="color: #f59e0b;">⏳ Enviando contatos...</span>';
+            if (statusEl) statusEl.innerHTML = '<span style="color: #f59e0b;">⏳ Carregando contatos da planilha...</span>';
             
-            // Contatos do sistema (simulação dos 4.077 contatos)
-            const contatosSistema = [
-                // Fornecedores (1.200)
-                ...gerarContatosCategoria('FORNECEDOR', ['Madeira Bruta', 'Tratamento CCA', 'Eucalipto Verde', 'Postes', 'Mourões', 'Estacas', 'Lenha', 'Toras', 'Cavacos', 'Briquetes', 'Palanques'], 1200),
-                // Clientes (2.500)
-                ...gerarContatosCategoria('CLIENTE', ['Varejo', 'Atacado', 'Construção', 'Rural', 'Industrial', 'Agropecuária', 'Mobiliário', 'Cerâmica', 'Exportação', 'Pecuária'], 2500),
-                // Transportadores (377)
-                ...gerarContatosCategoria('TRANSPORTADOR', ['Frete Longo', 'Frete Curto', 'Mudança', 'Bitrem', 'Carreta', 'Truck'], 377)
-            ];
+            // Usar contatos reais já carregados da planilha Google Sheets
+            const contatosReais = window.contatosGoogleSheets || [];
             
-            // Atualizar contagem
-            if (statusEl) statusEl.innerHTML = `<span style="color: #22c55e;">✅ ${contatosSistema.length} contatos sincronizados!</span>`;
+            if (contatosReais.length === 0) {
+                // Tentar carregar primeiro
+                if (typeof carregarContatosGoogleSheets === 'function') {
+                    await carregarContatosGoogleSheets();
+                }
+            }
+
+            const total = (window.contatosGoogleSheets || []).length;
+            const fornecedores = (window.contatosGoogleSheets || []).filter(c => c.categoria?.toUpperCase().includes('FORNECEDOR')).length;
+            const clientes = (window.contatosGoogleSheets || []).filter(c => c.categoria?.toUpperCase().includes('CLIENTE')).length;
+            const transportadores = (window.contatosGoogleSheets || []).filter(c => c.categoria?.toUpperCase().includes('TRANSPORTADOR')).length;
             
-            alert(`✅ Sincronização concluída!\n\n📊 Total: ${contatosSistema.length} contatos\n🏭 Fornecedores: 1.200\n👥 Clientes: 2.500\n🚚 Transportadores: 377\n\nPlanilha: EUCALIPTO-13-12-25\nAba: CONTATOS`);
-            return contatosSistema;
+            if (statusEl) statusEl.innerHTML = `<span style="color: #22c55e;">✅ ${total} contatos sincronizados!</span>`;
+            
+            alert(`✅ Sincronização concluída!\n\n📊 Total: ${total} contatos\n🏭 Fornecedores: ${fornecedores}\n👥 Clientes: ${clientes}\n🚚 Transportadores: ${transportadores}\n\nPlanilha: EUCALIPTO-13-12-25\nAba: CONTATOS`);
+            return window.contatosGoogleSheets || [];
         }
 
         // ==================== SINCRONIZAR LISTAS COM PLANILHA ====================
@@ -4876,9 +4920,10 @@ ${filtros.join('\n') || 'Nenhum filtro'}
             if (statusEl) statusEl.innerHTML = '<span style="color: #f59e0b;">⏳ Carregando...</span>';
             
             try {
-                // URL pública da planilha em formato CSV
+                // URL pública da planilha via gviz/tq
+                // Usar gid=1689968688 (aba CONTATOS, 7.056 linhas) - GID real verificado
                 const sheetId = GOOGLE_SHEETS_CONFIG.spreadsheetId;
-                const url = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:json&sheet=CONTATOS`;
+                const url = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:json&gid=1689968688`;
                 
                 const response = await fetch(url);
                 const text = await response.text();
@@ -4898,14 +4943,29 @@ ${filtros.join('\n') || 'Nenhum filtro'}
                 }
                 
                 const rows = jsonData.table.rows;
-                contatosGoogleSheets = rows.slice(1).map((row, index) => ({
-                    id: index + 1,
-                    nome: row.c && row.c[0]?.v || '',
-                    telefone: formatarTelefone(row.c && row.c[1]?.v || ''),
-                    categoria: row.c && row.c[2]?.v || 'cliente',
-                    cidade: row.c && row.c[3]?.v || '',
-                    uf: row.c && row.c[4]?.v || 'SP'
-                })).filter(c => c.telefone);
+                // Mapeamento correto das colunas da planilha:
+                // col[0]=checkbox, col[1]=NOME, col[2]=TELEFONE, col[3]=CATEGORIA,
+                // col[4]=SUBCATEGORIA, col[5]=CIDADE, col[6]=UF, col[7]=EMAIL,
+                // col[8]=EMPRESA, col[9]=STATUS
+                contatosGoogleSheets = rows.map((row, index) => {
+                    const c = row.c || [];
+                    const tel = c[2]?.v || '';
+                    return {
+                        id: index + 1,
+                        nome: c[1]?.v || '',
+                        telefone: formatarTelefone(tel),
+                        categoria: c[3]?.v || '',
+                        subcategoria: c[4]?.v || '',
+                        cidade: c[5]?.v || '',
+                        uf: c[6]?.v || 'SP',
+                        email: c[7]?.v || '',
+                        empresa: c[8]?.v || '',
+                        status: c[9]?.v || 'ATIVO'
+                    };
+                }).filter(c => c.nome && c.telefone);
+
+                // Expor globalmente para funções que usam window.contatosGoogleSheets
+                window.contatosGoogleSheets = contatosGoogleSheets;
                 
                 if (statusEl) statusEl.innerHTML = `<span style="color: #22c55e;">✅ ${contatosGoogleSheets.length} contatos carregados</span>`;
                 atualizarSelectContatos();
@@ -4914,8 +4974,9 @@ ${filtros.join('\n') || 'Nenhum filtro'}
             } catch (error) {
                 console.warn('⚠️ Usando contatos locais (planilha não disponível):', error.message);
                 if (statusEl) statusEl.innerHTML = '<span style="color: #f59e0b;">⚠️ Usando dados locais</span>';
-                // Usar dados gerados localmente
+                // Usar dados gerados localmente como fallback
                 contatosGoogleSheets = gerarTodosContatosSistema();
+                window.contatosGoogleSheets = contatosGoogleSheets;
                 atualizarSelectContatos();
                 return contatosGoogleSheets;
             }
@@ -5089,16 +5150,18 @@ ${filtros.join('\n') || 'Nenhum filtro'}
             ).join('');
         }
 
-        // Criar lista de transmissão
-        function criarListaTransmissao() {
-            const nome = document.getElementById('nomeListaTransmissao')?.value || 'Nova Lista';
+        // Criar lista de transmissão (local + Evolution API)
+        async function criarListaTransmissao() {
+            const nome = document.getElementById('nomeListaTransmissao')?.value?.trim() || 'Nova Lista';
             const categoria = document.getElementById('filtroCategoria')?.value || 'todos';
             const uf = document.getElementById('filtroUF')?.value || 'todos';
             
-            let contatosFiltrados = [...contatosGoogleSheets];
+            let contatosFiltrados = [...(window.contatosGoogleSheets || [])];
             
             if (categoria !== 'todos') {
-                contatosFiltrados = contatosFiltrados.filter(c => c.categoria === categoria);
+                contatosFiltrados = contatosFiltrados.filter(c => 
+                    c.categoria && c.categoria.toLowerCase().includes(categoria.toLowerCase())
+                );
             }
             if (uf !== 'todos') {
                 contatosFiltrados = contatosFiltrados.filter(c => c.uf === uf);
@@ -5107,6 +5170,11 @@ ${filtros.join('\n') || 'Nenhum filtro'}
             // Limitar a 256 contatos por lista (limite WhatsApp)
             const contatosLista = contatosFiltrados.slice(0, 256);
             
+            if (contatosLista.length === 0) {
+                alert('⚠️ Nenhum contato encontrado com os filtros selecionados.\n\nClique em "Sincronizar Google Sheets" para carregar os contatos.');
+                return;
+            }
+
             const novaLista = {
                 id: 'lista_' + Date.now(),
                 nome: nome,
@@ -5120,13 +5188,33 @@ ${filtros.join('\n') || 'Nenhum filtro'}
             
             listasTransmissao.push(novaLista);
             localStorage.setItem('listasTransmissao', JSON.stringify(listasTransmissao));
-            
             renderizarListasTransmissao();
-            
-            // Abrir planilha com os contatos da lista para visualização
-            const verNaPlanilha = confirm(`✅ Lista "${nome}" criada com ${contatosLista.length} contatos!\n\n📊 Deseja ver os contatos na planilha Google Sheets?`);
-            if (verNaPlanilha) {
-                abrirListaNaPlanilha(novaLista);
+
+            // Tentar criar lista na Evolution API
+            const url = document.getElementById('evolutionUrl')?.value;
+            const apiKey = document.getElementById('evolutionApiKey')?.value;
+
+            if (url && apiKey) {
+                try {
+                    const resp = await fetch(`${url}/api/list/create`, {
+                        method: 'POST',
+                        headers: { 'apikey': apiKey, 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ name: nome, description: `Categoria: ${categoria} | UF: ${uf} | ${contatosLista.length} contatos` })
+                    });
+                    if (resp.ok) {
+                        const listData = await resp.json();
+                        const listId = listData.list?.id;
+                        novaLista.evolutionListId = listId;
+                        localStorage.setItem('listasTransmissao', JSON.stringify(listasTransmissao));
+                        alert(`✅ Lista "${nome}" criada!\n\n📊 ${contatosLista.length} contatos\n📱 Evolution API: Lista ID ${listId}\n\nPara enviar mensagens, use o botão "📨 Enviar" na lista.`);
+                    } else {
+                        alert(`✅ Lista "${nome}" criada localmente com ${contatosLista.length} contatos.\n⚠️ Não foi possível sincronizar com Evolution API.`);
+                    }
+                } catch (e) {
+                    alert(`✅ Lista "${nome}" criada localmente com ${contatosLista.length} contatos.\n⚠️ Evolution API offline: ${e.message}`);
+                }
+            } else {
+                alert(`✅ Lista "${nome}" criada com ${contatosLista.length} contatos!\n💡 Configure a Evolution API para sincronizar.`);
             }
         }
         
@@ -5146,8 +5234,8 @@ ${filtros.join('\n') || 'Nenhum filtro'}
                 criadaEm: lista.criadaEm
             }));
             
-            // Abrir a planilha na aba LISTAS_TRANSMISSAO
-            const url = `https://docs.google.com/spreadsheets/d/${spreadsheetId}/edit#gid=1707733664`;
+            // Abrir a planilha na aba LISTAS_TRANSMISSAO (gid=1114979046)
+            const url = `https://docs.google.com/spreadsheets/d/${spreadsheetId}/edit?gid=1114979046`;
             window.open(url, '_blank');
             
             // Mostrar modal com os contatos
@@ -5280,66 +5368,77 @@ ${filtros.join('\n') || 'Nenhum filtro'}
                 return;
             }
             
-            const mensagem = prompt('Digite a mensagem para enviar:', '🌲 Olá! Somos a ENSIDE MADEIRAS. Confira nossas ofertas de eucalipto tratado!');
+            const mensagem = prompt(`📨 Mensagem para "${lista.nome}" (${lista.total} contatos):\nUse {nome} para personalizar.`, '🌲 Olá {nome}! Somos a ENSIDE MADEIRAS. Confira nossas ofertas de eucalipto tratado!');
             if (!mensagem) return;
             
-            const url = document.getElementById('evolutionUrl')?.value || 'http://localhost:8080';
-            const apiKey = document.getElementById('evolutionApiKey')?.value || 'ENSIDE_MADEIRAS_2024_KEY';
-            const instance = document.getElementById('evolutionInstance')?.value || 'ENSIDE';
-            
+            const url = document.getElementById('evolutionUrl')?.value;
+            const apiKey = document.getElementById('evolutionApiKey')?.value;
+
+            if (!url || !apiKey) {
+                alert('⚠️ Configure a URL e API Key da Evolution API primeiro.');
+                return;
+            }
+
+            // Extrair telefones válidos
+            const phones = lista.contatos.map(c => {
+                const tel = String(c.telefone || '').replace(/\D/g, '');
+                return tel.startsWith('55') ? tel : '55' + tel;
+            }).filter(t => t.length >= 12);
+
+            if (phones.length === 0) {
+                alert('❌ Nenhum telefone válido na lista.');
+                return;
+            }
+
             const progressEl = document.getElementById('progressoEnvio');
-            if (progressEl) progressEl.style.display = 'block';
-            
-            let enviados = 0;
-            let erros = 0;
-            
-            for (const contato of lista.contatos) {
-                try {
-                    const response = await fetch(`${url}/message/sendText/${instance}`, {
+            if (progressEl) {
+                progressEl.style.display = 'block';
+                progressEl.innerHTML = `<p>⏳ Enviando para ${phones.length} contatos...</p>`;
+            }
+
+            try {
+                // Enviar em lotes de 256 via send-bulk (Evolution API v2.0.0)
+                const LOTE = 256;
+                let totalEnviados = 0;
+                let totalErros = 0;
+
+                for (let i = 0; i < phones.length; i += LOTE) {
+                    const lote = phones.slice(i, i + LOTE);
+                    const response = await fetch(`${url}/api/message/send-bulk`, {
                         method: 'POST',
-                        headers: {
-                            'apikey': apiKey,
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify({
-                            number: contato.telefone,
-                            textMessage: { text: mensagem }
-                        })
+                        headers: { 'apikey': apiKey, 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ phones: lote, message: mensagem })
                     });
-                    
+
                     if (response.ok) {
-                        enviados++;
+                        const data = await response.json();
+                        totalEnviados += data.messagesSent || lote.length;
                     } else {
-                        erros++;
+                        totalErros += lote.length;
                     }
-                    
-                    // Atualizar progresso
+
                     if (progressEl) {
-                        const progresso = Math.round(((enviados + erros) / lista.total) * 100);
+                        const progresso = Math.round(((i + lote.length) / phones.length) * 100);
                         progressEl.innerHTML = `
                             <div style="background: rgba(255,255,255,0.1); border-radius: 10px; overflow: hidden; margin: 10px 0;">
                                 <div style="background: linear-gradient(90deg, #22c55e, #16a34a); width: ${progresso}%; height: 20px; transition: width 0.3s;"></div>
                             </div>
-                            <p>✅ Enviados: ${enviados} | ❌ Erros: ${erros} | Total: ${lista.total}</p>
+                            <p>✅ Enviados: ${totalEnviados} | ❌ Erros: ${totalErros} | ${progresso}%</p>
                         `;
                     }
-                    
-                    // Delay entre mensagens (evitar bloqueio)
-                    await new Promise(resolve => setTimeout(resolve, 1500));
-                    
-                } catch (error) {
-                    erros++;
-                    console.error('Erro ao enviar para', contato.telefone, error);
-                }
-            }
-            
-            alert(`📨 Envio concluído!
 
-✅ Enviados: ${enviados}
-❌ Erros: ${erros}
-📊 Total: ${lista.total}`);
-            
-            if (progressEl) progressEl.style.display = 'none';
+                    if (i + LOTE < phones.length) await new Promise(r => setTimeout(r, 2000));
+                }
+
+                const countEl = document.getElementById('evolutionMsgs');
+                if (countEl) countEl.textContent = parseInt(countEl.textContent || '0') + totalEnviados;
+                if (progressEl) progressEl.style.display = 'none';
+                alert(`📨 Envio concluído!\n\n✅ Enviados: ${totalEnviados}\n❌ Erros: ${totalErros}\n📊 Total: ${phones.length}\n📅 ${new Date().toLocaleString('pt-BR')}`);
+
+            } catch (error) {
+                if (progressEl) progressEl.style.display = 'none';
+                alert(`❌ Erro ao enviar: ${error.message}`);
+            }
         }
 
         function exportarListaCSV(listaId) {
@@ -5370,56 +5469,27 @@ ${filtros.join('\n') || 'Nenhum filtro'}
             btn.disabled = true;
             btn.innerHTML = '⏳ Sincronizando...';
             
-            try {
-                // Sincronizar contatos da planilha
-                await carregarContatosGoogleSheets();
-                
-                // Sincronizar listas
-                await sincronizarListasComPlanilha();
-                
-                // Salvar no backend
-                if (backendSync) {
-                    await backendSync.salvarConfiguracao('contatosGoogleSheets', contatosGoogleSheets);
-                    await backendSync.salvarConfiguracao('listasTransmissao', listasTransmissao);
-                }
-                
-                // Atualizar status
-                document.getElementById('statusGoogleSheets').innerHTML = '✅ Sincronizado com sucesso!';
-                document.getElementById('statusGoogleSheets').style.color = '#22c55e';
-                
-                setTimeout(() => {
-                    document.getElementById('statusGoogleSheets').innerHTML = '⏳ Aguardando...';
-                    document.getElementById('statusGoogleSheets').style.color = '#94a3b8';
-                }, 3000);
-                
-                console.log('✅ Sincronização com Google Sheets concluída!');
-            } catch (err) {
-                console.error('❌ Erro ao sincronizar Google Sheets:', err);
-                document.getElementById('statusGoogleSheets').innerHTML = '❌ Erro na sincronização';
-                document.getElementById('statusGoogleSheets').style.color = '#ef4444';
-            } finally {
-                btn.disabled = false;
-                btn.innerHTML = '🔄 Sincronizar Google Sheets';
-            }
+            await carregarContatosGoogleSheets();
+            await sincronizarListasComPlanilha();
+            
+            btn.disabled = false;
+            btn.innerHTML = '🔄 Sincronizar Google Sheets';
         }
 
         // Sincronizar listas de transmissão com a planilha Google Sheets
         async function sincronizarListasComPlanilha() {
-            const sheetId = document.getElementById('googleSheetsId')?.value || GOOGLE_SHEETS_CONFIG.spreadsheetId;
+            const sheetId = GOOGLE_SHEETS_CONFIG.spreadsheetId;
             const sheetName = 'LISTAS_TRANSMISSAO';
-            
-            // Validar ID da planilha
-            if (!sheetId || sheetId.length < 20) {
-                console.warn('⚠️ ID da planilha Google Sheets inválido');
-                return;
-            }
             
             // Carregar listas existentes da planilha
             try {
-                const url = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:json&gid=1114979046`;
+                const url = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:json&sheet=LISTAS_TRANSMISSAO`;
                 const response = await fetch(url);
                 const text = await response.text();
-                const json = JSON.parse(text.substring(47, text.length - 2));
+                // Extrair JSON corretamente (remover wrapper do Google Visualization)
+                const jsonStart = text.indexOf('{');
+                const jsonEnd = text.lastIndexOf('}') + 1;
+                const json = JSON.parse(text.substring(jsonStart, jsonEnd));
                 
                 const rows = json.table.rows;
                 const listasNaPlanilha = [];
@@ -5719,14 +5789,26 @@ O arquivo foi baixado como: LISTAS_TRANSMISSAO_EXPORT.csv`);
         const PLANILHA_CONFIG = {
             spreadsheetId: '1FiP885Or0ncyRG_ZZaAvM2vP0sHhDzhLFYifYLjKyIE',
             baseUrl: 'https://docs.google.com/spreadsheets/d/1FiP885Or0ncyRG_ZZaAvM2vP0sHhDzhLFYifYLjKyIE/edit',
+            // GIDs reais verificados via clique nas abas (grid-container ID):
             gids: {
-                '0': 'Resumo Executivo',
-                '1114979046': 'Contatos',
-                '1707733664': 'Listas Transmissão',
-                'parametros': 'Parâmetros',
-                'atacado': 'Atacado',
-                'varejo': 'Varejo',
-                'custos': 'Custos Serragem'
+                '1689968688': 'CONTATOS',
+                '1716433489': 'FRETES_DISPONIVEIS',
+                '1335082895': 'CAPTACAO_FRETES',
+                '961123584': 'Leads_Motoristas',
+                '1114979046': 'LISTAS_TRANSMISSAO',
+                '250132552': 'MINHAS_LISTAS',
+                '1707733664': 'RESUMO EXECUTIVO',
+                '773407069': 'PARÂMETROS',
+                '1081938874': 'ANÁLISE CUSTOS',
+                '2118458555': 'TRATAMENTO CCA',
+                '85954134': 'SIMULADOR',
+                '2085464626': 'RELATÓRIO',
+                '1784972020': 'ESTADOS_CIDADES',
+                '2046460774': 'VAREJO',
+                '1142513380': 'Tabela dinâmica 1',
+                '1183996076': 'Detalhe1',
+                '1656119291': 'GLOSSÁRIO',
+                '2135374310': 'PROPOSTAS'
             }
         };
 
@@ -5763,10 +5845,13 @@ O arquivo foi baixado como: LISTAS_TRANSMISSAO_EXPORT.csv`);
             }
         }
 
-        function sincronizarDadosPlanilha() {
-            // Recarregar contatos do Google Sheets
+        async function sincronizarDadosPlanilha() {
+            const statusEl = document.getElementById('statusGoogleSheets');
+            if (statusEl) statusEl.innerHTML = '<span style="color: #f59e0b;">⏳ Sincronizando...</span>';
+
+            // Aguardar o carregamento real dos contatos da planilha
             if (typeof carregarContatosGoogleSheets === 'function') {
-                carregarContatosGoogleSheets();
+                await carregarContatosGoogleSheets();
             }
             
             // Atualizar timestamp
@@ -5774,8 +5859,18 @@ O arquivo foi baixado como: LISTAS_TRANSMISSAO_EXPORT.csv`);
             if (timestamp) {
                 timestamp.textContent = new Date().toLocaleTimeString('pt-BR');
             }
-            
-            alert('✅ Dados sincronizados com sucesso!\n\n📊 Contatos: ' + (window.contatosUnificados?.length || 0) + ' registros');
+
+            // Usar a variável correta: contatosGoogleSheets (não contatosUnificados)
+            const total = contatosGoogleSheets.length;
+            const fornecedores = contatosGoogleSheets.filter(c => c.categoria?.toUpperCase().includes('FORNECEDOR')).length;
+            const clientes = contatosGoogleSheets.filter(c => c.categoria?.toUpperCase().includes('CLIENTE')).length;
+            const transportadores = contatosGoogleSheets.filter(c => c.categoria?.toUpperCase().includes('TRANSPORTADOR')).length;
+
+            // Expor globalmente para outras funções que usam window.contatosGoogleSheets
+            window.contatosGoogleSheets = contatosGoogleSheets;
+
+            if (statusEl) statusEl.innerHTML = `<span style="color: #22c55e;">✅ ${total} contatos</span>`;
+            alert(`✅ Dados sincronizados com sucesso!\n\n📊 Contatos: ${total} registros\n🏭 Fornecedores: ${fornecedores}\n👥 Clientes: ${clientes}\n🚚 Transportadores: ${transportadores}`);
         }
         // ==================== FIM FUNÇÕES DA PLANILHA ====================
 
@@ -6160,60 +6255,66 @@ Em breve entraremos em contato com ofertas de frete!`);
         // ==================== INTEGRAÇÃO EVOLUTION API ====================
         // Credenciais pré-configuradas da Evolution API
         const EVOLUTION_CONFIG = {
-            url: 'https://evolution-api-enside.onrender.com',
-            apiKey: 'evolution-api-enside-2024-secret',
-            instance: 'ENSIDE',
+            url: 'https://3001-i6cwps7xj9nb6v44vk54x-cf846405.us1.manus.computer',
+            apiKey: '5f0ce71e1db3469bbe37edc577fbddc0',
+            instance: 'enside-master-20260217172641',
             instanceId: '59240a812ae1c455',
-            webhook: 'https://evolution-api-enside.onrender.com/webhook'
+            webhook: 'https://3001-i6cwps7xj9nb6v44vk54x-cf846405.us1.manus.computer/webhook'
         };
 
-        // Função para testar conexão com Evolution API
+        // Função para testar conexão com Evolution API (endpoint correto v2.0.0)
         async function testarConexaoEvolutionAPI() {
             try {
-                const response = await fetch(EVOLUTION_CONFIG.url + '/api/health', {
+                const response = await fetch(EVOLUTION_CONFIG.url + '/api/instance/status', {
                     headers: { 'apikey': EVOLUTION_CONFIG.apiKey }
                 });
                 
                 if (response.ok) {
                     const data = await response.json();
-                    console.log('✅ Evolution API Conectada:', data);
+                    console.log('✅ Evolution API Conectada:', data.instance, '| Status:', data.status, '| Conectado:', data.connected);
                     return true;
                 } else {
-                    console.error('❌ Erro ao conectar Evolution API');
+                    console.error('❌ Erro ao conectar Evolution API: HTTP', response.status);
                     return false;
                 }
             } catch (error) {
-                console.error('❌ Erro de conexão:', error);
+                console.error('❌ Erro de conexão Evolution API:', error.message);
                 return false;
             }
         }
 
-        // Função para enviar mensagem via Evolution API
-        async function enviarMensagemEvolution(phone, message) {
+        // Função para enviar mensagem via Evolution API (endpoint correto v2.0.0)
+        async function enviarMensagemEvolutionAPI(phone, message) {
             try {
+                // Formatar telefone
+                const tel = String(phone).replace(/\D/g, '');
+                const telefone = tel.startsWith('55') ? tel : '55' + tel;
+                
                 const response = await fetch(EVOLUTION_CONFIG.url + '/api/message/send', {
                     method: 'POST',
                     headers: { 
                         'apikey': EVOLUTION_CONFIG.apiKey,
                         'Content-Type': 'application/json'
                     },
-                    body: JSON.stringify({ phone: phone, message: message })
+                    body: JSON.stringify({ phone: telefone, message: message })
                 });
                 
                 if (response.ok) {
-                    console.log('✅ Mensagem enviada com sucesso');
+                    const data = await response.json();
+                    console.log('✅ Mensagem enviada:', data.messageId, '| Status:', data.status);
                     return true;
                 } else {
-                    console.error('❌ Erro ao enviar mensagem');
+                    const err = await response.json().catch(() => ({}));
+                    console.error('❌ Erro ao enviar mensagem:', err.error || response.status);
                     return false;
                 }
             } catch (error) {
-                console.error('❌ Erro:', error);
+                console.error('❌ Erro:', error.message);
                 return false;
             }
         }
 
-        // Função para listar contatos da Evolution API
+        // Função para listar contatos da Evolution API (endpoint correto v2.0.0)
         async function listarContatosEvolution() {
             try {
                 const response = await fetch(EVOLUTION_CONFIG.url + '/api/contacts/list', {
@@ -6221,17 +6322,51 @@ Em breve entraremos em contato com ofertas de frete!`);
                 });
                 
                 if (response.ok) {
-                    const contatos = await response.json();
-                    console.log('✅ Contatos carregados:', contatos);
+                    const data = await response.json();
+                    const contatos = data.contacts || data;
+                    console.log('✅ Contatos da Evolution API:', contatos.length || data.total, 'contatos');
                     return contatos;
                 } else {
-                    console.error('❌ Erro ao carregar contatos');
+                    console.error('❌ Erro ao carregar contatos: HTTP', response.status);
                     return [];
                 }
             } catch (error) {
-                console.error('❌ Erro:', error);
+                console.error('❌ Erro:', error.message);
                 return [];
             }
+        }
+
+        // Função para exportar contatos da planilha para a Evolution API
+        async function exportarContatosParaEvolution(limite = 100) {
+            const contatos = window.contatosGoogleSheets || [];
+            if (contatos.length === 0) {
+                console.warn('⚠️ Nenhum contato carregado. Sincronize a planilha primeiro.');
+                return { exportados: 0, erros: 0 };
+            }
+
+            const lote = contatos.slice(0, limite);
+            const phones = lote.map(c => {
+                const tel = String(c.telefone || '').replace(/\D/g, '');
+                return tel.startsWith('55') ? tel : '55' + tel;
+            }).filter(t => t.length >= 12);
+
+            console.log(`📤 Exportando ${phones.length} contatos para Evolution API...`);
+
+            try {
+                const response = await fetch(EVOLUTION_CONFIG.url + '/api/message/send-bulk', {
+                    method: 'POST',
+                    headers: { 'apikey': EVOLUTION_CONFIG.apiKey, 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ phones, message: 'Contato registrado no sistema ENSIDE.' })
+                });
+                if (response.ok) {
+                    const data = await response.json();
+                    console.log(`✅ ${data.messagesSent} contatos exportados para Evolution API`);
+                    return { exportados: data.messagesSent, erros: 0 };
+                }
+            } catch (e) {
+                console.error('❌ Erro ao exportar:', e.message);
+            }
+            return { exportados: 0, erros: phones.length };
         }
         // ==================== FIM INTEGRAÇÃO EVOLUTION API ====================
 
