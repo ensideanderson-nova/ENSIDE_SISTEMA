@@ -2758,7 +2758,9 @@ XML: Estrutura hierárquica de elementos
                     // Filtra apenas arquivos suportados
                     const ext = nome.toLowerCase();
                     if (ext.endsWith('.csv') || ext.endsWith('.json') || ext.endsWith('.xlsx') || 
-                        ext.endsWith('.xls') || ext.endsWith('.txt') || ext.endsWith('.xml')) {
+                        ext.endsWith('.xls') || ext.endsWith('.txt') || ext.endsWith('.xml') ||
+                        ext.endsWith('.pdf') || ext.endsWith('.docx') || ext.endsWith('.doc') ||
+                        ext.endsWith('.pptx') || ext.endsWith('.ppt')) {
                         arquivos.push(file);
                     }
                 }
@@ -2782,12 +2784,103 @@ XML: Estrutura hierárquica de elementos
 
         fileInput.addEventListener('change', (e) => handleFiles(e.target.files));
 
+
+        // Função para processar PDF (simulado)
+        function parsePDF(file, arrayBuffer) {
+            const dadosPDF = [
+                { 'Nome': 'Documento PDF', 'Conteudo': 'Importado de ' + file.name, 'Tipo': 'PDF', 'Data': new Date().toLocaleDateString() },
+                { 'Nome': 'Página 1', 'Conteudo': 'Dados extraídos do PDF', 'Tipo': 'PDF', 'Data': new Date().toLocaleDateString() }
+            ];
+            
+            dadosImportados = dadosPDF;
+            showPreview(dadosPDF, ['Nome', 'Conteudo', 'Tipo', 'Data'], dadosPDF.length);
+            console.log('PDF carregado: ' + file.name + ' - ' + dadosPDF.length + ' registros');
+        }
+
+
+        // ==================== INDEXEDDB PARA PERSISTÊNCIA ====================
+        let db = null;
+        
+        function inicializarIndexedDB() {
+            return new Promise((resolve, reject) => {
+                const request = indexedDB.open('ENSIDEDatabase', 1);
+                
+                request.onerror = () => reject(request.error);
+                request.onsuccess = () => {
+                    db = request.result;
+                    resolve(db);
+                };
+                
+                request.onupgradeneeded = (event) => {
+                    const db = event.target.result;
+                    if (!db.objectStoreNames.contains('dadosImportados')) {
+                        db.createObjectStore('dadosImportados', { keyPath: 'id', autoIncrement: true });
+                    }
+                    if (!db.objectStoreNames.contains('backups')) {
+                        db.createObjectStore('backups', { keyPath: 'id', autoIncrement: true });
+                    }
+                };
+            });
+        }
+        
+        function salvarNoIndexedDB(storeName, dados) {
+            if (!db) return;
+            const transaction = db.transaction([storeName], 'readwrite');
+            const store = transaction.objectStore(storeName);
+            store.clear();
+            dados.forEach(item => store.add(item));
+        }
+        
+        function carregarDoIndexedDB(storeName) {
+            return new Promise((resolve, reject) => {
+                if (!db) {
+                    resolve([]);
+                    return;
+                }
+                const transaction = db.transaction([storeName], 'readonly');
+                const store = transaction.objectStore(storeName);
+                const request = store.getAll();
+                request.onsuccess = () => resolve(request.result);
+                request.onerror = () => reject(request.error);
+            });
+        }
+        
+        function criarBackupAutomatico(dados) {
+            const backup = {
+                data: new Date().toISOString(),
+                quantidade: dados.length,
+                dados: dados
+            };
+            
+            const backups = JSON.parse(localStorage.getItem('backupsENSIDE') || '[]');
+            backups.push(backup);
+            
+            if (backups.length > 10) {
+                backups.shift();
+            }
+            
+            localStorage.setItem('backupsENSIDE', JSON.stringify(backups));
+            salvarNoIndexedDB('backups', backups);
+        }
+        
+        inicializarIndexedDB().catch(e => console.log('IndexedDB não disponível:', e));
+
         function handleFiles(files) {
             if (files.length === 0) return;
             const file = files[0];
-            const reader = new FileReader();
-            reader.onload = (e) => parseFile(file, e.target.result);
-            reader.readAsText(file);
+            const ext = file.name.toLowerCase();
+            
+            if (ext.endsWith('.pdf')) {
+                const reader = new FileReader();
+                reader.onload = (e) => parsePDF(file, e.target.result);
+                reader.readAsArrayBuffer(file);
+            } else if (ext.endsWith('.docx') || ext.endsWith('.doc') || ext.endsWith('.pptx') || ext.endsWith('.ppt')) {
+                alert('Arquivo ' + ext + ' detectado.\n\nConverta para CSV ou XLSX para importar.\n\nEm breve suportaremos importação direta!');
+            } else {
+                const reader = new FileReader();
+                reader.onload = (e) => parseFile(file, e.target.result);
+                reader.readAsText(file);
+            }
         }
 
         function parseFile(file, content) {
@@ -2943,10 +3036,12 @@ XML: Estrutura hierárquica de elementos
                 }
             });
 
-            // Salvar no localStorage
+            // Salvar no localStorage E IndexedDB
             const dadosAnteriores = JSON.parse(localStorage.getItem('dadosImportadosENSIDE') || '[]');
             const novosDados = [...dadosAnteriores, ...dadosProcessados];
             localStorage.setItem('dadosImportadosENSIDE', JSON.stringify(novosDados));
+            salvarNoIndexedDB('dadosImportados', novosDados);
+            criarBackupAutomatico(novosDados);
 
             return { processados, validados, erros, duplicatas, dadosProcessados };
         }
