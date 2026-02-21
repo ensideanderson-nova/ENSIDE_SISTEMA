@@ -5370,17 +5370,49 @@ ${filtros.join('\n') || 'Nenhum filtro'}
             btn.disabled = true;
             btn.innerHTML = '⏳ Sincronizando...';
             
-            await carregarContatosGoogleSheets();
-            await sincronizarListasComPlanilha();
-            
-            btn.disabled = false;
-            btn.innerHTML = '🔄 Sincronizar Google Sheets';
+            try {
+                // Sincronizar contatos da planilha
+                await carregarContatosGoogleSheets();
+                
+                // Sincronizar listas
+                await sincronizarListasComPlanilha();
+                
+                // Salvar no backend
+                if (backendSync) {
+                    await backendSync.salvarConfiguracao('contatosGoogleSheets', contatosGoogleSheets);
+                    await backendSync.salvarConfiguracao('listasTransmissao', listasTransmissao);
+                }
+                
+                // Atualizar status
+                document.getElementById('statusGoogleSheets').innerHTML = '✅ Sincronizado com sucesso!';
+                document.getElementById('statusGoogleSheets').style.color = '#22c55e';
+                
+                setTimeout(() => {
+                    document.getElementById('statusGoogleSheets').innerHTML = '⏳ Aguardando...';
+                    document.getElementById('statusGoogleSheets').style.color = '#94a3b8';
+                }, 3000);
+                
+                console.log('✅ Sincronização com Google Sheets concluída!');
+            } catch (err) {
+                console.error('❌ Erro ao sincronizar Google Sheets:', err);
+                document.getElementById('statusGoogleSheets').innerHTML = '❌ Erro na sincronização';
+                document.getElementById('statusGoogleSheets').style.color = '#ef4444';
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = '🔄 Sincronizar Google Sheets';
+            }
         }
 
         // Sincronizar listas de transmissão com a planilha Google Sheets
         async function sincronizarListasComPlanilha() {
-            const sheetId = GOOGLE_SHEETS_CONFIG.spreadsheetId;
+            const sheetId = document.getElementById('googleSheetsId')?.value || GOOGLE_SHEETS_CONFIG.spreadsheetId;
             const sheetName = 'LISTAS_TRANSMISSAO';
+            
+            // Validar ID da planilha
+            if (!sheetId || sheetId.length < 20) {
+                console.warn('⚠️ ID da planilha Google Sheets inválido');
+                return;
+            }
             
             // Carregar listas existentes da planilha
             try {
