@@ -1917,6 +1917,13 @@
                     <button onclick="sincronizarDadosPlanilha()" style="padding: 12px 24px; background: linear-gradient(135deg, #f59e0b, #d97706); color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 600;">
                         📥 Sincronizar Dados
                     </button>
+                    <button onclick="importarContatosWppParaPlanilha()" style="padding: 12px 24px; background: linear-gradient(135deg, #a855f7, #7c3aed); color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 600;">
+                        📱 Importar Contatos WPP (3.702)
+                    </button>
+                </div>
+                <!-- Status importação WPP -->
+                <div id="statusImportWpp" style="display:none; padding: 12px; background: rgba(168,85,247,0.15); border-radius: 8px; border-left: 4px solid #a855f7; margin-bottom: 15px;">
+                    <p id="msgImportWpp" style="color: #c084fc; font-weight: bold; margin: 0;"></p>
                 </div>
                 
                 <!-- Abas da Planilha -->
@@ -4276,6 +4283,100 @@ XML: Estrutura hierárquica de elementos
             }
         }
 
+        // Importar todos os contatos do WhatsApp para o sistema e gerar CSV para planilha
+        async function importarContatosWppParaPlanilha() {
+            const url = document.getElementById('evolutionUrl')?.value || 'https://evolution-api-enside.onrender.com';
+            const apiKey = document.getElementById('evolutionApiKey')?.value || 'evolution-api-enside-2024-secret';
+            const instance = document.getElementById('evolutionInstance')?.value || 'ENSIDE';
+
+            const statusEl = document.getElementById('statusImportWpp');
+            const msgEl = document.getElementById('msgImportWpp');
+            if (statusEl) statusEl.style.display = 'block';
+            if (msgEl) msgEl.textContent = '⏳ Buscando contatos do WhatsApp...';
+
+            try {
+                // 1) Buscar todos os contatos do WhatsApp
+                const resp = await fetch(`${url}/chat/findContacts/${instance}`, {
+                    method: 'POST',
+                    headers: { 'apikey': apiKey, 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ where: {} }),
+                    signal: AbortSignal.timeout(60000)
+                });
+                if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+                const wppContatos = await resp.json();
+
+                if (!Array.isArray(wppContatos) || wppContatos.length === 0)
+                    throw new Error('Nenhum contato encontrado');
+
+                if (msgEl) msgEl.textContent = `✅ ${wppContatos.length} contatos carregados. Gerando CSV...`;
+
+                // 2) Filtrar apenas individuais (não grupos)
+                const individuais = wppContatos.filter(c => !c.id.includes('@g.us'));
+
+                // 3) Salvar no window para uso no envio em massa
+                window.contatosWpp = individuais.map(c => ({
+                    id: c.id,
+                    nome: c.pushName || '',
+                    telefone: c.id.replace('@s.whatsapp.net','').replace('@c.us','').replace(/\D/g,''),
+                    whatsapp: c.id.replace('@s.whatsapp.net','').replace('@c.us','').replace(/\D/g,''),
+                    categoria: 'WHATSAPP',
+                    subcategoria: 'Contato WPP',
+                    cidade: '',
+                    uf: ''
+                }));
+
+                // 4) Adicionar ao contatosGoogleSheets se não existir (por telefone)
+                if (!window.contatosGoogleSheets) window.contatosGoogleSheets = [];
+                const existentes = new Set(window.contatosGoogleSheets.map(c => String(c.telefone).replace(/\D/g,'')));
+                let novos = 0;
+                window.contatosWpp.forEach(c => {
+                    if (!existentes.has(c.telefone)) {
+                        window.contatosGoogleSheets.push(c);
+                        novos++;
+                    }
+                });
+
+                // 5) Gerar CSV para importar na planilha
+                const headers = ['NOME','TELEFONE','WHATSAPP','CATEGORIA','SUBCATEGORIA','CIDADE','UF'];
+                const rows = individuais.map(c => {
+                    const phone = c.id.replace('@s.whatsapp.net','').replace('@c.us','').replace(/\D/g,'');
+                    return [c.pushName || '', phone, phone, 'WHATSAPP', 'Contato WPP', '', ''];
+                });
+                const csvLines = [headers, ...rows].map(r => r.map(v => '"' + String(v).replace(/"/g,'""') + '"').join(','));
+                const csv = '\uFEFF' + csvLines.join('\n');
+                const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+                const dlUrl = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = dlUrl;
+                a.download = 'contatos_whatsapp_' + new Date().toISOString().slice(0,10) + '.csv';
+                a.click();
+                URL.revokeObjectURL(dlUrl);
+
+                // 6) Atualizar contador no dashboard
+                const evContacts = document.getElementById('evolutionContacts');
+                if (evContacts) evContacts.textContent = window.contatosGoogleSheets.length.toLocaleString('pt-BR');
+
+                // 7) Adicionar lista WPP no select do Envio em Massa
+                const select = document.getElementById('evolutionLista');
+                if (select) {
+                    const jaExiste = Array.from(select.options).some(o => o.value === 'whatsapp');
+                    if (!jaExiste) {
+                        const opt = document.createElement('option');
+                        opt.value = 'whatsapp';
+                        opt.textContent = '📱 Contatos WhatsApp (' + individuais.length + ' reais)';
+                        select.appendChild(opt);
+                    }
+                }
+
+                if (msgEl) msgEl.textContent = '✅ ' + individuais.length + ' contatos WPP exportados! ' + novos + ' novos adicionados ao sistema. CSV baixado.';
+                alert('📱 Contatos WhatsApp Exportados!\n\n✅ ' + individuais.length + ' contatos do WhatsApp\n🆕 ' + novos + ' novos no sistema\n\n📄 CSV baixado automaticamente.\n\nPara importar na planilha:\n1. Abra o Google Sheets\n2. Selecione a aba CONTATOS\n3. Vá em Arquivo > Importar > Fazer upload\n4. Escolha o CSV baixado\n5. Selecione "Acrescentar linhas"');
+
+            } catch(e) {
+                if (msgEl) { msgEl.textContent = '❌ Erro: ' + e.message; msgEl.style.color = '#ef4444'; }
+                console.error(e);
+            }
+        }
+
         async function exportarContatosWhatsApp() {
             const contatos = window.contatosGoogleSheets || [];
             const comWpp = contatos.filter(c => c.whatsapp);
@@ -4863,6 +4964,7 @@ ${filtros.join('\n') || 'Nenhum filtro'}
             'fornecedores_eucalipto_verde':    c => c.categoria && c.categoria.toUpperCase().includes('FORNECEDOR') && (c.subcategoria || '').toUpperCase().includes('EUCALIPTO'),
             'clientes_rural':                  c => c.categoria && c.categoria.toUpperCase().includes('CLIENTE') && (c.subcategoria || '').toUpperCase().includes('RURAL'),
             'clientes_construcao_civil':       c => c.categoria && c.categoria.toUpperCase().includes('CLIENTE'),
+            'whatsapp':                        c => c.categoria === 'WHATSAPP' || (c.whatsapp && c.whatsapp.length >= 10),
         };
 
         async function sincronizarListasPlanilha() {
