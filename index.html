@@ -1210,7 +1210,7 @@
                     </div>
                 <div class="form-group">
                     <label>🔗 Webhook URL</label>
-                    <input type="text" id="webhookUrl" placeholder="URL do Webhook" value="https://evolution-api-enside.onrender.com/webhook/ENSIDE" readonly style="background: rgba(14, 165, 233, 0.1); border-color: #0ea5e9;">
+                    <input type="text" id="webhookUrl" placeholder="URL do Webhook" value="https://evolution-api-enside.onrender.com/webhook" readonly style="background: rgba(14, 165, 233, 0.1); border-color: #0ea5e9;">
                     <small style="color: #94a3b8; display: block; margin-top: 5px;">✅ Webhook configurado para receber eventos</small>
                 </div>
 
@@ -3732,10 +3732,10 @@ XML: Estrutura hierárquica de elementos
             apiKey: 'evolution-api-enside-2024-secret',
             instance: 'ENSIDE',
             instanceId: 'ENSIDE',
-            webhook: 'https://evolution-api-enside.onrender.com/webhook/ENSIDE'
+            webhook: 'https://evolution-api-enside.onrender.com/webhook'
         };
 
-        // Limpar localStorage com valores desatualizados (instância antiga)
+        // Migrar credenciais antigaslores desatualizados (instância antiga)
         (function migrarCredenciaisEvolution() {
             const instanciaAtual = localStorage.getItem('evolutionInstance');
             const urlAtual = localStorage.getItem('evolutionUrl');
@@ -3794,37 +3794,37 @@ XML: Estrutura hierárquica de elementos
 
             document.getElementById('evolutionStatus').textContent = '🔄';
             
+            const instance = document.getElementById('evolutionInstance')?.value || 'ENSIDE';
             try {
-                // Endpoint correto da Evolution API v2.0.0
-                const response = await fetch(`${url}/api/instance/status`, {
-                    headers: {
-                        'apikey': apiKey,
-                        'Content-Type': 'application/json'
-                    }
+                // v1.7.4: GET /instance/connectionState/{instance}
+                const response = await fetch(`${url}/instance/connectionState/${instance}`, {
+                    headers: { 'apikey': apiKey }
                 });
                 
                 if (response.ok) {
                     const data = await response.json();
-                    const status = data.status || data.state || 'Conectado';
-                    const phone = data.phone ? `\n📱 Número: ${data.phone}` : '';
-                    const connected = data.connected ? '✅ Conectado' : '⚠️ Desconectado';
-                    document.getElementById('evolutionStatus').textContent = data.connected ? '✅' : '⚠️';
-                    document.getElementById('evolutionStatusCard').style.borderColor = data.connected ? '#22c55e' : '#f59e0b';
-                    // Atualizar contagem de contatos
-                    const contatosResp = await fetch(`${url}/api/contacts/list`, { headers: { 'apikey': apiKey } });
-                    if (contatosResp.ok) {
-                        const contatosData = await contatosResp.json();
-                        const total = contatosData.total || (contatosData.contacts || []).length;
-                        document.getElementById('evolutionContacts').textContent = total;
-                    }
-                    alert(`${connected}\nInstância: ${data.instance || ''}${phone}\nStatus: ${status}`);
+                    const state = data.instance?.state || 'unknown';
+                    const connected = state === 'open';
+                    const instanceName = data.instance?.instanceName || instance;
+                    document.getElementById('evolutionStatus').textContent = connected ? '✅' : '⚠️';
+                    document.getElementById('evolutionStatusCard').style.borderColor = connected ? '#22c55e' : '#f59e0b';
+                    // Buscar contatos via v1.7.4
+                    try {
+                        const contatosResp = await fetch(`${url}/chat/findContacts/${instance}`, { headers: { 'apikey': apiKey } });
+                        if (contatosResp.ok) {
+                            const contatosData = await contatosResp.json();
+                            const total = Array.isArray(contatosData) ? contatosData.length : (contatosData.total || 0);
+                            document.getElementById('evolutionContacts').textContent = total;
+                        }
+                    } catch(e) {}
+                    alert(`${connected ? '✅ Conectado' : '⚠️ Desconectado'}\nInstância: ${instanceName}\nEstado: ${state}\nAPI: v1.7.4`);
                 } else {
                     throw new Error(`HTTP ${response.status}`);
                 }
             } catch (error) {
                 document.getElementById('evolutionStatus').textContent = '❌';
                 document.getElementById('evolutionStatusCard').style.borderColor = '#ef4444';
-                alert(`❌ Erro ao conectar: ${error.message}\n\nVerifique:\n- URL da API (ex: https://3001-xxx.manus.computer)\n- API Key\n- Se o servidor está online`);
+                alert(`❌ Erro ao conectar: ${error.message}\n\nVerifique:\n- URL: https://evolution-api-enside.onrender.com\n- API Key: evolution-api-enside-2024-secret\n- Instância: ENSIDE\n- O servidor pode estar em sleep (aguarde 30s e tente novamente)`);
             }
         }
 
@@ -3885,28 +3885,24 @@ XML: Estrutura hierárquica de elementos
             // Formatar telefone: garantir que comece com 55
             const telefone = numero.startsWith('55') ? numero : '55' + numero;
 
+            const instance = document.getElementById('evolutionInstance')?.value || 'ENSIDE';
             try {
-                // Endpoint correto da Evolution API v2.0.0
-                const response = await fetch(`${url}/api/message/send`, {
+                // v1.7.4: POST /message/sendText/{instance}
+                // Body: { number: "5511999999999", textMessage: { text: "..." } }
+                const response = await fetch(`${url}/message/sendText/${instance}`, {
                     method: 'POST',
-                    headers: {
-                        'apikey': apiKey,
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        phone: telefone,
-                        message: mensagem
-                    })
+                    headers: { 'apikey': apiKey, 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ number: telefone, textMessage: { text: mensagem } })
                 });
 
                 if (response.ok) {
                     const data = await response.json();
-                    alert(`✅ Mensagem enviada com sucesso!\nID: ${data.messageId || ''}\nStatus: ${data.status || 'sent'}`);
-                    const count = parseInt(document.getElementById('evolutionMsgs').textContent) + 1;
+                    alert(`✅ Mensagem enviada!\nID: ${data.key?.id || ''}\nStatus: ${data.status || 'PENDING'}`);
+                    const count = parseInt(document.getElementById('evolutionMsgs').textContent || '0') + 1;
                     document.getElementById('evolutionMsgs').textContent = count;
                 } else {
                     const err = await response.json().catch(() => ({}));
-                    throw new Error(err.error || `HTTP ${response.status}`);
+                    throw new Error(err.message || err.error || `HTTP ${response.status}`);
                 }
             } catch (error) {
                 alert(`❌ Erro ao enviar: ${error.message}`);
@@ -3982,33 +3978,39 @@ XML: Estrutura hierárquica de elementos
                 progressEl.innerHTML = `<p>⏳ Enviando para ${phones.length} contatos via Evolution API...</p>`;
             }
 
+            // v1.7.4: não há send-bulk — enviar individualmente com delay
+            const instance = document.getElementById('evolutionInstance')?.value || 'ENSIDE';
+            let totalEnviados = 0, totalErros = 0;
             try {
-                // Usar endpoint send-bulk da Evolution API v2.0.0
-                const response = await fetch(`${url}/api/message/send-bulk`, {
-                    method: 'POST',
-                    headers: {
-                        'apikey': apiKey,
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        phones: phones,
-                        message: mensagemTemplate
-                    })
-                });
-
-                if (response.ok) {
-                    const data = await response.json();
-                    const enviados = data.messagesSent || phones.length;
-                    // Atualizar contador
-                    const countEl = document.getElementById('evolutionMsgs');
-                    if (countEl) countEl.textContent = parseInt(countEl.textContent || '0') + enviados;
+                for (let i = 0; i < phones.length; i++) {
+                    const phone = phones[i];
+                    const contato = lote[i];
+                    const msgPersonalizada = mensagemTemplate.replace(/\{nome\}/gi, contato?.nome || '');
+                    try {
+                        const response = await fetch(`${url}/message/sendText/${instance}`, {
+                            method: 'POST',
+                            headers: { 'apikey': apiKey, 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ number: phone, textMessage: { text: msgPersonalizada } })
+                        });
+                        if (response.ok) totalEnviados++; else totalErros++;
+                    } catch(e) { totalErros++; }
                     
-                    if (progressEl) progressEl.style.display = 'none';
-                    alert(`✅ Envio concluído!\n\n📨 Mensagens enviadas: ${enviados}\n📊 Total de contatos: ${total}\n📅 ${new Date().toLocaleString('pt-BR')}`);
-                } else {
-                    const err = await response.json().catch(() => ({}));
-                    throw new Error(err.error || `HTTP ${response.status}`);
+                    if (progressEl) {
+                        const pct = Math.round(((i + 1) / phones.length) * 100);
+                        progressEl.innerHTML = `
+                            <div style="background: rgba(255,255,255,0.1); border-radius: 10px; overflow: hidden; margin: 10px 0;">
+                                <div style="background: linear-gradient(90deg, #22c55e, #16a34a); width: ${pct}%; height: 20px; transition: width 0.3s;"></div>
+                            </div>
+                            <p>✅ Enviados: ${totalEnviados} | ❌ Erros: ${totalErros} | ${pct}%</p>
+                        `;
+                    }
+                    await new Promise(r => setTimeout(r, 1200)); // delay 1.2s entre envios
                 }
+
+                const countEl = document.getElementById('evolutionMsgs');
+                if (countEl) countEl.textContent = parseInt(countEl.textContent || '0') + totalEnviados;
+                if (progressEl) progressEl.style.display = 'none';
+                alert(`✅ Envio concluído!\n\n📨 Enviados: ${totalEnviados}\n❌ Erros: ${totalErros}\n📅 ${new Date().toLocaleString('pt-BR')}`);
             } catch (error) {
                 if (progressEl) progressEl.style.display = 'none';
                 alert(`❌ Erro no envio em massa: ${error.message}\n\nVerifique a conexão com a Evolution API.`);
@@ -5331,28 +5333,8 @@ ${filtros.join('\n') || 'Nenhum filtro'}
             const url = document.getElementById('evolutionUrl')?.value;
             const apiKey = document.getElementById('evolutionApiKey')?.value;
 
-            if (url && apiKey) {
-                try {
-                    const resp = await fetch(`${url}/api/list/create`, {
-                        method: 'POST',
-                        headers: { 'apikey': apiKey, 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ name: nome, description: `Categoria: ${categoria} | UF: ${uf} | ${contatosLista.length} contatos` })
-                    });
-                    if (resp.ok) {
-                        const listData = await resp.json();
-                        const listId = listData.list?.id;
-                        novaLista.evolutionListId = listId;
-                        localStorage.setItem('listasTransmissao', JSON.stringify(listasTransmissao));
-                        alert(`✅ Lista "${nome}" criada!\n\n📊 ${contatosLista.length} contatos\n📱 Evolution API: Lista ID ${listId}\n\nPara enviar mensagens, use o botão "📨 Enviar" na lista.`);
-                    } else {
-                        alert(`✅ Lista "${nome}" criada localmente com ${contatosLista.length} contatos.\n⚠️ Não foi possível sincronizar com Evolution API.`);
-                    }
-                } catch (e) {
-                    alert(`✅ Lista "${nome}" criada localmente com ${contatosLista.length} contatos.\n⚠️ Evolution API offline: ${e.message}`);
-                }
-            } else {
-                alert(`✅ Lista "${nome}" criada com ${contatosLista.length} contatos!\n💡 Configure a Evolution API para sincronizar.`);
-            }
+            // v1.7.4: não há endpoint de criação de lista — salvar localmente e usar botão Enviar
+            alert(`✅ Lista "${nome}" criada com ${contatosLista.length} contatos!\n\n📨 Para enviar, clique no botão "📨 Enviar" na lista.\n📊 Categoria: ${categoria} | UF: ${uf || 'Todos'}`);}
         }
         
         // Função para abrir a lista na planilha Google Sheets
@@ -5533,38 +5515,33 @@ ${filtros.join('\n') || 'Nenhum filtro'}
                 progressEl.innerHTML = `<p>⏳ Enviando para ${phones.length} contatos...</p>`;
             }
 
+            // v1.7.4: enviar individualmente com delay (sem send-bulk)
+            const instance = document.getElementById('evolutionInstance')?.value || 'ENSIDE';
+            let totalEnviados = 0, totalErros = 0;
             try {
-                // Enviar em lotes de 256 via send-bulk (Evolution API v2.0.0)
-                const LOTE = 256;
-                let totalEnviados = 0;
-                let totalErros = 0;
-
-                for (let i = 0; i < phones.length; i += LOTE) {
-                    const lote = phones.slice(i, i + LOTE);
-                    const response = await fetch(`${url}/api/message/send-bulk`, {
-                        method: 'POST',
-                        headers: { 'apikey': apiKey, 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ phones: lote, message: mensagem })
-                    });
-
-                    if (response.ok) {
-                        const data = await response.json();
-                        totalEnviados += data.messagesSent || lote.length;
-                    } else {
-                        totalErros += lote.length;
-                    }
+                for (let i = 0; i < phones.length; i++) {
+                    const phone = phones[i];
+                    const contato = lista.contatos[i];
+                    const msgPersonalizada = mensagem.replace(/\{nome\}/gi, contato?.nome || '');
+                    try {
+                        const response = await fetch(`${url}/message/sendText/${instance}`, {
+                            method: 'POST',
+                            headers: { 'apikey': apiKey, 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ number: phone, textMessage: { text: msgPersonalizada } })
+                        });
+                        if (response.ok) totalEnviados++; else totalErros++;
+                    } catch(e) { totalErros++; }
 
                     if (progressEl) {
-                        const progresso = Math.round(((i + lote.length) / phones.length) * 100);
+                        const pct = Math.round(((i + 1) / phones.length) * 100);
                         progressEl.innerHTML = `
                             <div style="background: rgba(255,255,255,0.1); border-radius: 10px; overflow: hidden; margin: 10px 0;">
-                                <div style="background: linear-gradient(90deg, #22c55e, #16a34a); width: ${progresso}%; height: 20px; transition: width 0.3s;"></div>
+                                <div style="background: linear-gradient(90deg, #22c55e, #16a34a); width: ${pct}%; height: 20px; transition: width 0.3s;"></div>
                             </div>
-                            <p>✅ Enviados: ${totalEnviados} | ❌ Erros: ${totalErros} | ${progresso}%</p>
+                            <p>✅ Enviados: ${totalEnviados} | ❌ Erros: ${totalErros} | ${pct}%</p>
                         `;
                     }
-
-                    if (i + LOTE < phones.length) await new Promise(r => setTimeout(r, 2000));
+                    await new Promise(r => setTimeout(r, 1200)); // delay 1.2s
                 }
 
                 const countEl = document.getElementById('evolutionMsgs');
@@ -6404,20 +6381,28 @@ Em breve entraremos em contato com ofertas de frete!`);
             apiKey: 'evolution-api-enside-2024-secret',
             instance: 'ENSIDE',
             instanceId: 'ENSIDE',
-            webhook: 'https://evolution-api-enside.onrender.com/webhook/ENSIDE'
+            webhook: 'https://evolution-api-enside.onrender.com/webhook'
         };
 
-        // Função para testar conexão com Evolution API (endpoint correto v2.0.0)
+        // ============================================================
+        // Evolution API v1.7.4 — Endpoints corretos
+        // Base: https://evolution-api-enside.onrender.com
+        // Instância: ENSIDE
+        // ============================================================
+
         async function testarConexaoEvolutionAPI() {
             try {
-                const response = await fetch(EVOLUTION_CONFIG.url + '/api/instance/status', {
-                    headers: { 'apikey': EVOLUTION_CONFIG.apiKey }
-                });
-                
+                // v1.7.4: GET /instance/connectionState/{instance}
+                const response = await fetch(
+                    `${EVOLUTION_CONFIG.url}/instance/connectionState/${EVOLUTION_CONFIG.instance}`,
+                    { headers: { 'apikey': EVOLUTION_CONFIG.apiKey } }
+                );
                 if (response.ok) {
                     const data = await response.json();
-                    console.log('✅ Evolution API Conectada:', data.instance, '| Status:', data.status, '| Conectado:', data.connected);
-                    return true;
+                    const state = data.instance?.state || 'unknown';
+                    const connected = state === 'open';
+                    console.log(`✅ Evolution API v1.7.4 | Instância: ${data.instance?.instanceName} | Estado: ${state}`);
+                    return connected;
                 } else {
                     console.error('❌ Erro ao conectar Evolution API: HTTP', response.status);
                     return false;
@@ -6428,29 +6413,27 @@ Em breve entraremos em contato com ofertas de frete!`);
             }
         }
 
-        // Função para enviar mensagem via Evolution API (endpoint correto v2.0.0)
+        // v1.7.4: POST /message/sendText/{instance}
+        // Body: { number: "5511999999999", textMessage: { text: "mensagem" } }
         async function enviarMensagemEvolutionAPI(phone, message) {
             try {
-                // Formatar telefone
                 const tel = String(phone).replace(/\D/g, '');
-                const telefone = tel.startsWith('55') ? tel : '55' + tel;
-                
-                const response = await fetch(EVOLUTION_CONFIG.url + '/api/message/send', {
-                    method: 'POST',
-                    headers: { 
-                        'apikey': EVOLUTION_CONFIG.apiKey,
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ phone: telefone, message: message })
-                });
-                
+                const numero = tel.startsWith('55') ? tel : '55' + tel;
+                const response = await fetch(
+                    `${EVOLUTION_CONFIG.url}/message/sendText/${EVOLUTION_CONFIG.instance}`,
+                    {
+                        method: 'POST',
+                        headers: { 'apikey': EVOLUTION_CONFIG.apiKey, 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ number: numero, textMessage: { text: message } })
+                    }
+                );
                 if (response.ok) {
                     const data = await response.json();
-                    console.log('✅ Mensagem enviada:', data.messageId, '| Status:', data.status);
+                    console.log('✅ Mensagem enviada | ID:', data.key?.id, '| Status:', data.status);
                     return true;
                 } else {
                     const err = await response.json().catch(() => ({}));
-                    console.error('❌ Erro ao enviar mensagem:', err.error || response.status);
+                    console.error('❌ Erro ao enviar mensagem:', err.message || response.status);
                     return false;
                 }
             } catch (error) {
@@ -6459,17 +6442,17 @@ Em breve entraremos em contato com ofertas de frete!`);
             }
         }
 
-        // Função para listar contatos da Evolution API (endpoint correto v2.0.0)
+        // v1.7.4: GET /chat/findContacts/{instance}
         async function listarContatosEvolution() {
             try {
-                const response = await fetch(EVOLUTION_CONFIG.url + '/api/contacts/list', {
-                    headers: { 'apikey': EVOLUTION_CONFIG.apiKey }
-                });
-                
+                const response = await fetch(
+                    `${EVOLUTION_CONFIG.url}/chat/findContacts/${EVOLUTION_CONFIG.instance}`,
+                    { headers: { 'apikey': EVOLUTION_CONFIG.apiKey } }
+                );
                 if (response.ok) {
                     const data = await response.json();
-                    const contatos = data.contacts || data;
-                    console.log('✅ Contatos da Evolution API:', contatos.length || data.total, 'contatos');
+                    const contatos = Array.isArray(data) ? data : (data.contacts || []);
+                    console.log('✅ Contatos da Evolution API:', contatos.length, 'contatos');
                     return contatos;
                 } else {
                     console.error('❌ Erro ao carregar contatos: HTTP', response.status);
@@ -6481,37 +6464,22 @@ Em breve entraremos em contato com ofertas de frete!`);
             }
         }
 
-        // Função para exportar contatos da planilha para a Evolution API
-        async function exportarContatosParaEvolution(limite = 100) {
+        // v1.7.4: Exportar contatos via loop individual (não há send-bulk nesta versão)
+        async function exportarContatosParaEvolution(limite = 50) {
             const contatos = window.contatosGoogleSheets || [];
             if (contatos.length === 0) {
                 console.warn('⚠️ Nenhum contato carregado. Sincronize a planilha primeiro.');
                 return { exportados: 0, erros: 0 };
             }
-
             const lote = contatos.slice(0, limite);
-            const phones = lote.map(c => {
-                const tel = String(c.telefone || '').replace(/\D/g, '');
-                return tel.startsWith('55') ? tel : '55' + tel;
-            }).filter(t => t.length >= 12);
-
-            console.log(`📤 Exportando ${phones.length} contatos para Evolution API...`);
-
-            try {
-                const response = await fetch(EVOLUTION_CONFIG.url + '/api/message/send-bulk', {
-                    method: 'POST',
-                    headers: { 'apikey': EVOLUTION_CONFIG.apiKey, 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ phones, message: 'Contato registrado no sistema ENSIDE.' })
-                });
-                if (response.ok) {
-                    const data = await response.json();
-                    console.log(`✅ ${data.messagesSent} contatos exportados para Evolution API`);
-                    return { exportados: data.messagesSent, erros: 0 };
-                }
-            } catch (e) {
-                console.error('❌ Erro ao exportar:', e.message);
+            let exportados = 0, erros = 0;
+            for (const c of lote) {
+                const ok = await enviarMensagemEvolutionAPI(c.telefone, `Olá ${c.nome || ''}! Contato registrado no sistema ENSIDE.`);
+                if (ok) exportados++; else erros++;
+                await new Promise(r => setTimeout(r, 1500)); // delay entre envios
             }
-            return { exportados: 0, erros: phones.length };
+            console.log(`✅ Exportação concluída: ${exportados} enviados, ${erros} erros`);
+            return { exportados, erros };
         }
         // ==================== FIM INTEGRAÇÃO EVOLUTION API ====================
 
