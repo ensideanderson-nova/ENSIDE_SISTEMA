@@ -4014,7 +4014,7 @@ XML: Estrutura hierárquica de elementos
 
             // v1.7.4: não há send-bulk — enviar individualmente com delay
             const instance = document.getElementById('evolutionInstance')?.value || 'ENSIDE';
-            let totalEnviados = 0, totalErros = 0;
+            let totalEnviados = 0, totalErros = 0, totalSemWhatsApp = 0;
 
             // Wake-up: verificar conexão antes de começar o envio
             if (progressElMassa) progressElMassa.innerHTML = '<p>⏳ Verificando conexão com WhatsApp...</p>';
@@ -4042,23 +4042,34 @@ XML: Estrutura hierárquica de elementos
                 for (let i = 0; i < phones.length; i++) {
                     const phone = phones[i];
                     const contato = lote[i];
+                    // Usar coluna whatsapp se disponivel, senao telefone
+                    const wppTel = contato?.whatsapp ? String(contato.whatsapp).replace(/\D/g, '') : null;
+                    const phoneEnvio = (wppTel && wppTel.length >= 10) 
+                        ? (wppTel.startsWith('55') ? wppTel : '55' + wppTel)
+                        : phone;
                     const msgPersonalizada = mensagemTemplate.replace(/\{nome\}/gi, contato?.nome || '');
                     try {
                         const response = await fetch(`${url}/message/sendText/${instance}`, {
                             method: 'POST',
                             headers: { 'apikey': apiKey, 'Content-Type': 'application/json' },
-                            body: JSON.stringify({ number: phone, textMessage: { text: msgPersonalizada } }),
+                            body: JSON.stringify({ number: phoneEnvio, textMessage: { text: msgPersonalizada } }),
                             signal: AbortSignal.timeout(15000)
                         });
                         if (response.ok) {
                             totalEnviados++;
                         } else {
                             const errBody = await response.json().catch(() => ({}));
-                            console.warn(`Erro ao enviar para ${phone}:`, errBody);
-                            totalErros++;
+                            // HTTP 400 com exists:false = número sem WhatsApp (não é erro do sistema)
+                            const semWpp = errBody?.response?.message?.[0]?.exists === false;
+                            if (semWpp) {
+                                totalSemWhatsApp++;
+                            } else {
+                                console.warn(`Erro ao enviar para ${phoneEnvio}:`, errBody);
+                                totalErros++;
+                            }
                         }
                     } catch(e) {
-                        console.warn(`Falha ao enviar para ${phone}:`, e.message);
+                        console.warn(`Falha ao enviar para ${phoneEnvio}:`, e.message);
                         totalErros++;
                     }
                     
@@ -4068,7 +4079,7 @@ XML: Estrutura hierárquica de elementos
                             <div style="background: rgba(255,255,255,0.1); border-radius: 10px; overflow: hidden; margin: 10px 0;">
                                 <div style="background: linear-gradient(90deg, #22c55e, #16a34a); width: ${pct}%; height: 20px; transition: width 0.3s;"></div>
                             </div>
-                            <p>✅ Enviados: ${totalEnviados} | ❌ Erros: ${totalErros} | ${pct}% | Contato: ${lote[i]?.nome || phone}</p>
+                            <p>✅ Enviados: ${totalEnviados} | 📵 Sem WhatsApp: ${totalSemWhatsApp} | ❌ Erros: ${totalErros} | ${pct}% | Contato: ${lote[i]?.nome || phoneEnvio}</p>
                         `;
                     }
                     await new Promise(r => setTimeout(r, 1200)); // delay 1.2s entre envios
@@ -4077,7 +4088,7 @@ XML: Estrutura hierárquica de elementos
                 const countEl = document.getElementById('evolutionMsgs');
                 if (countEl) countEl.textContent = parseInt(countEl.textContent || '0') + totalEnviados;
                 if (progressElMassa) progressElMassa.style.display = 'none';
-                alert(`✅ Envio concluído!\n\n📨 Enviados: ${totalEnviados}\n❌ Erros: ${totalErros}\n📅 ${new Date().toLocaleString('pt-BR')}`);
+                alert(`✅ Envio concluído!\n\n📨 Enviados: ${totalEnviados}\n📵 Sem WhatsApp: ${totalSemWhatsApp}\n❌ Erros reais: ${totalErros}\n📅 ${new Date().toLocaleString('pt-BR')}\n\n${totalSemWhatsApp > 0 ? 'Dica: Números sem WhatsApp são normais. Adicione o WhatsApp correto na coluna WHATSAPP da planilha.' : ''}`);
             } catch (error) {
                 if (progressElMassa) progressElMassa.style.display = 'none';
                 alert(`❌ Erro no envio em massa: ${error.message}\n\nVerifique a conexão com a Evolution API.`);
