@@ -3727,7 +3727,7 @@ XML: Estrutura hierárquica de elementos
 
         // ==================== EVOLUTION API ====================
         let evolutionConfig = {
-            url: localStorage.getItem('evolutionUrl') || 'https://3001-i6cwps7xj9nb6v44vk54x-cf846405.us1.manus.computer',
+            url: localStorage.getItem('evolutionUrl') || 'https://evolution-api-enside.onrender.com',
             apiKey: localStorage.getItem('evolutionApiKey') || '5f0ce71e1db3469bbe37edc577fbddc0',
             instance: localStorage.getItem('evolutionInstance') || 'enside-master-20260217172641'
         };
@@ -3791,7 +3791,7 @@ XML: Estrutura hierárquica de elementos
             } catch (error) {
                 document.getElementById('evolutionStatus').textContent = '❌';
                 document.getElementById('evolutionStatusCard').style.borderColor = '#ef4444';
-                alert(`❌ Erro ao conectar: ${error.message}\n\nVerifique:\n- URL da API (ex: https://3001-xxx.manus.computer)\n- API Key\n- Se o servidor está online`);
+                alert(`❌ Erro ao conectar: ${error.message}\n\nVerifique:\n- URL da API (ex: https://evolution-api-enside.onrender.com)\n- API Key\n- Se o servidor está online`);
             }
         }
 
@@ -6367,11 +6367,11 @@ Em breve entraremos em contato com ofertas de frete!`);
         // ==================== INTEGRAÇÃO EVOLUTION API ====================
         // Credenciais pré-configuradas da Evolution API
         const EVOLUTION_CONFIG = {
-            url: 'https://3001-i6cwps7xj9nb6v44vk54x-cf846405.us1.manus.computer',
+            url: 'https://evolution-api-enside.onrender.com',
             apiKey: '5f0ce71e1db3469bbe37edc577fbddc0',
             instance: 'enside-master-20260217172641',
             instanceId: '59240a812ae1c455',
-            webhook: 'https://3001-i6cwps7xj9nb6v44vk54x-cf846405.us1.manus.computer/webhook'
+            webhook: 'https://evolution-api-enside.onrender.com/webhook'
         };
 
         // Função para testar conexão com Evolution API (endpoint correto v2.0.0)
