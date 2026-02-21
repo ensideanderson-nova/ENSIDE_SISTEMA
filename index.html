@@ -3746,9 +3746,9 @@ XML: Estrutura hierárquica de elementos
             evolutionConfig.apiKey = document.getElementById('evolutionApiKey').value;
             evolutionConfig.instance = document.getElementById('evolutionInstance').value;
             
-            localStorage.setItem('evolutionUrl', evolutionConfig.url);
-            localStorage.setItem('evolutionApiKey', evolutionConfig.apiKey);
-            localStorage.setItem('evolutionInstance', evolutionConfig.instance);
+            localStorage.setItem('evolutionUrl', evolutionConfig.url); backendSync.salvarConfiguracao('evolutionUrl', evolutionConfig.url);
+            localStorage.setItem('evolutionApiKey', evolutionConfig.apiKey); backendSync.salvarConfiguracao('evolutionApiKey', evolutionConfig.apiKey);
+            localStorage.setItem('evolutionInstance', evolutionConfig.instance); backendSync.salvarConfiguracao('evolutionInstance', evolutionConfig.instance);
             
             alert('✅ Configurações salvas com sucesso!');
         }
