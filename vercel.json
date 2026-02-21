@@ -1,17 +1,15 @@
 {
   "version": 2,
-  "name": "enside-sistema-unificado",
-  "public": true,
-  "buildCommand": "echo 'Static site'",
-  "outputDirectory": ".",
+  "builds": [
+    {
+      "src": "server.js",
+      "use": "@vercel/node"
+    }
+  ],
   "routes": [
     {
-      "src": "/(?!.*\\.)",
-      "dest": "/index.html"
-    },
-    {
       "src": "/(.*)",
-      "dest": "/$1"
+      "dest": "server.js"
     }
   ]
 }
