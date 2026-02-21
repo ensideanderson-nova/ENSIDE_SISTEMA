@@ -2485,12 +2485,14 @@ XML: Estrutura hierárquica de elementos
         }
 
         // ==================== NAVEGAÇÃO ABAS ====================
-        function mudarAba(abaId) {
+        function mudarAba(abaId, btnEl) {
             document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
             document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
             
             document.getElementById(abaId).classList.add('active');
-            event.target.classList.add('active');
+            // Usar o botão passado como parâmetro, ou tentar pegar do event global
+            const activeBtn = btnEl || (typeof event !== 'undefined' && event && event.target ? event.target : null);
+            if (activeBtn) activeBtn.classList.add('active');
             
             window.scrollTo(0, 0);
 
