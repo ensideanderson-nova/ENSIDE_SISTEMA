@@ -2468,6 +2468,85 @@ XML: Estrutura hierárquica de elementos
             event.target.classList.add('active');
             
             window.scrollTo(0, 0);
+
+            // ── Carregamento automático de dados ao trocar de aba ──
+            setTimeout(async () => {
+                try {
+                    if (abaId === 'contatoscrm' || abaId === 'triagem' || abaId === 'evolution') {
+                        // Aba CONTATOS (gid=1689968688)
+                        if (typeof carregarContatosGoogleSheets === 'function' && contatosGoogleSheets.length === 0) {
+                            await carregarContatosGoogleSheets();
+                        }
+                        if (abaId === 'triagem') atualizarEstatisticasTriagem();
+                    } else if (abaId === 'fretesdisponiveis') {
+                        // Aba FRETES_DISPONIVEIS (gid=1716433489)
+                        if (typeof carregarFretesGoogleSheets === 'function') {
+                            await carregarFretesGoogleSheets();
+                        }
+                    } else if (abaId === 'captacaofretes') {
+                        // Aba CAPTACAO_FRETES (gid=1335082895)
+                        if (typeof carregarCaptacaoFretesGoogleSheets === 'function') {
+                            await carregarCaptacaoFretesGoogleSheets();
+                        }
+                    } else if (abaId === 'listas') {
+                        // Aba LISTAS_TRANSMISSAO (gid=1114979046)
+                        if (typeof carregarContatosGoogleSheets === 'function' && contatosGoogleSheets.length === 0) {
+                            await carregarContatosGoogleSheets();
+                        }
+                        if (typeof sincronizarListasComPlanilha === 'function') {
+                            await sincronizarListasComPlanilha();
+                        }
+                    } else if (abaId === 'dashboard') {
+                        // Dashboard — carrega contatos e atualiza KPIs
+                        if (typeof carregarContatosGoogleSheets === 'function' && contatosGoogleSheets.length === 0) {
+                            await carregarContatosGoogleSheets();
+                        }
+                        atualizarDashboard();
+                    } else if (abaId === 'sincronizacao') {
+                        // Aba Sincronização — carrega tudo
+                        if (typeof carregarContatosGoogleSheets === 'function' && contatosGoogleSheets.length === 0) {
+                            await carregarContatosGoogleSheets();
+                        }
+                    }
+                } catch (e) {
+                    console.warn('Erro ao carregar dados da aba', abaId, e);
+                }
+            }, 100);
+        }
+
+        // Atualizar estatísticas da aba Triagem com dados reais da planilha
+        function atualizarEstatisticasTriagem() {
+            const total = contatosGoogleSheets.length;
+            const classificados = contatosGoogleSheets.filter(c => c.categoria && c.categoria.trim() !== '').length;
+            const pendentes = total - classificados;
+            const precisao = total > 0 ? Math.round((classificados / total) * 100) : 0;
+            const el = (id) => document.getElementById(id);
+            if (el('triagemTotal')) el('triagemTotal').textContent = total.toLocaleString('pt-BR');
+            if (el('triagemClassificados')) el('triagemClassificados').textContent = classificados.toLocaleString('pt-BR');
+            if (el('triagemPendentes')) el('triagemPendentes').textContent = pendentes.toLocaleString('pt-BR');
+            if (el('triagemPrecisao')) el('triagemPrecisao').textContent = precisao + '%';
+            // Atualizar o select de fonte de dados
+            const sel = document.getElementById('triagemFonte');
+            if (sel && sel.options[0]) sel.options[0].text = `📊 Todos os Contatos (${total.toLocaleString('pt-BR')})`;
+            if (sel && sel.options[1]) sel.options[1].text = `⏳ Apenas Pendentes (${pendentes.toLocaleString('pt-BR')})`;
+        }
+
+        // Atualizar KPIs do Dashboard com dados reais da planilha
+        function atualizarDashboard() {
+            const total = contatosGoogleSheets.length;
+            if (total === 0) return;
+            const fornecedores = contatosGoogleSheets.filter(c => c.categoria?.toUpperCase().includes('FORNECEDOR')).length;
+            const clientes = contatosGoogleSheets.filter(c => c.categoria?.toUpperCase().includes('CLIENTE')).length;
+            const transportadores = contatosGoogleSheets.filter(c =>
+                c.categoria?.toUpperCase().includes('TRANSPORTADOR') ||
+                c.categoria?.toUpperCase().includes('MOTORISTA')
+            ).length;
+            // Atualizar os stat-cards do dashboard (4 primeiros)
+            const cards = document.querySelectorAll('#dashboard .stat-value');
+            if (cards[0]) cards[0].textContent = total.toLocaleString('pt-BR');
+            if (cards[1]) cards[1].textContent = fornecedores.toLocaleString('pt-BR');
+            if (cards[2]) cards[2].textContent = transportadores.toLocaleString('pt-BR');
+            if (cards[3]) cards[3].textContent = clientes.toLocaleString('pt-BR');
         }
 
         // ==================== CATEGORIAS E SUBCATEGORIAS IMPORTADOR UNIVERSAL ====================
@@ -4943,24 +5022,49 @@ ${filtros.join('\n') || 'Nenhum filtro'}
                 }
                 
                 const rows = jsonData.table.rows;
-                // Mapeamento correto das colunas da planilha:
-                // col[0]=checkbox, col[1]=NOME, col[2]=TELEFONE, col[3]=CATEGORIA,
-                // col[4]=SUBCATEGORIA, col[5]=CIDADE, col[6]=UF, col[7]=EMAIL,
-                // col[8]=EMPRESA, col[9]=STATUS
+                // Mapeamento completo das 32 colunas reais da aba CONTATOS:
+                // [0]=checkbox [1]=NOME [2]=TELEFONE [3]=CATEGORIA [4]=SUBCATEGORIA
+                // [5]=CIDADE [6]=UF [7]=EMAIL [8]=EMPRESA [9]=STATUS
+                // [10]=ULTIMA_COMPRA [11]=ORIGEM_LEAD [12]=DATA_CADASTRO [13]=RESPONSAVEL
+                // [14]=PRIORIDADE [15]=VALOR_POTENCIAL [16]=ETAPA_FUNIL [17]=PROXIMO_CONTATO
+                // [18]=OBSERVACOES [19]=TAGS [20]=TELEFONE_2 [21]=WHATSAPP [22]=LINKEDIN
+                // [23]=INSTAGRAM [24]=CARGO [25]=(vazio) [26]=CEP [27]=ID_CONTATO
+                // [28]=LEAD_SCORE [29]=RESPONSAVEL [30]=DATA_CADASTRO [31]=DATA_ULTIMA_INTERACAO
                 contatosGoogleSheets = rows.map((row, index) => {
                     const c = row.c || [];
-                    const tel = c[2]?.v || '';
+                    const telRaw = c[2]?.v || '';
+                    // Telefone vem como número float (ex: 5514918265659.0) — converter para string
+                    const telStr = telRaw ? String(Math.round(Number(telRaw))) : '';
+                    const whatsapp = c[21]?.v || telStr;
                     return {
-                        id: index + 1,
+                        id: c[27]?.v || index + 1,
                         nome: c[1]?.v || '',
-                        telefone: formatarTelefone(tel),
+                        telefone: formatarTelefone(telStr),
+                        telefone2: c[20]?.v || '',
+                        whatsapp: formatarTelefone(String(whatsapp)),
                         categoria: c[3]?.v || '',
                         subcategoria: c[4]?.v || '',
                         cidade: c[5]?.v || '',
-                        uf: c[6]?.v || 'SP',
+                        uf: c[6]?.v || '',
                         email: c[7]?.v || '',
                         empresa: c[8]?.v || '',
-                        status: c[9]?.v || 'ATIVO'
+                        status: c[9]?.v || 'ATIVO',
+                        ultimaCompra: c[10]?.v || '',
+                        origemLead: c[11]?.v || '',
+                        dataCadastro: c[12]?.v || '',
+                        responsavel: c[13]?.v || c[29]?.v || '',
+                        prioridade: c[14]?.v || '',
+                        valorPotencial: c[15]?.v || '',
+                        etapaFunil: c[16]?.v || '',
+                        proximoContato: c[17]?.v || '',
+                        observacoes: c[18]?.v || '',
+                        tags: c[19]?.v || '',
+                        linkedin: c[22]?.v || '',
+                        instagram: c[23]?.v || '',
+                        cargo: c[24]?.v || '',
+                        cep: c[26]?.v || '',
+                        leadScore: c[28]?.v || '',
+                        dataUltimaInteracao: c[31]?.v || ''
                     };
                 }).filter(c => c.nome && c.telefone);
 
@@ -6243,13 +6347,21 @@ Em breve entraremos em contato com ofertas de frete!`);
             if (document.getElementById('openaiKey')) carregarAPIKeys();
             renderizarListasTransmissao();
             renderAprendizados();
-            carregarContatosGoogleSheets();
             // Reconectar GitHub automaticamente se estava conectado
             reconectarGitHub();
             console.log('Planilha integrada:', GOOGLE_SHEETS_CONFIG.spreadsheetName);
-            console.log('✅ Sistema ENSIDE MASTER v19.0 CORRIGIDO - Evolution API v2.0.0 + Google Sheets + Webhook');
+            console.log('✅ Sistema ENSIDE MASTER v20.0 - Abas sincronizadas com Google Sheets');
             // Inicializar Captação de Fretes
             initFretesIntegrado();
+            // Carregar contatos da planilha ao iniciar e atualizar KPIs do Dashboard
+            carregarContatosGoogleSheets().then(() => {
+                atualizarDashboard();
+                atualizarEstatisticasTriagem();
+                // Atualizar contador de contatos no Evolution
+                const evContacts = document.getElementById('evolutionContacts');
+                if (evContacts) evContacts.textContent = contatosGoogleSheets.length.toLocaleString('pt-BR');
+                console.log('✅ Contatos carregados da planilha CONTATOS (gid=1689968688):', contatosGoogleSheets.length);
+            }).catch(err => console.warn('⚠️ Falha ao carregar contatos na inicialização:', err.message));
         });
     
         // ==================== INTEGRAÇÃO EVOLUTION API ====================
