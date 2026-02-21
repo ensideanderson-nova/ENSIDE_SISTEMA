@@ -5363,6 +5363,11 @@ ${filtros.join('\n') || 'Nenhum filtro'}
 
         // ==================== LISTA DE TRANSMISSÃO EVOLUTION API ====================
         let listasTransmissao = JSON.parse(localStorage.getItem('listasTransmissao') || '[]');
+        // Remover listas sincronizadas com 0 contatos para que sejam recriadas com filtros corretos
+        listasTransmissao = listasTransmissao.filter(l => {
+            if (l.sincronizadaDaPlanilha && l.total === 0) return false;
+            return true;
+        });
         let contatosGoogleSheets = [];
 
         // Carregar contatos do Google Sheets
@@ -5854,20 +5859,51 @@ ${filtros.join('\n') || 'Nenhum filtro'}
 
             // v1.7.4: enviar individualmente com delay (sem send-bulk)
             const instance = document.getElementById('evolutionInstance')?.value || 'ENSIDE';
-            let totalEnviados = 0, totalErros = 0;
+            let totalEnviados = 0, totalErros = 0, totalSemWpp = 0;
+
+            // Wake-up: verificar conexão antes de começar
+            if (progressEl) progressEl.innerHTML = '<p>⏳ Verificando conexão com WhatsApp...</p>';
+            try {
+                const wakeResp = await fetch(`${url}/instance/connectionState/${instance}`, {
+                    headers: { 'apikey': apiKey },
+                    signal: AbortSignal.timeout(30000)
+                });
+                if (!wakeResp.ok) throw new Error(`Servidor retornou HTTP ${wakeResp.status}`);
+                const state = await wakeResp.json();
+                const status = state?.instance?.state || state?.state || '';
+                if (status !== 'open') throw new Error(`WhatsApp desconectado (${status}). Reconecte via QR Code.`);
+            } catch(e) {
+                if (progressEl) progressEl.style.display = 'none';
+                alert(`❌ Não foi possível conectar:\n${e.message}\n\nAguarde 30 segundos e tente novamente.`);
+                return;
+            }
+
             try {
                 for (let i = 0; i < phones.length; i++) {
                     const phone = phones[i];
                     const contato = lista.contatos[i];
+                    // Usar coluna whatsapp se disponivel
+                    const wppTel = contato?.whatsapp ? String(contato.whatsapp).replace(/\D/g, '') : null;
+                    const phoneEnvio = (wppTel && wppTel.length >= 10)
+                        ? (wppTel.startsWith('55') ? wppTel : '55' + wppTel)
+                        : phone;
                     const msgPersonalizada = mensagem.replace(/\{nome\}/gi, contato?.nome || '');
                     try {
                         const response = await fetch(`${url}/message/sendText/${instance}`, {
                             method: 'POST',
                             headers: { 'apikey': apiKey, 'Content-Type': 'application/json' },
-                            body: JSON.stringify({ number: phone, textMessage: { text: msgPersonalizada } })
+                            body: JSON.stringify({ number: phoneEnvio, textMessage: { text: msgPersonalizada } }),
+                            signal: AbortSignal.timeout(15000)
                         });
-                        if (response.ok) totalEnviados++; else totalErros++;
-                    } catch(e) { totalErros++; }
+                        if (response.ok) {
+                            totalEnviados++;
+                        } else {
+                            const errBody = await response.json().catch(() => ({}));
+                            // HTTP 400 com exists:false = número sem WhatsApp (não é erro do sistema)
+                            const semWpp = errBody?.response?.message?.[0]?.exists === false;
+                            if (semWpp) totalSemWpp++; else { console.warn('Erro:', errBody); totalErros++; }
+                        }
+                    } catch(e) { console.warn('Falha:', e.message); totalErros++; }
 
                     if (progressEl) {
                         const pct = Math.round(((i + 1) / phones.length) * 100);
@@ -5875,7 +5911,7 @@ ${filtros.join('\n') || 'Nenhum filtro'}
                             <div style="background: rgba(255,255,255,0.1); border-radius: 10px; overflow: hidden; margin: 10px 0;">
                                 <div style="background: linear-gradient(90deg, #22c55e, #16a34a); width: ${pct}%; height: 20px; transition: width 0.3s;"></div>
                             </div>
-                            <p>✅ Enviados: ${totalEnviados} | ❌ Erros: ${totalErros} | ${pct}%</p>
+                            <p>✅ Enviados: ${totalEnviados} | 📵 Sem WPP: ${totalSemWpp} | ❌ Erros: ${totalErros} | ${pct}% | ${contato?.nome || phoneEnvio}</p>
                         `;
                     }
                     await new Promise(r => setTimeout(r, 1200)); // delay 1.2s
@@ -5884,7 +5920,7 @@ ${filtros.join('\n') || 'Nenhum filtro'}
                 const countEl = document.getElementById('evolutionMsgs');
                 if (countEl) countEl.textContent = parseInt(countEl.textContent || '0') + totalEnviados;
                 if (progressEl) progressEl.style.display = 'none';
-                alert(`📨 Envio concluído!\n\n✅ Enviados: ${totalEnviados}\n❌ Erros: ${totalErros}\n📊 Total: ${phones.length}\n📅 ${new Date().toLocaleString('pt-BR')}`);
+                alert(`📨 Envio concluído!\n\n✅ Enviados: ${totalEnviados}\n📵 Sem WhatsApp: ${totalSemWpp}\n❌ Erros reais: ${totalErros}\n📊 Total: ${phones.length}\n📅 ${new Date().toLocaleString('pt-BR')}\n\n${totalSemWpp > 0 ? 'Dica: Use a sincronização WPP na aba Sincronização para identificar contatos com WhatsApp.' : ''}`);
 
             } catch (error) {
                 if (progressEl) progressEl.style.display = 'none';
@@ -5987,15 +6023,38 @@ ${filtros.join('\n') || 'Nenhum filtro'}
                             sincronizadaDaPlanilha: true
                         };
                         
-                        // Filtrar contatos baseado na categoria e UF
+                        // Filtrar contatos baseado na categoria e subcategoria
+                        // O campo filtroUF da planilha é na verdade SUBCATEGORIA (ex: Varejo, CCA, Frete Longo)
+                        // Não é um estado (UF) real
+                        const FILTROS_SUBCATEGORIA = {
+                            'Varejo': c => c.subcategoria && c.subcategoria.toLowerCase().includes('varejo'),
+                            'Varejo SP': c => c.subcategoria && c.subcategoria.toLowerCase().includes('varejo'),
+                            'CCA': c => c.subcategoria && (c.subcategoria.toLowerCase().includes('cca') || c.subcategoria.toLowerCase().includes('tratamento')),
+                            'Tratamento CCA': c => c.subcategoria && (c.subcategoria.toLowerCase().includes('cca') || c.subcategoria.toLowerCase().includes('tratamento')),
+                            'Frete Longo': c => c.subcategoria && c.subcategoria.toLowerCase().includes('frete'),
+                            'Construcao': c => c.subcategoria && (c.subcategoria.toLowerCase().includes('constru') || c.subcategoria.toLowerCase().includes('civil')),
+                            'Construcao Civil': c => c.subcategoria && (c.subcategoria.toLowerCase().includes('constru') || c.subcategoria.toLowerCase().includes('civil')),
+                            'Atacado': c => c.subcategoria && c.subcategoria.toLowerCase().includes('atacado'),
+                            'Eucalipto Verde': c => c.subcategoria && (c.subcategoria.toLowerCase().includes('eucalipto') || c.subcategoria.toLowerCase().includes('verde')),
+                            'Rural': c => c.subcategoria && c.subcategoria.toLowerCase().includes('rural'),
+                            'Mourões': c => c.subcategoria && c.subcategoria.toLowerCase().includes('mour'),
+                            'TODOS': null,
+                            'todos': null
+                        };
+
                         let contatosFiltrados = [...contatosGoogleSheets];
+                        // Filtrar por categoria principal
                         if (novaLista.categoria && novaLista.categoria !== 'todos') {
                             contatosFiltrados = contatosFiltrados.filter(c => 
                                 c.categoria && c.categoria.toLowerCase().includes(novaLista.categoria.toLowerCase())
                             );
                         }
-                        if (novaLista.uf && novaLista.uf !== 'TODOS' && novaLista.uf !== 'todos') {
-                            contatosFiltrados = contatosFiltrados.filter(c => c.uf === novaLista.uf);
+                        // Filtrar por subcategoria (o campo uf da lista é na verdade subcategoria)
+                        const filtroSub = FILTROS_SUBCATEGORIA[novaLista.uf];
+                        if (filtroSub && novaLista.uf && novaLista.uf !== 'TODOS' && novaLista.uf !== 'todos') {
+                            const filtrados = contatosFiltrados.filter(filtroSub);
+                            // Se o filtro de subcategoria retornar contatos, usar; senao manter todos da categoria
+                            if (filtrados.length > 0) contatosFiltrados = filtrados;
                         }
                         
                         // Limitar ao total especificado ou 256 por lote
