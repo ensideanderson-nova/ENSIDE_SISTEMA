@@ -2803,17 +2803,19 @@ XML: Estrutura hierárquica de elementos
         }
 
         // ==================== IMPORTADOR ====================
-        const dropZone = document.getElementById('dropZone');
-        const fileInput = document.getElementById('fileInput');
+        // dropZone e fileInput são inicializados no DOMContentLoaded abaixo para evitar null reference
+        let dropZone = null;
+        let fileInput = null;
 
         // Função para importar arquivos individuais
         function importarArquivos() {
-            fileInput.removeAttribute('webkitdirectory');
-            fileInput.click();
+            const fi = document.getElementById('fileInput');
+            if (fi) { fi.removeAttribute('webkitdirectory'); fi.click(); }
         }
 
         // Função para importar pastas inteiras
         async function importarPastas() {
+            const fi = document.getElementById('fileInput');
             if ('showDirectoryPicker' in window) {
                 try {
                     const dirHandle = await window.showDirectoryPicker();
@@ -2821,7 +2823,6 @@ XML: Estrutura hierárquica de elementos
                     await processarDiretorio(dirHandle, '', arquivos);
                     if (arquivos.length > 0) {
                         alert(`📁 ${arquivos.length} arquivos encontrados na pasta!\n\nProcessando...`);
-                        // Processa o primeiro arquivo como exemplo
                         if (arquivos[0]) {
                             const file = arquivos[0];
                             const reader = new FileReader();
@@ -2833,9 +2834,7 @@ XML: Estrutura hierárquica de elementos
                     console.log('Seleção cancelada');
                 }
             } else {
-                // Fallback para navegadores que não suportam showDirectoryPicker
-                fileInput.setAttribute('webkitdirectory', 'true');
-                fileInput.click();
+                if (fi) { fi.setAttribute('webkitdirectory', 'true'); fi.click(); }
             }
         }
 
@@ -2847,7 +2846,6 @@ XML: Estrutura hierárquica de elementos
                     await processarDiretorio(handle, caminho, arquivos);
                 } else {
                     const file = await handle.getFile();
-                    // Filtra apenas arquivos suportados
                     const ext = nome.toLowerCase();
                     if (ext.endsWith('.csv') || ext.endsWith('.json') || ext.endsWith('.xlsx') || 
                         ext.endsWith('.xls') || ext.endsWith('.txt') || ext.endsWith('.xml')) {
@@ -2856,23 +2854,6 @@ XML: Estrutura hierárquica de elementos
                 }
             }
         }
-
-        // Evento de clique na drop zone (removido para evitar conflito com botões)
-        // dropZone.addEventListener('click', () => fileInput.click());
-        
-        dropZone.addEventListener('dragover', (e) => {
-            e.preventDefault();
-            dropZone.classList.add('dragover');
-        });
-
-        dropZone.addEventListener('dragleave', () => dropZone.classList.remove('dragover'));
-        dropZone.addEventListener('drop', (e) => {
-            e.preventDefault();
-            dropZone.classList.remove('dragover');
-            handleFiles(e.dataTransfer.files);
-        });
-
-        fileInput.addEventListener('change', (e) => handleFiles(e.target.files));
 
         function handleFiles(files) {
             if (files.length === 0) return;
@@ -6352,6 +6333,17 @@ Em breve entraremos em contato com ofertas de frete!`);
         // ==================== FIM FUNÇÕES HTMLs EXTERNOS ====================
 
         document.addEventListener('DOMContentLoaded', function() {
+            // Inicializar dropZone e fileInput agora que o DOM está pronto
+            dropZone = document.getElementById('dropZone');
+            fileInput = document.getElementById('fileInput');
+            if (dropZone) {
+                dropZone.addEventListener('dragover', (e) => { e.preventDefault(); dropZone.classList.add('dragover'); });
+                dropZone.addEventListener('dragleave', () => dropZone.classList.remove('dragover'));
+                dropZone.addEventListener('drop', (e) => { e.preventDefault(); dropZone.classList.remove('dragover'); handleFiles(e.dataTransfer.files); });
+            }
+            if (fileInput) {
+                fileInput.addEventListener('change', (e) => handleFiles(e.target.files));
+            }
             carregarTema();
             if (document.getElementById('evolutionUrl')) carregarConfigEvolution();
             if (document.getElementById('openaiKey')) carregarAPIKeys();
