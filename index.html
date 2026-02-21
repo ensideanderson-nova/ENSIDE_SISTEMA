@@ -3828,9 +3828,14 @@ XML: Estrutura hierárquica de elementos
                     const instanceName = data.instance?.instanceName || instance;
                     document.getElementById('evolutionStatus').textContent = connected ? '✅' : '⚠️';
                     document.getElementById('evolutionStatusCard').style.borderColor = connected ? '#22c55e' : '#f59e0b';
-                    // Buscar contatos via v1.7.4
+                    // Buscar contatos via v1.7.4 (POST com body)
                     try {
-                        const contatosResp = await fetch(`${url}/chat/findContacts/${instance}`, { headers: { 'apikey': apiKey } });
+                        const contatosResp = await fetch(`${url}/chat/findContacts/${instance}`, {
+                            method: 'POST',
+                            headers: { 'apikey': apiKey, 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ where: {} }),
+                            signal: AbortSignal.timeout(10000)
+                        });
                         if (contatosResp.ok) {
                             const contatosData = await contatosResp.json();
                             const total = Array.isArray(contatosData) ? contatosData.length : (contatosData.total || 0);
@@ -4010,6 +4015,29 @@ XML: Estrutura hierárquica de elementos
             // v1.7.4: não há send-bulk — enviar individualmente com delay
             const instance = document.getElementById('evolutionInstance')?.value || 'ENSIDE';
             let totalEnviados = 0, totalErros = 0;
+
+            // Wake-up: verificar conexão antes de começar o envio
+            if (progressElMassa) progressElMassa.innerHTML = '<p>⏳ Verificando conexão com WhatsApp...</p>';
+            try {
+                const wakeResp = await fetch(`${url}/instance/connectionState/${instance}`, {
+                    headers: { 'apikey': apiKey },
+                    signal: AbortSignal.timeout(30000)
+                });
+                if (!wakeResp.ok) {
+                    const err = await wakeResp.json().catch(() => ({}));
+                    throw new Error(err.message || `Servidor retornou HTTP ${wakeResp.status}`);
+                }
+                const state = await wakeResp.json();
+                const status = state?.instance?.state || state?.state || '';
+                if (status !== 'open') {
+                    throw new Error(`WhatsApp desconectado (estado: ${status}). Reconecte via QR Code.`);
+                }
+            } catch(e) {
+                if (progressElMassa) progressElMassa.style.display = 'none';
+                alert(`❌ Não foi possível conectar ao servidor:\n${e.message}\n\nO servidor pode estar dormindo (Render plano gratuito).\nAguarde 30 segundos e tente novamente.`);
+                return;
+            }
+
             try {
                 for (let i = 0; i < phones.length; i++) {
                     const phone = phones[i];
@@ -4019,10 +4047,20 @@ XML: Estrutura hierárquica de elementos
                         const response = await fetch(`${url}/message/sendText/${instance}`, {
                             method: 'POST',
                             headers: { 'apikey': apiKey, 'Content-Type': 'application/json' },
-                            body: JSON.stringify({ number: phone, textMessage: { text: msgPersonalizada } })
+                            body: JSON.stringify({ number: phone, textMessage: { text: msgPersonalizada } }),
+                            signal: AbortSignal.timeout(15000)
                         });
-                        if (response.ok) totalEnviados++; else totalErros++;
-                    } catch(e) { totalErros++; }
+                        if (response.ok) {
+                            totalEnviados++;
+                        } else {
+                            const errBody = await response.json().catch(() => ({}));
+                            console.warn(`Erro ao enviar para ${phone}:`, errBody);
+                            totalErros++;
+                        }
+                    } catch(e) {
+                        console.warn(`Falha ao enviar para ${phone}:`, e.message);
+                        totalErros++;
+                    }
                     
                     if (progressElMassa) {
                         const pct = Math.round(((i + 1) / phones.length) * 100);
