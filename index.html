@@ -664,8 +664,8 @@
             <button class="tab-btn" onclick="mudarAba('captacaofretes')" style="background: linear-gradient(135deg, #FFD700, #FFA500); color: #000;">🚚 Captação Fretes</button>
             <button class="tab-btn" onclick="mudarAba('contatoscrm')" style="background: linear-gradient(135deg, #ec4899, #be185d); color: white;">📊 Contatos CRM</button>
             <button class="tab-btn" onclick="mudarAba('fretesdisponiveis')" style="background: linear-gradient(135deg, #8b5cf6, #6d28d9); color: white;">📦 Fretes Disponíveis</button>
-            <button class="tab-btn" onclick="abrirCRMContatos()" style="background: linear-gradient(135deg, #3b82f6, #1d4ed8); color: white;">📇 CRM Contatos</button>
-            <button class="tab-btn" onclick="abrirFretesDisponiveis()" style="background: linear-gradient(135deg, #8b5cf6, #6d28d9); color: white;">📦 Fretes Disponíveis</button>
+            <button class="tab-btn" onclick="mudarAba('contatoscrm')" style="background: linear-gradient(135deg, #3b82f6, #1d4ed8); color: white;">📇 CRM Contatos</button>
+            <button class="tab-btn" onclick="mudarAba('fretesdisponiveis')" style="background: linear-gradient(135deg, #8b5cf6, #6d28d9); color: white;">📦 Fretes Disponíveis</button>
         </div>
 
         <!-- ==================== ABA MARKETING/INÍCIO ==================== -->
@@ -2376,41 +2376,66 @@ XML: Estrutura hierárquica de elementos
 
     <!-- ABA CONTATOS CRM -->
     <div id="contatoscrm" class="tab-content">
-        <div class="section-title">📊 Contatos CRM - Integrado com Google Sheets</div>
-        <p style="text-align: center; color: var(--text-muted); margin-bottom: 20px;">Gestão completa de contatos com campos CRM | Integrado em tempo real com a planilha EUCALIPTO</p>
-        <div style="display: flex; gap: 15px; justify-content: center; flex-wrap: wrap; margin-bottom: 20px;">
-            <button onclick="window.open('MODULOS/CONTATOS_CRM.html', '_blank')" class="btn" style="background: linear-gradient(135deg, #ec4899, #be185d);">🔗 Abrir CRM Completo</button>
-            <button onclick="window.open('https://docs.google.com/spreadsheets/d/1FiP885Or0ncyRG_ZZaAvM2vP0sHhDzhLFYifYLjKyIE/edit?gid=1689968688', '_blank')" class="btn" style="background: linear-gradient(135deg, #22c55e, #16a34a);">📊 Abrir Planilha</button>
+        <div class="section-title">📊 Contatos CRM - Google Sheets</div>
+        <p style="text-align: center; color: var(--text-muted); margin-bottom: 20px;">7.055+ contatos | Filtros por categoria, cidade, UF | Integrado com Google Sheets em tempo real</p>
+        <div style="display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-bottom: 15px;">
+            <input id="crmBusca" type="text" placeholder="🔍 Buscar por nome, telefone, cidade..." style="padding: 8px 15px; border-radius: 8px; border: 1px solid #334155; background: #1e293b; color: #e2e8f0; width: 280px;" oninput="filtrarContatosCRM()">
+            <select id="crmCategoria" style="padding: 8px 12px; border-radius: 8px; border: 1px solid #334155; background: #1e293b; color: #e2e8f0;" onchange="filtrarContatosCRM()">
+                <option value="">Todas as categorias</option>
+                <option value="FORNECEDOR">Fornecedores</option>
+                <option value="CLIENTE">Clientes</option>
+                <option value="TRANSPORTADOR">Transportadores</option>
+                <option value="REPRESENTANTE">Representantes</option>
+            </select>
+            <button onclick="carregarContatosCRMAba()" style="padding: 8px 15px; border-radius: 8px; background: linear-gradient(135deg, #ec4899, #be185d); color: white; border: none; cursor: pointer; font-weight: 600;">🔄 Recarregar</button>
+            <button onclick="window.open('https://docs.google.com/spreadsheets/d/1FiP885Or0ncyRG_ZZaAvM2vP0sHhDzhLFYifYLjKyIE/edit?gid=1689968688', '_blank')" style="padding: 8px 15px; border-radius: 8px; background: linear-gradient(135deg, #22c55e, #16a34a); color: white; border: none; cursor: pointer; font-weight: 600;">📊 Abrir Planilha</button>
         </div>
-        <div style="width: 100%; height: 400px; border: 2px solid #ec4899; border-radius: 12px; background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 20px;">
-            <div style="font-size: 4em;">📊</div>
-            <h2 style="color: #ec4899; margin: 0;">ENSIDE CRM - Gestão de Contatos</h2>
-            <p style="color: #94a3b8; text-align: center; max-width: 500px;">Sistema completo de CRM com 7.055+ contatos, filtros avançados, categorias (Fornecedores, Clientes, Transportadores, Representantes) e integração com Google Sheets.</p>
-            <div style="display: flex; gap: 15px; flex-wrap: wrap; justify-content: center;">
-                <button onclick="window.open('MODULOS/CONTATOS_CRM.html', '_blank')" style="background: linear-gradient(135deg, #ec4899, #be185d); color: white; border: none; padding: 15px 30px; border-radius: 10px; font-size: 1.1em; cursor: pointer; font-weight: 600;">🚀 Abrir CRM Completo</button>
-                <button onclick="window.open('https://docs.google.com/spreadsheets/d/1FiP885Or0ncyRG_ZZaAvM2vP0sHhDzhLFYifYLjKyIE/edit?gid=1689968688', '_blank')" style="background: linear-gradient(135deg, #22c55e, #16a34a); color: white; border: none; padding: 15px 30px; border-radius: 10px; font-size: 1.1em; cursor: pointer; font-weight: 600;">📊 Abrir Planilha</button>
-            </div>
-            <p style="color: #64748b; font-size: 0.85em; margin-top: 10px;">⚠️ Por segurança, o Safari não permite iframes de arquivos locais. Clique no botão acima.</p>
+        <div id="crmStatus" style="text-align: center; color: #f59e0b; margin-bottom: 10px;">⏳ Carregando contatos...</div>
+        <div style="overflow-x: auto; max-height: 500px; overflow-y: auto;">
+            <table id="tabelaCRM" style="width: 100%; border-collapse: collapse; font-size: 0.85em;">
+                <thead style="position: sticky; top: 0; background: #0f172a; z-index: 1;">
+                    <tr>
+                        <th style="padding: 8px; text-align: left; border-bottom: 1px solid #334155; color: #ec4899;">#</th>
+                        <th style="padding: 8px; text-align: left; border-bottom: 1px solid #334155; color: #ec4899;">Nome</th>
+                        <th style="padding: 8px; text-align: left; border-bottom: 1px solid #334155; color: #ec4899;">Telefone</th>
+                        <th style="padding: 8px; text-align: left; border-bottom: 1px solid #334155; color: #ec4899;">Categoria</th>
+                        <th style="padding: 8px; text-align: left; border-bottom: 1px solid #334155; color: #ec4899;">Subcategoria</th>
+                        <th style="padding: 8px; text-align: left; border-bottom: 1px solid #334155; color: #ec4899;">Cidade/UF</th>
+                        <th style="padding: 8px; text-align: left; border-bottom: 1px solid #334155; color: #ec4899;">Status</th>
+                        <th style="padding: 8px; text-align: left; border-bottom: 1px solid #334155; color: #ec4899;">Ações</th>
+                    </tr>
+                </thead>
+                <tbody id="crmTbody"></tbody>
+            </table>
         </div>
+        <div id="crmPaginacao" style="display: flex; gap: 10px; justify-content: center; align-items: center; margin-top: 15px; flex-wrap: wrap;"></div>
     </div>
 
     <!-- ABA FRETES DISPONÍVEIS -->
     <div id="fretesdisponiveis" class="tab-content">
-        <div class="section-title">📦 Fretes Disponíveis - Integrado com Google Sheets</div>
-        <p style="text-align: center; color: var(--text-muted); margin-bottom: 20px;">Cadastre e gerencie fretes disponíveis | Integrado em tempo real com a planilha EUCALIPTO</p>
-        <div style="display: flex; gap: 15px; justify-content: center; flex-wrap: wrap; margin-bottom: 20px;">
-            <button onclick="window.open('MODULOS/FRETES_DISPONIVEIS.html', '_blank')" class="btn" style="background: linear-gradient(135deg, #8b5cf6, #6d28d9);">🔗 Abrir Fretes Completo</button>
-            <button onclick="window.open('https://docs.google.com/spreadsheets/d/1FiP885Or0ncyRG_ZZaAvM2vP0sHhDzhLFYifYLjKyIE/edit?gid=1716433489', '_blank')" class="btn" style="background: linear-gradient(135deg, #22c55e, #16a34a);">📊 Abrir Planilha</button>
+        <div class="section-title">📦 Fretes Disponíveis - Google Sheets</div>
+        <p style="text-align: center; color: var(--text-muted); margin-bottom: 20px;">Fretes disponíveis com origem, destino, valores e status | Integrado com Google Sheets</p>
+        <div style="display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-bottom: 15px;">
+            <input id="freteBusca" type="text" placeholder="🔍 Buscar por origem, destino, motorista..." style="padding: 8px 15px; border-radius: 8px; border: 1px solid #334155; background: #1e293b; color: #e2e8f0; width: 280px;" oninput="filtrarFretesAba()">
+            <button onclick="carregarFretesGoogleSheets()" style="padding: 8px 15px; border-radius: 8px; background: linear-gradient(135deg, #8b5cf6, #6d28d9); color: white; border: none; cursor: pointer; font-weight: 600;">🔄 Recarregar</button>
+            <button onclick="window.open('https://docs.google.com/spreadsheets/d/1FiP885Or0ncyRG_ZZaAvM2vP0sHhDzhLFYifYLjKyIE/edit?gid=1716433489', '_blank')" style="padding: 8px 15px; border-radius: 8px; background: linear-gradient(135deg, #22c55e, #16a34a); color: white; border: none; cursor: pointer; font-weight: 600;">📊 Abrir Planilha</button>
         </div>
-        <div style="width: 100%; height: 400px; border: 2px solid #8b5cf6; border-radius: 12px; background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 20px;">
-            <div style="font-size: 4em;">📦</div>
-            <h2 style="color: #8b5cf6; margin: 0;">Fretes Disponíveis</h2>
-            <p style="color: #94a3b8; text-align: center; max-width: 500px;">Sistema de fretes com rotas disponíveis, valores, filtros por origem/destino e integração com transportadores.</p>
-            <div style="display: flex; gap: 15px; flex-wrap: wrap; justify-content: center;">
-                <button onclick="window.open('MODULOS/FRETES_DISPONIVEIS.html', '_blank')" style="background: linear-gradient(135deg, #8b5cf6, #6d28d9); color: white; border: none; padding: 15px 30px; border-radius: 10px; font-size: 1.1em; cursor: pointer; font-weight: 600;">🚀 Abrir Fretes</button>
-                <button onclick="window.open('https://docs.google.com/spreadsheets/d/1FiP885Or0ncyRG_ZZaAvM2vP0sHhDzhLFYifYLjKyIE/edit?gid=1716433489', '_blank')" style="background: linear-gradient(135deg, #22c55e, #16a34a); color: white; border: none; padding: 15px 30px; border-radius: 10px; font-size: 1.1em; cursor: pointer; font-weight: 600;">📊 Abrir Planilha</button>
-            </div>
-            <p style="color: #64748b; font-size: 0.85em; margin-top: 10px;">⚠️ Por segurança, o Safari não permite iframes de arquivos locais. Clique no botão acima.</p>
+        <div id="fretesStatus" style="text-align: center; color: #f59e0b; margin-bottom: 10px;">⏳ Carregando fretes...</div>
+        <div style="overflow-x: auto; max-height: 500px; overflow-y: auto;">
+            <table id="tabelaFretes" style="width: 100%; border-collapse: collapse; font-size: 0.85em;">
+                <thead style="position: sticky; top: 0; background: #0f172a; z-index: 1;">
+                    <tr>
+                        <th style="padding: 8px; text-align: left; border-bottom: 1px solid #334155; color: #8b5cf6;">#</th>
+                        <th style="padding: 8px; text-align: left; border-bottom: 1px solid #334155; color: #8b5cf6;">Origem</th>
+                        <th style="padding: 8px; text-align: left; border-bottom: 1px solid #334155; color: #8b5cf6;">Destino</th>
+                        <th style="padding: 8px; text-align: left; border-bottom: 1px solid #334155; color: #8b5cf6;">Produto</th>
+                        <th style="padding: 8px; text-align: left; border-bottom: 1px solid #334155; color: #8b5cf6;">Valor</th>
+                        <th style="padding: 8px; text-align: left; border-bottom: 1px solid #334155; color: #8b5cf6;">Status</th>
+                        <th style="padding: 8px; text-align: left; border-bottom: 1px solid #334155; color: #8b5cf6;">Data</th>
+                    </tr>
+                </thead>
+                <tbody id="fretesTbody"></tbody>
+            </table>
         </div>
     </div>
 
@@ -2478,10 +2503,20 @@ XML: Estrutura hierárquica de elementos
                             await carregarContatosGoogleSheets();
                         }
                         if (abaId === 'triagem') atualizarEstatisticasTriagem();
+                        if (abaId === 'contatoscrm') {
+                            // Renderizar tabela CRM com dados carregados
+                            if (typeof carregarContatosCRMAba === 'function') {
+                                await carregarContatosCRMAba();
+                            }
+                        }
                     } else if (abaId === 'fretesdisponiveis') {
                         // Aba FRETES_DISPONIVEIS (gid=1716433489)
                         if (typeof carregarFretesGoogleSheets === 'function') {
                             await carregarFretesGoogleSheets();
+                        }
+                        // Renderizar tabela de fretes
+                        if (typeof renderizarTabelaFretes === 'function') {
+                            renderizarTabelaFretes(fretesDisponiveisIntegrado || []);
                         }
                     } else if (abaId === 'captacaofretes') {
                         // Aba CAPTACAO_FRETES (gid=1335082895)
@@ -6499,6 +6534,113 @@ Em breve entraremos em contato com ofertas de frete!`);
                 testarConexaoEvolutionAPI();
             }, 1000);
         });
+
+        // ==================== FUNÇÕES CRM CONTATOS (TABELA) ====================
+        let crmContatosFiltrados = [];
+        let crmPaginaAtual = 1;
+        const CRM_POR_PAGINA = 50;
+
+        async function carregarContatosCRMAba() {
+            const statusEl = document.getElementById('crmStatus');
+            if (statusEl) statusEl.innerHTML = '<span style="color: #f59e0b;">⏳ Carregando contatos da planilha...</span>';
+            try {
+                await carregarContatosGoogleSheets();
+                crmContatosFiltrados = [...contatosGoogleSheets];
+                crmPaginaAtual = 1;
+                renderizarTabelaCRM();
+                if (statusEl) statusEl.innerHTML = `<span style="color: #22c55e;">✅ ${contatosGoogleSheets.length.toLocaleString('pt-BR')} contatos carregados</span>`;
+            } catch (e) {
+                if (statusEl) statusEl.innerHTML = '<span style="color: #ef4444;">❌ Erro ao carregar contatos</span>';
+            }
+        }
+
+        function filtrarContatosCRM() {
+            const busca = (document.getElementById('crmBusca')?.value || '').toLowerCase();
+            const categoria = (document.getElementById('crmCategoria')?.value || '').toUpperCase();
+            crmContatosFiltrados = contatosGoogleSheets.filter(c => {
+                const matchBusca = !busca || 
+                    (c.nome || '').toLowerCase().includes(busca) ||
+                    (c.telefone || '').includes(busca) ||
+                    (c.cidade || '').toLowerCase().includes(busca) ||
+                    (c.empresa || '').toLowerCase().includes(busca);
+                const matchCategoria = !categoria || (c.categoria || '').toUpperCase().includes(categoria);
+                return matchBusca && matchCategoria;
+            });
+            crmPaginaAtual = 1;
+            renderizarTabelaCRM();
+        }
+
+        function renderizarTabelaCRM() {
+            const tbody = document.getElementById('crmTbody');
+            const paginacao = document.getElementById('crmPaginacao');
+            if (!tbody) return;
+
+            const inicio = (crmPaginaAtual - 1) * CRM_POR_PAGINA;
+            const fim = inicio + CRM_POR_PAGINA;
+            const pagina = crmContatosFiltrados.slice(inicio, fim);
+            const totalPaginas = Math.ceil(crmContatosFiltrados.length / CRM_POR_PAGINA);
+
+            tbody.innerHTML = pagina.map((c, i) => `
+                <tr style="border-bottom: 1px solid #1e293b; ${i % 2 === 0 ? 'background: rgba(255,255,255,0.02);' : ''}">
+                    <td style="padding: 6px 8px; color: #64748b;">${inicio + i + 1}</td>
+                    <td style="padding: 6px 8px; color: #e2e8f0; font-weight: 500;">${c.nome || '-'}</td>
+                    <td style="padding: 6px 8px; color: #94a3b8;">${c.telefone || '-'}</td>
+                    <td style="padding: 6px 8px;"><span style="background: ${c.categoria?.includes('FORNECEDOR') ? '#1d4ed8' : c.categoria?.includes('CLIENTE') ? '#16a34a' : c.categoria?.includes('TRANSPORTADOR') ? '#d97706' : '#6d28d9'}; color: white; padding: 2px 8px; border-radius: 12px; font-size: 0.75em;">${c.categoria || '-'}</span></td>
+                    <td style="padding: 6px 8px; color: #94a3b8; font-size: 0.85em;">${c.subcategoria || '-'}</td>
+                    <td style="padding: 6px 8px; color: #94a3b8;">${c.cidade || '-'}${c.uf ? '/' + c.uf : ''}</td>
+                    <td style="padding: 6px 8px;"><span style="color: ${c.status === 'ATIVO' || !c.status ? '#22c55e' : '#f59e0b'}; font-size: 0.85em;">${c.status || 'ATIVO'}</span></td>
+                    <td style="padding: 6px 8px;">
+                        <a href="https://wa.me/${(c.telefone || '').replace(/\D/g, '')}" target="_blank" style="color: #25d366; text-decoration: none; font-size: 0.85em;">💬 WA</a>
+                    </td>
+                </tr>
+            `).join('');
+
+            if (paginacao) {
+                paginacao.innerHTML = `
+                    <span style="color: #94a3b8; font-size: 0.85em;">${crmContatosFiltrados.length.toLocaleString('pt-BR')} contatos | Página ${crmPaginaAtual} de ${totalPaginas}</span>
+                    <button onclick="crmPaginaAtual = Math.max(1, crmPaginaAtual - 1); renderizarTabelaCRM();" style="padding: 4px 12px; border-radius: 6px; background: #334155; color: white; border: none; cursor: pointer;" ${crmPaginaAtual <= 1 ? 'disabled' : ''}>◀ Anterior</button>
+                    <button onclick="crmPaginaAtual = Math.min(${totalPaginas}, crmPaginaAtual + 1); renderizarTabelaCRM();" style="padding: 4px 12px; border-radius: 6px; background: #334155; color: white; border: none; cursor: pointer;" ${crmPaginaAtual >= totalPaginas ? 'disabled' : ''}>Próxima ▶</button>
+                `;
+            }
+        }
+
+        // ==================== FUNÇÕES FRETES DISPONÍVEIS (TABELA) ====================
+        function filtrarFretesAba() {
+            const busca = (document.getElementById('freteBusca')?.value || '').toLowerCase();
+            const fretesFiltrados = (fretesDisponiveisIntegrado || []).filter(f => {
+                return !busca ||
+                    (f.origem || '').toLowerCase().includes(busca) ||
+                    (f.destino || '').toLowerCase().includes(busca) ||
+                    (f.contato || '').toLowerCase().includes(busca);
+            });
+            renderizarTabelaFretes(fretesFiltrados);
+        }
+
+        function renderizarTabelaFretes(fretes) {
+            const tbody = document.getElementById('fretesTbody');
+            const statusEl = document.getElementById('fretesStatus');
+            if (!tbody) return;
+            const lista = fretes || fretesDisponiveisIntegrado || [];
+            if (statusEl) statusEl.innerHTML = `<span style="color: #22c55e;">✅ ${lista.length} fretes disponíveis</span>`;
+            tbody.innerHTML = lista.map((f, i) => `
+                <tr style="border-bottom: 1px solid #1e293b; ${i % 2 === 0 ? 'background: rgba(255,255,255,0.02);' : ''}">
+                    <td style="padding: 6px 8px; color: #64748b;">${i + 1}</td>
+                    <td style="padding: 6px 8px; color: #e2e8f0;">${f.origem || '-'}${f.estadoOrigem ? ' (' + f.estadoOrigem + ')' : ''}</td>
+                    <td style="padding: 6px 8px; color: #e2e8f0;">${f.destino || '-'}${f.estadoDestino ? ' (' + f.estadoDestino + ')' : ''}</td>
+                    <td style="padding: 6px 8px; color: #94a3b8;">${f.carga || 'Madeira'}</td>
+                    <td style="padding: 6px 8px; color: #22c55e; font-weight: 600;">${f.valorPago ? 'R$ ' + f.valorPago.toLocaleString('pt-BR') : '-'}</td>
+                    <td style="padding: 6px 8px;"><span style="color: ${f.urgente ? '#ef4444' : '#22c55e'}; font-size: 0.85em;">${f.urgente ? '🔥 URGENTE' : f.status || 'DISPONÍVEL'}</span></td>
+                    <td style="padding: 6px 8px; color: #94a3b8; font-size: 0.85em;">${f.embarque || 'A combinar'}</td>
+                </tr>
+            `).join('');
+        }
+
+        // Sobrescrever renderizarFretesIntegrado para também atualizar a nova tabela
+        const _renderizarFretesIntegradoOriginal = typeof renderizarFretesIntegrado === 'function' ? renderizarFretesIntegrado : null;
+        function renderizarFretesIntegradoNovo(fretes) {
+            if (_renderizarFretesIntegradoOriginal) _renderizarFretesIntegradoOriginal(fretes);
+            renderizarTabelaFretes(fretes);
+        }
 
     </script>
     <!-- Scripts externos ENSIDE -->
