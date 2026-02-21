@@ -1893,13 +1893,9 @@
                 
                 <!-- Abas da Planilha -->
                 <div style="display: flex; gap: 5px; margin-bottom: 15px; flex-wrap: wrap;">
-                    <button onclick="mudarAbaPlanilha('0')" class="planilha-tab active" data-gid="0">📋 Resumo Executivo</button>
-                    <button onclick="mudarAbaPlanilha('1114979046')" class="planilha-tab" data-gid="1114979046">👥 Contatos</button>
-                    <button onclick="mudarAbaPlanilha('1707733664')" class="planilha-tab" data-gid="1707733664">📝 Listas Transmissão</button>
-                    <button onclick="mudarAbaPlanilha('parametros')" class="planilha-tab" data-gid="parametros">⚙️ Parâmetros</button>
-                    <button onclick="mudarAbaPlanilha('atacado')" class="planilha-tab" data-gid="atacado">💰 Atacado</button>
-                    <button onclick="mudarAbaPlanilha('varejo')" class="planilha-tab" data-gid="varejo">🛒 Varejo</button>
-                    <button onclick="mudarAbaPlanilha('custos')" class="planilha-tab" data-gid="custos">📊 Custos Serragem</button>
+                    <button onclick="mudarAbaPlanilha('0')" class="planilha-tab active" data-gid="0">👥 Contatos (7.056)</button>
+                    <button onclick="mudarAbaPlanilha('1114979046')" class="planilha-tab" data-gid="1114979046">📝 Listas Transmissão</button>
+                    <button onclick="mudarAbaPlanilha('1707733664')" class="planilha-tab" data-gid="1707733664">📊 Parâmetros / Custos</button>
                 </div>
                 
                 <!-- Container do iframe -->
@@ -4308,14 +4304,18 @@ ${filtros.join('\n') || 'Nenhum filtro'}
                 varejo: 'VAREJO',
                 resumoExecutivo: 'RESUMO EXECUTIVO'
             },
+            // GIDs reais verificados via gviz/tq:
+            // gid=0 -> CONTATOS (7.056 linhas)
+            // gid=1114979046 -> LISTAS_TRANSMISSAO (10 linhas)
+            // gid=1707733664 -> Parâmetros / Custos Serragem
             gids: {
                 resumoExecutivo: '0',
-                contatos: '1114979046',
+                contatos: '0',
                 listasTransmissao: '1114979046',
-                parametros: '1234567890',
-                tratamentoCCA: '987654321',
-                atacado: '111222333',
-                custosSerragem: '444555666'
+                parametros: '1707733664',
+                tratamentoCCA: '1707733664',
+                atacado: '1707733664',
+                custosSerragem: '1707733664'
             }
         };
         
@@ -4881,9 +4881,10 @@ ${filtros.join('\n') || 'Nenhum filtro'}
             if (statusEl) statusEl.innerHTML = '<span style="color: #f59e0b;">⏳ Carregando...</span>';
             
             try {
-                // URL pública da planilha em formato CSV
+                // URL pública da planilha via gviz/tq
+                // Usar gid=0 (aba CONTATOS, 7.056 linhas) - mais confiável que sheet=CONTATOS
                 const sheetId = GOOGLE_SHEETS_CONFIG.spreadsheetId;
-                const url = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:json&sheet=CONTATOS`;
+                const url = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:json&gid=0`;
                 
                 const response = await fetch(url);
                 const text = await response.text();
@@ -4903,14 +4904,29 @@ ${filtros.join('\n') || 'Nenhum filtro'}
                 }
                 
                 const rows = jsonData.table.rows;
-                contatosGoogleSheets = rows.slice(1).map((row, index) => ({
-                    id: index + 1,
-                    nome: row.c && row.c[0]?.v || '',
-                    telefone: formatarTelefone(row.c && row.c[1]?.v || ''),
-                    categoria: row.c && row.c[2]?.v || 'cliente',
-                    cidade: row.c && row.c[3]?.v || '',
-                    uf: row.c && row.c[4]?.v || 'SP'
-                })).filter(c => c.telefone);
+                // Mapeamento correto das colunas da planilha:
+                // col[0]=checkbox, col[1]=NOME, col[2]=TELEFONE, col[3]=CATEGORIA,
+                // col[4]=SUBCATEGORIA, col[5]=CIDADE, col[6]=UF, col[7]=EMAIL,
+                // col[8]=EMPRESA, col[9]=STATUS
+                contatosGoogleSheets = rows.map((row, index) => {
+                    const c = row.c || [];
+                    const tel = c[2]?.v || '';
+                    return {
+                        id: index + 1,
+                        nome: c[1]?.v || '',
+                        telefone: formatarTelefone(tel),
+                        categoria: c[3]?.v || '',
+                        subcategoria: c[4]?.v || '',
+                        cidade: c[5]?.v || '',
+                        uf: c[6]?.v || 'SP',
+                        email: c[7]?.v || '',
+                        empresa: c[8]?.v || '',
+                        status: c[9]?.v || 'ATIVO'
+                    };
+                }).filter(c => c.nome && c.telefone);
+
+                // Expor globalmente para funções que usam window.contatosGoogleSheets
+                window.contatosGoogleSheets = contatosGoogleSheets;
                 
                 if (statusEl) statusEl.innerHTML = `<span style="color: #22c55e;">✅ ${contatosGoogleSheets.length} contatos carregados</span>`;
                 atualizarSelectContatos();
@@ -4919,8 +4935,9 @@ ${filtros.join('\n') || 'Nenhum filtro'}
             } catch (error) {
                 console.warn('⚠️ Usando contatos locais (planilha não disponível):', error.message);
                 if (statusEl) statusEl.innerHTML = '<span style="color: #f59e0b;">⚠️ Usando dados locais</span>';
-                // Usar dados gerados localmente
+                // Usar dados gerados localmente como fallback
                 contatosGoogleSheets = gerarTodosContatosSistema();
+                window.contatosGoogleSheets = contatosGoogleSheets;
                 atualizarSelectContatos();
                 return contatosGoogleSheets;
             }
@@ -5430,7 +5447,10 @@ ${filtros.join('\n') || 'Nenhum filtro'}
                 const url = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:json&gid=1114979046`;
                 const response = await fetch(url);
                 const text = await response.text();
-                const json = JSON.parse(text.substring(47, text.length - 2));
+                // Extrair JSON corretamente (remover wrapper do Google Visualization)
+                const jsonStart = text.indexOf('{');
+                const jsonEnd = text.lastIndexOf('}') + 1;
+                const json = JSON.parse(text.substring(jsonStart, jsonEnd));
                 
                 const rows = json.table.rows;
                 const listasNaPlanilha = [];
@@ -5730,14 +5750,14 @@ O arquivo foi baixado como: LISTAS_TRANSMISSAO_EXPORT.csv`);
         const PLANILHA_CONFIG = {
             spreadsheetId: '1FiP885Or0ncyRG_ZZaAvM2vP0sHhDzhLFYifYLjKyIE',
             baseUrl: 'https://docs.google.com/spreadsheets/d/1FiP885Or0ncyRG_ZZaAvM2vP0sHhDzhLFYifYLjKyIE/edit',
+            // GIDs reais da planilha (verificados via gviz/tq):
+            // gid=0 -> CONTATOS (7.056 linhas)
+            // gid=1114979046 -> LISTAS_TRANSMISSAO (10 linhas)
+            // gid=1707733664 -> Parâmetros / Custos Serragem
             gids: {
-                '0': 'Resumo Executivo',
-                '1114979046': 'Contatos',
-                '1707733664': 'Listas Transmissão',
-                'parametros': 'Parâmetros',
-                'atacado': 'Atacado',
-                'varejo': 'Varejo',
-                'custos': 'Custos Serragem'
+                '0': 'Contatos (7.056)',
+                '1114979046': 'Listas Transmissão',
+                '1707733664': 'Parâmetros / Custos'
             }
         };
 
@@ -5774,10 +5794,13 @@ O arquivo foi baixado como: LISTAS_TRANSMISSAO_EXPORT.csv`);
             }
         }
 
-        function sincronizarDadosPlanilha() {
-            // Recarregar contatos do Google Sheets
+        async function sincronizarDadosPlanilha() {
+            const statusEl = document.getElementById('statusGoogleSheets');
+            if (statusEl) statusEl.innerHTML = '<span style="color: #f59e0b;">⏳ Sincronizando...</span>';
+
+            // Aguardar o carregamento real dos contatos da planilha
             if (typeof carregarContatosGoogleSheets === 'function') {
-                carregarContatosGoogleSheets();
+                await carregarContatosGoogleSheets();
             }
             
             // Atualizar timestamp
@@ -5785,8 +5808,18 @@ O arquivo foi baixado como: LISTAS_TRANSMISSAO_EXPORT.csv`);
             if (timestamp) {
                 timestamp.textContent = new Date().toLocaleTimeString('pt-BR');
             }
-            
-            alert('✅ Dados sincronizados com sucesso!\n\n📊 Contatos: ' + (window.contatosUnificados?.length || 0) + ' registros');
+
+            // Usar a variável correta: contatosGoogleSheets (não contatosUnificados)
+            const total = contatosGoogleSheets.length;
+            const fornecedores = contatosGoogleSheets.filter(c => c.categoria?.toUpperCase().includes('FORNECEDOR')).length;
+            const clientes = contatosGoogleSheets.filter(c => c.categoria?.toUpperCase().includes('CLIENTE')).length;
+            const transportadores = contatosGoogleSheets.filter(c => c.categoria?.toUpperCase().includes('TRANSPORTADOR')).length;
+
+            // Expor globalmente para outras funções que usam window.contatosGoogleSheets
+            window.contatosGoogleSheets = contatosGoogleSheets;
+
+            if (statusEl) statusEl.innerHTML = `<span style="color: #22c55e;">✅ ${total} contatos</span>`;
+            alert(`✅ Dados sincronizados com sucesso!\n\n📊 Contatos: ${total} registros\n🏭 Fornecedores: ${fornecedores}\n👥 Clientes: ${clientes}\n🚚 Transportadores: ${transportadores}`);
         }
         // ==================== FIM FUNÇÕES DA PLANILHA ====================
 
